@@ -5,7 +5,7 @@ spring:
     druid:
       master:
         #        url: jdbc:mysql://localhost:3306/tests?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT
-        url: jdbc:mysql://47.102.104.124:3306/logistics?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=true&useAffectedRows=true&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://47.102.104.124:3306/tickets?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=true&useAffectedRows=true&serverTimezone=Asia/Shanghai
         username: root
         password: root
       slave:
@@ -46,7 +46,7 @@ spring:
     port: 5672
     username: admin
     password: admin
-    virtual-host: my_logistics
+    virtual-host: my_tickets
 #    connection-timeout: 10000
     listener:
       simple:
@@ -97,18 +97,6 @@ ignored:
     - /app/user/data/binding
     - /generator/create
     - /app/order/logistics/callback/**
-
-# 配置快递100
-logistics:
-  key: JAQwnglU8950
-  callbackUrl: http://112.126.96.226/distribution/app/order/logistics/callback
-  customer: B68940AC663A6C2576F8469305BE6AE6
-  resultv2: 1 #行政区域解析 0-关闭 1-开启
-  autoCom: 0  #单号智能识别 0-关闭 1-开启
-  interCom: 0 #开启国际版 0-关闭 1-开启
-  subscribeUrl: http://poll.kuaidi100.com/poll #实时订阅查询请求地址
-  synqueryUrl: http://poll.kuaidi100.com/poll/query.do #实时查询请求地址
-  autoUrl: http://www.kuaidi100.com/autonumber/auto #快递100智能判断接口请求地址 参数为运单号 num 和 key
 
 # 配置文件加密key
 jasypt:
