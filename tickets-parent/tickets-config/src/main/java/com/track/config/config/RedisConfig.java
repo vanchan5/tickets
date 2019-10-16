@@ -65,6 +65,9 @@ public class RedisConfig {
     @Value("${redis.testOnBorrow}")
     private boolean testOnBorrow;
 
+    @Value("${redis.testOnReturn}")
+    private boolean testOnReturn;
+
     @Value("${redis.testWhileIdle}")
     private boolean testWhileIdle;
 
@@ -103,8 +106,9 @@ public class RedisConfig {
         jedisPoolConfig.setTestOnBorrow(testOnBorrow);
         // 在空闲时检查有效性, 默认false
         jedisPoolConfig.setTestWhileIdle(testWhileIdle);
-
-        jedisPoolConfig.setTestOnReturn(true);
+        //是否进行有效性检查
+        jedisPoolConfig.setTestOnReturn(testOnReturn);
+        jedisPoolConfig.setMaxTotal(maxTotal);
 
         return jedisPoolConfig;
     }
@@ -139,7 +143,7 @@ public class RedisConfig {
         //如果Redis设置有密码
         JedisConnectionFactory.setPassword(password);
         //客户端超时时间单位是毫秒
-        JedisConnectionFactory.setTimeout(5000);
+        JedisConnectionFactory.setTimeout(timeout);
 
         return JedisConnectionFactory;
     }
