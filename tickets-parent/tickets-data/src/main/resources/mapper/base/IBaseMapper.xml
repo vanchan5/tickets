@@ -11,7 +11,15 @@
         </if>
     </select>
     <select id="findByUserName" resultType="java.util.Map">
-        select id as 'id', name as '名字', age as '年龄', salary as '薪水' from tb_user where name = #{username}
+        select id as 'id', name as '名字', age as '年龄', salary as '薪水'
+        from tb_user
+        where name like concat('%', #{username} ,'%')
+    </select>
+
+    <select id="findByUserNames" resultType="com.track.data.domain.po.test.TbUserPo">
+        select *
+        from tb_user
+        where name like concat('%', #{username} ,'%')
     </select>
 
 </mapper>

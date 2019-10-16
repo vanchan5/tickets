@@ -1,5 +1,6 @@
 package com.track.data.domain.po.test;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -57,7 +58,7 @@ public class TbUserPo implements Serializable {
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "用户类型 1-app 2-商家 3-后台")
-    private UserTypeEnum type;
+    private Integer type;
 
     @ApiModelProperty(value = "入职时间")
     private LocalDateTime entryTime;

@@ -14,10 +14,11 @@
         <module>tickets-core</module>
         <module>tickets-web</module>
         <module>tickets-test</module>
+        <module>tickets-user</module>
     </modules>
 
     <packaging>pom</packaging>
-    <description>搭建物流跟踪系统</description>
+    <description>搭建小程序演唱会票务管理系统</description>
 
     <properties>
         <mysql.version>5.1.21</mysql.version>

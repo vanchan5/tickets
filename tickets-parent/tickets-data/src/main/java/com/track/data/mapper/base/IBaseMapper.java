@@ -1,6 +1,7 @@
 package com.track.data.mapper.base;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.track.data.domain.po.test.TbUserPo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;
@@ -34,4 +35,6 @@ public interface IBaseMapper<T> extends BaseMapper<T> {
                   @Param("field")String fields,
                   @Param("concatWhereSql") String concatWhereSql
     );
+
+    TbUserPo findByUserNames(String username);
 }

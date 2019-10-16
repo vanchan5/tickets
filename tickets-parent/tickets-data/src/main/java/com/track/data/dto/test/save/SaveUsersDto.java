@@ -41,6 +41,7 @@ public class SaveUsersDto {
 
     @ApiModelProperty(value = "用户类型 1-app 2-商家 3-后台")
     @EnumConstraint(target = UserTypeEnum.class)
+    @NotNull(message = "用户类型不能为空")
     private Integer type;
 
     @ApiModelProperty(value = "入职时间")

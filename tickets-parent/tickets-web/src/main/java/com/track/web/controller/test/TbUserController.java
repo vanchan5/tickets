@@ -2,8 +2,10 @@ package com.track.web.controller.test;
 
 
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.interaction.JsonViewData;
+import com.track.data.domain.po.test.TbUserPo;
 import com.track.data.dto.test.save.SaveUsersDto;
 import com.track.data.dto.test.select.SearchUsersDto;
 import com.track.data.vo.test.SearchUsersVo;
@@ -46,7 +48,8 @@ public class TbUserController extends BaseWeb {
 
         //测试baseService使用
         Map<String, Object> result = service.findByUserName(username);
-
+        TbUserPo userPo = service.findByUserNames(username);
+        System.out.println(new Gson().toJson(userPo));
         //测试业务模块使用
         service.test(username);
 
@@ -79,7 +82,7 @@ public class TbUserController extends BaseWeb {
                                  @Validated SaveUsersDto saveUsersDto){
 
         service.saveUsers(saveUsersDto);
-        return setJsonViewData(ResultCode.SUCCESS);
+        return setJsonViewData(ResultCode.SUCCESS,"保存成功");
     }
 
 }
