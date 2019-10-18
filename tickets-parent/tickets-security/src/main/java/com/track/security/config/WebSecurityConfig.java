@@ -1,9 +1,9 @@
 package com.track.security.config;
 
-import com.track.security.handler.AuthenticationFailHandler;
-import com.track.security.handler.AuthenticationSuccessHandler;
+import com.track.security.handler.login.token.AuthenticationFailHandler;
+import com.track.security.handler.login.token.AuthenticationSuccessHandler;
 import com.track.security.util.SecurityUtil;
-import com.track.security.jwt.JWTAuthenticationFilter;
+import com.track.security.filter.MyAuthenticationFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -122,8 +122,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and()
                 //添加自定义权限过滤器
 //                .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
-                //添加JWT过滤器 除已配置的其它请求都需经过此过滤器
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), tokenRedis, tokenExpireTime, storePerms,
+                //添加网络请求过滤器 除已配置的其它请求都需经过此过滤器
+                .addFilter(new MyAuthenticationFilter(authenticationManager(), tokenRedis, tokenExpireTime, storePerms,
                         redisTemplate, securityUtil));
 
     }

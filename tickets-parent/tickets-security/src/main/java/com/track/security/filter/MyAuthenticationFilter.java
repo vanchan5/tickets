@@ -1,4 +1,4 @@
-package com.track.security.jwt;
+package com.track.security.filter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -37,12 +37,17 @@ import java.util.concurrent.TimeUnit;
  * @Author cheng
  * @create 2019-10-17 13:53
  * <p>
- * 结合json web token,用户的每次请求都会被拦截,token有效并用户没选择保持登录状态则更新失效时间
+ * 重写BasicAuthenticationFilter的doFilterInternal()方法用户的每次请求都会被拦截,token有效并用户没选择保持登录状态则更新失效时间
  * <p>
  * token过滤器来验证token有效性，主要处理根据请求中携带的header即token来获取用户信息并进行判断以及生成security的token
+ *
+ * 校验token有效性和生成Authentication(new UsernamePasswordAuthenticationToken())有两种方式
+ *
+ * 1：redis 2、jwt
+ *
  */
 @Slf4j
-public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
+public class MyAuthenticationFilter extends BasicAuthenticationFilter {
 
     private Boolean tokenRedis;
 
@@ -55,8 +60,8 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
     private SecurityUtil securityUtil;
 
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, Boolean tokenRedis, Integer tokenExpireTime,
-                                   Boolean storePerms, StringRedisTemplate redisTemplate, SecurityUtil securityUtil) {
+    public MyAuthenticationFilter(AuthenticationManager authenticationManager, Boolean tokenRedis, Integer tokenExpireTime,
+                                  Boolean storePerms, StringRedisTemplate redisTemplate, SecurityUtil securityUtil) {
         super(authenticationManager);
         this.tokenRedis = tokenRedis;
         this.tokenExpireTime = tokenExpireTime;
@@ -65,7 +70,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
         this.securityUtil = securityUtil;
     }
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint) {
+    public MyAuthenticationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint) {
         super(authenticationManager, authenticationEntryPoint);
     }
 

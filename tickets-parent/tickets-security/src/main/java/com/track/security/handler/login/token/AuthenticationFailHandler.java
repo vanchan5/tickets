@@ -1,4 +1,4 @@
-package com.track.security.handler;
+package com.track.security.handler.login.token;
 
 import com.track.common.enums.system.ResultCode;
 import com.track.core.exception.LoginFailLimitException;

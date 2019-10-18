@@ -1,4 +1,4 @@
-package com.track.security.handler;
+package com.track.security.handler.login.token;
 
 import com.google.gson.Gson;
 import com.track.common.constant.SecurityConstant;
