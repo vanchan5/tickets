@@ -165,3 +165,9 @@ distribution:
   # mob api配置 mob官网注册申请即可
   mob:
     appKey: appKey
+
+# 微信小程序配置
+wetch:
+  applet:
+    APP_ID: wx9f0839375a30274e
+    SECRET: 905f26893b74727ede31a42b5e55a5dd
