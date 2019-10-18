@@ -21,7 +21,7 @@ public enum UserTypeEnum implements BaseEnum {
     MERCHANT(2,"商家"),
     PLATFORM(3,"后台");
 
-    @EnumValue  //这个注解放在数据库存储的字段上
+//    @EnumValue  //这个注解放在数据库存储的字段上
     private Integer id;
 
     private String name;

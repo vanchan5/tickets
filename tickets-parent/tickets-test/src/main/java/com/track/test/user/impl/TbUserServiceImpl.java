@@ -3,6 +3,7 @@ package com.track.test.user.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.base.service.AbstractService;
 import com.track.core.exception.ServiceException;
@@ -42,7 +43,7 @@ public class TbUserServiceImpl extends AbstractService<TbUserMapper,TbUserPo> im
 
         TbUserPo user = mapper.selectOne(new QueryWrapper<TbUserPo>()
                 .lambda().eq(TbUserPo::getName,username));
-        System.out.println(user);
+        System.out.println(new Gson().toJson(user));
     }
 
     /**

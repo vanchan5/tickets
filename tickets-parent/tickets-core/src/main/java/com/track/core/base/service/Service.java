@@ -1,6 +1,7 @@
 package com.track.core.base.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.track.data.domain.po.test.TbUserPo;
 
 import java.util.Map;
 
@@ -13,4 +14,6 @@ import java.util.Map;
 public interface Service<T> extends IService<T> {
 
     Map<String, Object> findByUserName(String username);
+
+    TbUserPo findByUserNames(String username);
 }

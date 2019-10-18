@@ -46,7 +46,7 @@ public class SearchUsersVo {
 
     @ApiModelProperty("用户类型 1-app 2-商家 3-后台")
     @JSONField(ordinal = 5)
-    private UserTypeEnum type;
+    private Integer type;
 
     @ApiModelProperty("入职时间")
     @JSONField(ordinal = 6)

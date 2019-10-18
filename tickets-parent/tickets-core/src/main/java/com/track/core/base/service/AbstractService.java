@@ -2,6 +2,7 @@ package com.track.core.base.service;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.track.data.domain.po.test.TbUserPo;
 import com.track.data.mapper.base.IBaseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,5 +29,10 @@ public abstract class AbstractService<M extends BaseMapper<T>,T> extends Service
     @Override
     public Map<String, Object> findByUserName(String username) {
         return iBaseMapper.findByUserName(username);
+    }
+
+    @Override
+    public TbUserPo findByUserNames(String username) {
+        return iBaseMapper.findByUserNames(username);
     }
 }
