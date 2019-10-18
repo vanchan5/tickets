@@ -8,6 +8,7 @@
     <artifactId>tickets-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>tickets-applet</module>
         <module>tickets-common</module>
         <module>tickets-data</module>
         <module>tickets-config</module>
