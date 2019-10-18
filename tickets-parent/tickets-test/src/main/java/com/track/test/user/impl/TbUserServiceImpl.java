@@ -8,7 +8,7 @@ import com.track.common.enums.system.ResultCode;
 import com.track.core.base.service.AbstractService;
 import com.track.core.exception.ServiceException;
 import com.track.data.domain.po.test.TbUserPo;
-import com.track.data.dto.test.save.SaveUsersDto;
+import com.track.data.dto.test.save.SaveTestUsersDto;
 import com.track.data.dto.test.select.SearchUsersDto;
 import com.track.data.mapper.test.TbUserMapper;
 import com.track.data.vo.test.SearchUsersVo;
@@ -55,6 +55,13 @@ public class TbUserServiceImpl extends AbstractService<TbUserMapper,TbUserPo> im
     @Override
     public PageInfo<SearchUsersVo> searchUsers(SearchUsersDto searchUsersDto) {
 
+        //测试mybatis-plus结合lambda表达式使用
+        List<TbUserPo> userPos = mapper.selectList(new QueryWrapper<TbUserPo>().lambda()
+                .and(obj->obj.eq(TbUserPo::getType,searchUsersDto.getType())
+                .like(TbUserPo::getName,searchUsersDto.getName())));
+
+        log.error(userPos.toString());
+
         Integer pageNo = searchUsersDto.getPageNo()==null ? defaultPageNo : searchUsersDto.getPageNo();
         Integer pageSize = searchUsersDto.getPageSize()==null ? defaultPageSize : searchUsersDto.getPageSize();
 
@@ -75,22 +82,22 @@ public class TbUserServiceImpl extends AbstractService<TbUserMapper,TbUserPo> im
     /**
      * 保存用户--测试事务和异常处理
      *
-     * @param saveUsersDto
+     * @param saveTestUsersDto
      * @return
      */
     @Override
-    public void saveUsers(SaveUsersDto saveUsersDto) {
+    public void saveUsers(SaveTestUsersDto saveTestUsersDto) {
 
         //测试异常处理
         List<String> nameList = mapper.selectList(null).stream()
                 .map(a->a.getName()).collect(Collectors.toList());
 
-        if (nameList.contains(saveUsersDto.getName())){
-            throw new ServiceException(ResultCode.DUPLICATION,String.format("已经存在名称为【%s】的用户，请检查",saveUsersDto.getName()));
+        if (nameList.contains(saveTestUsersDto.getName())){
+            throw new ServiceException(ResultCode.DUPLICATION,String.format("已经存在名称为【%s】的用户，请检查", saveTestUsersDto.getName()));
         }
 
         TbUserPo userPo = new TbUserPo();
-        BeanUtils.copyProperties(saveUsersDto,userPo);
+        BeanUtils.copyProperties(saveTestUsersDto,userPo);
 
         mapper.insert(userPo);
 

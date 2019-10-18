@@ -35,19 +35,19 @@ public class QiniuUtil {
     /**
      * 生成上传凭证，然后准备上传
      */
-    @Value("${distribution.qiniu.accessKey}")
+    @Value("${tickets.qiniu.accessKey}")
     private String accessKey;
 
-    @Value("${distribution.qiniu.secretKey}")
+    @Value("${tickets.qiniu.secretKey}")
     private String secretKey;
 
-    @Value("${distribution.qiniu.bucket}")
+    @Value("${tickets.qiniu.bucket}")
     private String bucket;
 
-    @Value("${distribution.qiniu.domain}")
+    @Value("${tickets.qiniu.domain}")
     private String domain;
 
-    @Value("${distribution.qiniu.zone}")
+    @Value("${tickets.qiniu.zone}")
     private Integer zone;
 
     /**

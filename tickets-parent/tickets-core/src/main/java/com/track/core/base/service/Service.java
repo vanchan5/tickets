@@ -13,7 +13,11 @@ import java.util.Map;
  */
 public interface Service<T> extends IService<T> {
 
+    //测试
     Map<String, Object> findByUserName(String username);
 
+    //测试
     TbUserPo findByUserNames(String username);
+
+
 }

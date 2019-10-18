@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class JpushClientUtil {
 
-    @Value("${distribution.jpush.APPKEY}")
+    @Value("${tickets.jpush.APPKEY}")
     private String app_key;
 
     private final static String APPKEY = "43fce926da40c017ab4b4818";

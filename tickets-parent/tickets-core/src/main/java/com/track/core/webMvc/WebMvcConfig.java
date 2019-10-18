@@ -1,4 +1,4 @@
-package com.track.core.fastjson;
+package com.track.core.webMvc;
 
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -149,7 +149,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Logistics-API文档")
+                .title("Tickets-API文档")
                 .description("restfun风格！此文档方便Java开发API对接前端沟通文档")
                 .version("1.0")
                 .build();

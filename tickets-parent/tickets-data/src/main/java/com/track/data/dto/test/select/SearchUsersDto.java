@@ -1,6 +1,6 @@
 package com.track.data.dto.test.select;
 
-import com.track.common.enums.test.UserTypeEnum;
+import com.track.common.enums.test.TestUserTypeEnum;
 import com.track.data.dto.base.BaseSearchDto;
 import com.track.data.valid.annotation.EnumConstraint;
 import com.track.data.valid.annotation.NeedExistConstraint;
@@ -31,7 +31,7 @@ public class SearchUsersDto extends BaseSearchDto {
     private Long userId;
 
     @ApiModelProperty("用户类型 1-app 2-商家 3-后台")
-    @EnumConstraint(target = UserTypeEnum.class)
+    @EnumConstraint(target = TestUserTypeEnum.class)
     private Integer type;
 
     @ApiModelProperty

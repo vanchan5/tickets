@@ -22,7 +22,7 @@ import redis.clients.jedis.JedisPoolConfig;
  * Redis属性配置
  */
 @Configuration
-@PropertySource("classpath:redis.properties")
+//@PropertySource("classpath:redis.properties")
 @Slf4j
 public class RedisConfig {
     /**
@@ -144,6 +144,8 @@ public class RedisConfig {
         JedisConnectionFactory.setPassword(password);
         //客户端超时时间单位是毫秒
         JedisConnectionFactory.setTimeout(timeout);
+        //设置redis数据库索引
+        JedisConnectionFactory.setDatabase(database);
 
         return JedisConnectionFactory;
     }

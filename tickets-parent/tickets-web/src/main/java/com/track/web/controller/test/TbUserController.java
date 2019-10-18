@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.domain.po.test.TbUserPo;
-import com.track.data.dto.test.save.SaveUsersDto;
+import com.track.data.dto.test.save.SaveTestUsersDto;
 import com.track.data.dto.test.select.SearchUsersDto;
 import com.track.data.vo.test.SearchUsersVo;
 import com.track.test.user.ITbUserService;
@@ -73,15 +73,15 @@ public class TbUserController extends BaseWeb {
     /**
      * 保存用户--测试事务和异常处理
      *
-     * @param saveUsersDto
+     * @param saveTestUsersDto
      * @return
      */
     @PostMapping("/saveUser")
     @ApiOperation("保存用户--测试事务和异常处理")
     public JsonViewData saveUser(@RequestBody @ApiParam(required = true,name = "",value = "")
-                                 @Validated SaveUsersDto saveUsersDto){
+                                 @Validated SaveTestUsersDto saveTestUsersDto){
 
-        service.saveUsers(saveUsersDto);
+        service.saveUsers(saveTestUsersDto);
         return setJsonViewData(ResultCode.SUCCESS,"保存成功");
     }
 

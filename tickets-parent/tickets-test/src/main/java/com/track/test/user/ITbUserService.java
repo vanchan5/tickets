@@ -1,10 +1,9 @@
 package com.track.test.user;
 
 import com.github.pagehelper.PageInfo;
-import com.track.common.enums.system.ResultCode;
 import com.track.core.base.service.Service;
 import com.track.data.domain.po.test.TbUserPo;
-import com.track.data.dto.test.save.SaveUsersDto;
+import com.track.data.dto.test.save.SaveTestUsersDto;
 import com.track.data.dto.test.select.SearchUsersDto;
 import com.track.data.vo.test.SearchUsersVo;
 
@@ -32,8 +31,8 @@ public interface ITbUserService extends Service<TbUserPo> {
     /**
      * 保存用户--测试事务和异常处理
      *
-     * @param saveUsersDto
+     * @param saveTestUsersDto
      * @return
      */
-    void saveUsers(SaveUsersDto saveUsersDto);
+    void saveUsers(SaveTestUsersDto saveTestUsersDto);
 }

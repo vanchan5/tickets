@@ -1,6 +1,5 @@
-package com.track.common.enums.test;
+package com.track.common.enums.manage.user;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.track.common.enums.BaseEnum;
 import lombok.Getter;
 
@@ -10,23 +9,21 @@ import java.util.Objects;
  * @Author cheng
  * @create 2019-09-02 10:28
  *
- * 用户类型 1-app 2-商家 3-后台
+ * 用户类型:1-超级管理员，2-系统普通用户,3-消费者
  *
- * 测试枚举类校验、从数据库查询自动映射到具体名称，比如查数据库是type为1，那么显示的就是app
  */
 @Getter
 public enum UserTypeEnum implements BaseEnum {
 
-    APP(1,"app"),
-    MERCHANT(2,"商家"),
-    PLATFORM(3,"后台");
+    SYS_SUPER_USER(1,"超级管理员"),
+    SYS_GENERAL_USER(2,"系统普通用户"),
+    CONSUMER(3,"消费者");
 
-//    @EnumValue  //这个注解放在数据库存储的字段上
     private Integer id;
 
     private String name;
 
-    UserTypeEnum(Integer id ,String name){
+    UserTypeEnum(Integer id , String name){
         this.id = id;
         this.name = name;
     }
