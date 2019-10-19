@@ -22,4 +22,21 @@
         where name like concat('%', #{username} ,'%')
     </select>
 
+    <select id="findUserRoleByUserId" resultType="com.track.data.bo.user.permission.RoleBo">
+        SELECT sr.id id, name, sr.data_type
+        FROM sys_role_user sru
+        LEFT JOIN sys_role sr ON sru.role_id = sr.id
+        WHERE user_Id = #{userId}
+    </select>
+
+    <select id="findPermissionByUserId" resultType="com.track.data.bo.user.permission.PermissionBo">
+        select DISTINCT sp.id, sp.name, sp.title, sp.path, sp.icon, sp.type, sp.component, sp.level, sp.button_type,
+             sp.parent_id, sp.sort_order, sp.description, sp.status, sp.url
+        from sys_role_user sru
+        inner join sys_role_permission srp on srp.role_id = sru.role_id
+        inner JOIN sys_permission sp on sp.id = srp.permission_id
+        where sru.user_id = #{userId} and sru.del_flag = 0 and srp.del_flag = 0 and sp.del_flag = 0 and sp.status = 0
+        order by sp.sort_order ASC;
+    </select>
+
 </mapper>

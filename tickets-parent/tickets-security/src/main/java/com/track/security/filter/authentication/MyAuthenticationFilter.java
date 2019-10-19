@@ -1,4 +1,4 @@
-package com.track.security.filter;
+package com.track.security.filter.authentication;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

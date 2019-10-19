@@ -1,13 +1,20 @@
 package com.track.security.details.user;
 
 import com.track.common.constant.SecurityConstant;
-import com.track.data.domain.po.user.UmUserPo;
+import com.track.common.utils.ListUtil;
+import com.track.data.bo.user.permission.PermissionBo;
+import com.track.data.bo.user.permission.RoleBo;
+import com.track.data.bo.user.permission.UserInfoBo;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @Author cheng
@@ -34,21 +41,49 @@ import java.util.Collection;
  */
 @Slf4j
 @NoArgsConstructor
-public class SecurityUserDetails extends UmUserPo implements UserDetails {
+public class SecurityUserDetails extends UserInfoBo implements UserDetails {
 
-    public SecurityUserDetails(UmUserPo user){
+    public SecurityUserDetails(UserInfoBo userInfoBo){
 
-        if (user != null){
-            this.setUsername(user.getUsername());
-            this.setPassword(user.getPassword());
-            this.setStatus(user.getStatus());
+        if (userInfoBo != null){
+            //必须对username和password赋值
+            this.setUsername(userInfoBo.getUsername());
+            this.setPassword(userInfoBo.getPassword());
+            this.setStatus(userInfoBo.getStatus());
+            this.setPermissions(userInfoBo.getPermissions());
+            this.setRoles(userInfoBo.getRoles());
         }
 
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+
+        List<GrantedAuthority> authorityList = new ArrayList<>();
+        List<PermissionBo> permissionBos = this.getPermissions();
+        //添加类型为1操作的请求权限
+        if (!ListUtil.isListNullAndEmpty(permissionBos)){
+            for (PermissionBo permissionBo : permissionBos){
+                if (SecurityConstant.PERMISSION_OPERATION.equals(permissionBo.getType())
+                    && StringUtils.isNotBlank(permissionBo.getTitle())
+                    && StringUtils.isNotBlank(permissionBo.getPath())) {
+
+                    authorityList.add(new SimpleGrantedAuthority(permissionBo.getTitle()));
+                }
+            }
+        }
+        //添加角色
+        List<RoleBo> roleBos = this.getRoles();
+        if (!ListUtil.isListNullAndEmpty(roleBos)){
+            authorityList.add(new SimpleGrantedAuthority("role_start_flag"));
+            roleBos.forEach(a->{
+                if (StringUtils.isNotBlank(a.getName())){
+                    authorityList.add(new SimpleGrantedAuthority(a.getName()));
+                }
+            });
+        }
+
+        return authorityList;
     }
 
     /**

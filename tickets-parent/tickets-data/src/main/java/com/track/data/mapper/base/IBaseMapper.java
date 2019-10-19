@@ -1,9 +1,12 @@
 package com.track.data.mapper.base;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.track.data.bo.user.permission.PermissionBo;
+import com.track.data.bo.user.permission.RoleBo;
 import com.track.data.domain.po.test.TbUserPo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,4 +40,28 @@ public interface IBaseMapper<T> extends BaseMapper<T> {
     );
 
     TbUserPo findByUserNames(String username);
+
+    /**
+     * @Author chauncy
+     * @Date 2019-10-19 18:00
+     * @Description //根据用户id获取绑定的角色
+    *
+     * @Update chauncy
+     *
+     * @param  userId
+     * @return java.util.List<com.track.data.bo.user.permissions.RoleBo>
+     **/
+    List<RoleBo> findUserRoleByUserId(Long userId);
+
+    /**
+     * @Author chauncy
+     * @Date 2019-10-19 18:04
+     * @Description //根据用户id获取对应的权限
+     *
+     * @Update chauncy
+     *
+     * @param  id
+     * @return java.util.List<com.track.data.bo.user.permissions.PermissionBo>
+     **/
+    List<PermissionBo> findPermissionByUserId(Long id);
 }

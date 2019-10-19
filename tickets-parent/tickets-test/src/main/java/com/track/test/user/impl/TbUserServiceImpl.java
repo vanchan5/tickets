@@ -42,7 +42,7 @@ public class TbUserServiceImpl extends AbstractService<TbUserMapper,TbUserPo> im
     public void test(String username) {
 
         TbUserPo user = mapper.selectOne(new QueryWrapper<TbUserPo>()
-                .lambda().eq(TbUserPo::getName,username));
+                .lambda().like(TbUserPo::getName,username));
         System.out.println(new Gson().toJson(user));
     }
 
@@ -60,7 +60,7 @@ public class TbUserServiceImpl extends AbstractService<TbUserMapper,TbUserPo> im
                 .and(obj->obj.eq(TbUserPo::getType,searchUsersDto.getType())
                 .like(TbUserPo::getName,searchUsersDto.getName())));
 
-        log.error(userPos.toString());
+        log.info(userPos.toString());
 
         Integer pageNo = searchUsersDto.getPageNo()==null ? defaultPageNo : searchUsersDto.getPageNo();
         Integer pageSize = searchUsersDto.getPageSize()==null ? defaultPageSize : searchUsersDto.getPageSize();
@@ -72,7 +72,7 @@ public class TbUserServiceImpl extends AbstractService<TbUserMapper,TbUserPo> im
         //对分页后的数据进行处理
         searchUsersVoPageInfo.getList().forEach(a->{
             //逻辑处理
-            if (a.getId() == 2){
+            if (a.getId() == 1184461168891789314L){
                 a.setAge(1000);
             }
         });

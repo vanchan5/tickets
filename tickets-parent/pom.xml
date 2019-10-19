@@ -8,7 +8,6 @@
     <artifactId>tickets-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>tickets-applet</module>
         <module>tickets-common</module>
         <module>tickets-data</module>
         <module>tickets-config</module>
@@ -17,6 +16,7 @@
         <module>tickets-test</module>
         <module>tickets-user</module>
         <module>tickets-security</module>
+        <module>tickets-permission</module>
     </modules>
 
     <packaging>pom</packaging>

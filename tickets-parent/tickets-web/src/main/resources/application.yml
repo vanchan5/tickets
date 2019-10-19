@@ -34,7 +34,7 @@ mybatis-plus:
 #  global-config:
 #    db-config:
 #      logic-delete-value: del_flag
-#filter:
+#jwt:
 #  header: Authorization
 #  secret: mySecret
 #  #token有效期一天

@@ -43,6 +43,13 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!--权限业务模块-->
+        <dependency>
+            <groupId>com.track</groupId>
+            <artifactId>tickets-permission</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jetty</artifactId>

@@ -1,9 +1,11 @@
 package com.track.security.config;
 
+import com.track.security.handler.authority.RestAccessDeniedHandler;
 import com.track.security.handler.login.token.AuthenticationFailHandler;
 import com.track.security.handler.login.token.AuthenticationSuccessHandler;
+import com.track.security.permissions.MyFilterSecurityInterceptor;
 import com.track.security.util.SecurityUtil;
-import com.track.security.filter.MyAuthenticationFilter;
+import com.track.security.filter.authentication.MyAuthenticationFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +64,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthenticationFailHandler failHandler;
+
+    @Autowired
+    private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
+
+    @Autowired RestAccessDeniedHandler accessDeniedHandler;
 
     @Autowired
     private SecurityUtil securityUtil;
@@ -118,10 +126,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 //自定义权限拒绝处理类,权限不足
-//                .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-//                .and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+                .and()
                 //添加自定义权限过滤器
-//                .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
+                .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
                 //添加网络请求过滤器 除已配置的其它请求都需经过此过滤器
                 .addFilter(new MyAuthenticationFilter(authenticationManager(), tokenRedis, tokenExpireTime, storePerms,
                         redisTemplate, securityUtil));
