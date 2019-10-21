@@ -50,9 +50,49 @@ public interface SecurityConstant {
     String USER_DEFAULT_AVATAR = "https://i.loli.net/2019/04/28/5cc5a71a6e3b6.png";
 
     /**
+     * 用户默认昵称
+     */
+    String USER_DEFAULT_NICKNAME = "昵称";
+
+    /**
+     * 用户默认性别--保密
+     */
+    Integer USER_DEFAULT_SEX = 2;
+
+    /**
      * 用户正常状态
      */
     Integer USER_STATUS_NORMAL = 0;
+
+    /**
+     * 用户默认登录名字段
+     */
+    String LOGIN_NAME_PARAM = "username";
+
+    /**
+     * 用户默认登录密码字段
+     */
+    String LOGIN_PASSWOED_PARAM = "password";
+
+    /**
+     * 登录额外字段--手机号
+     */
+    String PHONE = "phone";
+
+    /**
+     * 登录额外字段--通过第三方登录获得的用户唯一idf
+     */
+    String UNION_ID = "unionId";
+
+    /**
+     * 登录额外字段--验证码
+     */
+    String VERIFY_CODE = "verifyCode";
+
+    /**
+     * 登录额外字段--登录方式
+     */
+    String LOGIN_TYPE = "loginType";
 
     /**
      * 用户禁用状态

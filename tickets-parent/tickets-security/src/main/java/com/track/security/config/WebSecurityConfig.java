@@ -1,14 +1,17 @@
 package com.track.security.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.track.security.handler.authority.RestAccessDeniedHandler;
 import com.track.security.handler.login.token.AuthenticationFailHandler;
 import com.track.security.handler.login.token.AuthenticationSuccessHandler;
+import com.track.security.handler.login.token.MyUsernamePasswordAuthenticationFilter;
 import com.track.security.permissions.MyFilterSecurityInterceptor;
 import com.track.security.util.SecurityUtil;
 import com.track.security.filter.authentication.MyAuthenticationFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
@@ -21,6 +24,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
  * Security 核心配置类
  * 开启控制权限至Controller
  *
+ * 用户登录会经过UsernamePasswordAuthenticationFilter过滤器，该过滤器默认使用post请求以及form表单
  */
 @Slf4j
 @Configuration
@@ -59,16 +64,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationProvider provider;
 
+    //认证成功处理器
     @Autowired
     private AuthenticationSuccessHandler successHandler;
 
+    //认证失败处理器
     @Autowired
     private AuthenticationFailHandler failHandler;
 
+    //访问过滤器(权限请求)
     @Autowired
     private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
 
-    @Autowired RestAccessDeniedHandler accessDeniedHandler;
+    //权限不足决断起
+    @Autowired
+    private RestAccessDeniedHandler accessDeniedHandler;
 
     @Autowired
     private SecurityUtil securityUtil;
@@ -91,7 +101,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             registry.antMatchers(url).permitAll();
         }
 
+        //配置json登录,
+        //用重写的Filter替换掉原有的UsernamePasswordAuthenticationFilter
+        http.addFilterAt(myUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         registry.and()
+                //这里必须要写formLogin()，不然原有的UsernamePasswordAuthenticationFilter不会出现，也就无法配置我们重新的UsernamePasswordAuthenticationFilter
                 //表单登录方式
                 .formLogin()
                 //增加手机号  验证码等字段
@@ -134,5 +149,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new MyAuthenticationFilter(authenticationManager(), tokenRedis, tokenExpireTime, storePerms,
                         redisTemplate, securityUtil));
 
+    }
+
+    //注册自定义的UsernamePasswordAuthenticationFilter
+    //认证(登录)过滤器，添加json+Post请求登录方式
+    @Bean
+    MyUsernamePasswordAuthenticationFilter myUsernamePasswordAuthenticationFilter() throws Exception{
+        MyUsernamePasswordAuthenticationFilter filter = new MyUsernamePasswordAuthenticationFilter();
+        filter.setAuthenticationSuccessHandler(successHandler);
+        filter.setAuthenticationFailureHandler(failHandler);
+        filter.setFilterProcessesUrl("/login/self");
+        //自定义认证信息详情
+        filter.setAuthenticationDetailsSource(authenticationDetailsSource);
+        //这句很关键，重用WebSecurityConfigurerAdapter配置的AuthenticationManager，不然要自己组装AuthenticationManager
+        filter.setAuthenticationManager(authenticationManagerBean()); //走了AuthenticationManager
+        return filter;
     }
 }

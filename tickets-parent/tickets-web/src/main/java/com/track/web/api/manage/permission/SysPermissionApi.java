@@ -18,8 +18,8 @@ import com.track.web.base.BaseWeb;
  * @since 2019-10-19
  */
 @RestController
-@RequestMapping("sys-permission-po")
-@Api(tags = "菜单权限表")
+@RequestMapping("/manage/permission")
+@Api(tags = "后台_系统管理_菜单权限管理")
 public class SysPermissionApi extends BaseWeb {
 
     @Autowired

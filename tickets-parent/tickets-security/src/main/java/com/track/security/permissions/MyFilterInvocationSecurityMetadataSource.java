@@ -102,7 +102,7 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
             String resURL = iterator.next();
             //不在权限表中则放行,在权限表中，则返回给decide方法
             if (StringUtils.isNotBlank(resURL) && pathMatcher.match(resURL,url)){
-                return map.get(resURL);
+                return map.get(resURL);//返回操作请求url对应的标题
             }
         }
 

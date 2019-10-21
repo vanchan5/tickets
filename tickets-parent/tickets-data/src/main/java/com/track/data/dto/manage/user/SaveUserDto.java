@@ -1,5 +1,7 @@
 package com.track.data.dto.manage.user;
 
+import com.track.common.constant.SecurityConstant;
+import com.track.common.constant.login.LoginConstant;
 import com.track.common.enums.manage.user.UserTypeEnum;
 import com.track.data.valid.annotation.EnumConstraint;
 import io.swagger.annotations.ApiModel;
@@ -28,16 +30,16 @@ public class SaveUserDto {
     private String phone;
 
     @ApiModelProperty(value = "昵称")
-    private String nickName;
+    private String nickName = SecurityConstant.USER_DEFAULT_NICKNAME;
 
-    @ApiModelProperty(value = "0-女  1-男")
-    private Boolean sex;
+    @ApiModelProperty(value = "0-女  1-男 2-保密")
+    private Integer sex = SecurityConstant.USER_DEFAULT_SEX;
 
     @ApiModelProperty(value = "密码")
-    private String password;
+    private String password = LoginConstant.PASSWORD;
 
     @ApiModelProperty(value = "头像")
-    private String photo;
+    private String photo = SecurityConstant.USER_DEFAULT_AVATAR;
 
     @ApiModelProperty(value = "微信openId")
     private String openId;
