@@ -1,10 +1,16 @@
 package com.track.security.handler.login.token;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
 import com.track.common.constant.SecurityConstant;
+import com.track.common.enums.manage.sys.LoginTypeEnum;
 import com.track.common.utils.ListUtil;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.bo.security.TokenUserBo;
+import com.track.data.domain.po.user.UmUserPo;
+import com.track.data.mapper.base.IBaseMapper;
+import com.track.data.vo.sys.security.UserInfoVo;
+import com.track.security.details.authentication.MyWebAuthenticationDetails;
 import com.track.security.util.ResponseUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -63,10 +69,16 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private IBaseMapper<UmUserPo> umUserPoIBaseMapper;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response, Authentication authentication)
             throws ServletException, IOException {
+
+        MyWebAuthenticationDetails details = (MyWebAuthenticationDetails) authentication.getDetails();
+
 
         //获取用户请求是否保持登陆状态:saveLogin
         String saveLogin = request.getParameter(SecurityConstant.SAVE_LOGIN);
@@ -140,6 +152,27 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
                     .signWith(SignatureAlgorithm.HS512,SecurityConstant.JWT_SIGN_KEY)
                     .compact();
         }
-        ResponseUtil.out(response, new JsonViewData<String>(token));
+        UserInfoVo userInfoVo = new UserInfoVo();
+        if (details.getAuthenticationDetailsBo().getLoginType().equals(LoginTypeEnum.MANAGE_PASSWORD)) {
+            ResponseUtil.out(response, new JsonViewData<String>(token));
+        }else if (details.getAuthenticationDetailsBo().getLoginType().equals(LoginTypeEnum.THIRD_WECHAT)){
+            UmUserPo userPo =umUserPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
+                    .eq(UmUserPo::getOpenId,details.getAuthenticationDetailsBo().getOpenId()));
+            userInfoVo.setToken(token);
+            userInfoVo.setIM(String.valueOf(userPo.getId()));
+            userInfoVo.setJPush(String.valueOf(userPo.getId()));
+            userInfoVo.setNickName(userPo.getNickName() == null ? userPo.getNickName() : SecurityConstant.USER_DEFAULT_NICKNAME);
+            ResponseUtil.out(response, new JsonViewData<UserInfoVo>(userInfoVo));
+
+        }else {
+            UmUserPo userPo =umUserPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
+                    .eq(UmUserPo::getPhone,details.getAuthenticationDetailsBo().getPhone()));
+            userInfoVo.setToken(token);
+            userInfoVo.setIM(String.valueOf(userPo.getId()));
+            userInfoVo.setJPush(String.valueOf(userPo.getId()));
+            userInfoVo.setNickName(userPo.getNickName() == null ? userPo.getNickName() : SecurityConstant.USER_DEFAULT_NICKNAME);
+            ResponseUtil.out(response, new JsonViewData<UserInfoVo>(userInfoVo));
+
+        }
     }
 }

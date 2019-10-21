@@ -72,10 +72,10 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         //获取密码并加密
         String encryptPass = bCryptPasswordEncoder.encode(authentication.getCredentials().toString());
-        //获取表单中用户名
-        String username = authentication.getName();
+        //获取表单中用户名,这里不能再用authentication.getName(),因为json方式登录输入流只能读一次问题还没解决
+        String username = details.getAuthenticationDetailsBo().getUsername();
         //获取密码
-        String password = authentication.getCredentials().toString();
+        String password = details.getAuthenticationDetailsBo().getPassword();
 
         //处理超过登录限制异常
         String flagKey = "loginFailFlag:"+username;
@@ -87,31 +87,25 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
             throw new LoginFailLimitException("登录错误次数超过限制，请"+timeRest+"分钟后再试");
         }
 
-        switch (details.getLoginType()) {
-            //后台用户管理，涉及权限管理
-            case MANAGE:
-                //通过用户名查找信息，这一步操作可以通过自定义实现UserDetailsService类重写loadUsername(String username)方法,查询用户信息进而判断账号密码异常，
-                // 暂时不实现，也没必要了
-                //根据用户名查找用户基本信息、绑定角色、权限等
-                UserInfoBo userInfo = new UserInfoBo();
-                //用户基本信息
-                UmUserPo userPo = userMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
-                        .eq(UmUserPo::getUsername,username));
-                BeanUtils.copyProperties(userPo,userInfo);
+        //通过用户名查找信息，这一步操作可以通过自定义实现UserDetailsService类重写loadUsername(String username)方法,查询用户信息进而判断账号密码异常，
+        // 暂时不实现，也没必要了
+        //根据用户名查找用户基本信息、绑定角色、权限等
+        UserInfoBo userInfo = new UserInfoBo();
+        UmUserPo userPo = new UmUserPo();
 
-                //绑定角色
-                List<RoleBo> roleBos = roleUserMapper.findUserRoleByUserId(userPo.getId());
-                //绑定权限
-                List<PermissionBo> permissionBos = rolePermissionMapper.findPermissionByUserId(userPo.getId());
-                //设置角色和权限，给getAuthorities传参生成Collection<? extends GrantedAuthority>
-                userInfo.setRoles(roleBos);
-                userInfo.setPermissions(permissionBos);
+        switch (details.getAuthenticationDetailsBo().getLoginType()) {
+            //后台用户管理，涉及权限管理
+            case MANAGE_PASSWORD:
+                //用户基本信息
+                userPo = userMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
+                        .eq(UmUserPo::getUsername,username));
+                getUserInfo(userInfo, userPo);
 
                 //需要处理异常情况，不能使用SecurityUserDetails里面实现的判断方法，因为不走AuthenticationProvider接口的默认实现类AbstractUserDetailsAuthenticationProvider里面的判断了
                 //MyAuthenticationProvider抛出异常,需要被SimpleUrlAuthenticationFailureHandler捕捉
                 //自定义一个继承了SimpleUrlAuthenticationFailureHandler失败处理器AuthenticationFailHandler
                 // 对异常进行处理，默认实现类
-                if (userInfo == null) {
+                if (userPo == null) {
                     throw new DisabledException("用户名不存在");
                 }else if (!bCryptPasswordEncoder.matches(password, userPo.getPassword())) {
                     throw new BadCredentialsException("密码不正确");
@@ -127,6 +121,25 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                 Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
                 //默认的实现类也会包装,加密的权限会在FilterAuthenticationIntecepter实现类中用到，用于每次请求的添加权限
                 return new UsernamePasswordAuthenticationToken(userDetails,encryptPass,authorities);
+            case MANAGE_CODE:
+                //用户基本信息
+                userPo = userMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
+                        .eq(UmUserPo::getPhone,details.getAuthenticationDetailsBo().getPhone()));
+                getUserInfo(userInfo, userPo);
+                if (userPo == null) {
+                    throw new DisabledException("用户名不存在");
+                }else if (!bCryptPasswordEncoder.matches(password, userPo.getPassword())) {
+                    throw new BadCredentialsException("密码不正确");
+                }else if (userPo.getStatus()==-1){
+                    throw new LockedException("账户被禁用，请联系管理员");
+                }
+
+                SecurityUserDetails manageCodeUserDetail = new SecurityUserDetails(userInfo);
+                //获取给予的授权
+                Collection<? extends GrantedAuthority> manageCodeUserDetailAuthorities = manageCodeUserDetail.getAuthorities();
+                return new UsernamePasswordAuthenticationToken(manageCodeUserDetail,encryptPass,manageCodeUserDetailAuthorities);
+
+
             case APP_PASSWORD:
                 break;
             case APP_CODE:
@@ -135,6 +148,19 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                 break;
         }
         return null;
+    }
+
+    private void getUserInfo(UserInfoBo userInfo, UmUserPo userPo) {
+        if (userPo != null) {
+            BeanUtils.copyProperties(userPo, userInfo);
+            //绑定角色
+            List<RoleBo> roleBos = roleUserMapper.findUserRoleByUserId(userPo.getId());
+            //绑定权限
+            List<PermissionBo> permissionBos = rolePermissionMapper.findPermissionByUserId(userPo.getId());
+            //设置角色和权限，给getAuthorities传参生成Collection<? extends GrantedAuthority>
+            userInfo.setRoles(roleBos);
+            userInfo.setPermissions(permissionBos);
+        }
     }
 
     /**

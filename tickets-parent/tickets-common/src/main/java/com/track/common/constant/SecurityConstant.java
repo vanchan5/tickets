@@ -85,6 +85,11 @@ public interface SecurityConstant {
     String UNION_ID = "unionId";
 
     /**
+     * 登录额外字段--微信小程序openId
+     */
+    String OPEN_ID = "openId";
+
+    /**
      * 登录额外字段--验证码
      */
     String VERIFY_CODE = "verifyCode";

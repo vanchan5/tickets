@@ -3,12 +3,14 @@ package com.track.security.handler.login.token;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.exception.LoginFailLimitException;
 import com.track.core.interaction.JsonViewData;
+import com.track.security.details.authentication.MyWebAuthenticationDetails;
 import com.track.security.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -66,7 +68,16 @@ public class AuthenticationFailHandler extends SimpleUrlAuthenticationFailureHan
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response, AuthenticationException e)
             throws IOException, ServletException {
-        String username = request.getParameter("username");
+
+
+        String username;
+        //json方式登录
+        if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
+            username = "";
+        }else {
+            username = request.getParameter("username");
+        }
         //用户名或密码错误异常
         if (e instanceof UsernameNotFoundException || e instanceof BadCredentialsException) {
             recordLoginTime(username);

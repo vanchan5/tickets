@@ -1,10 +1,13 @@
 package com.track.security.details.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.track.common.constant.SecurityConstant;
 import com.track.common.enums.manage.sys.LoginTypeEnum;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.exception.ServiceException;
+import com.track.security.Bo.AuthenticationDetailsBo;
+import com.track.security.util.ResponseUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -26,14 +29,8 @@ import java.util.Map;
 @Slf4j
 public class MyWebAuthenticationDetails extends WebAuthenticationDetails {
 
-    //手机号码
-    private final String phone;
-    //验证码
-    private final String verifyCode;
-    //登录方式
-    private final LoginTypeEnum loginType;
-    //通过第三方登录获得的用户唯一idf
-    private final String unionId;
+    //额外数据实体
+    private final AuthenticationDetailsBo authenticationDetailsBo = new AuthenticationDetailsBo();
 
 
 
@@ -50,30 +47,41 @@ public class MyWebAuthenticationDetails extends WebAuthenticationDetails {
 
             ObjectMapper objectMapper = new ObjectMapper();
             try (InputStream jsonData = request.getInputStream()) {
-                log.info(request.getInputStream().toString());
+
                 Map<String, String> jsonAuthenticationBean = objectMapper.readValue(jsonData, Map.class);
+                log.info(new Gson().toJson(jsonAuthenticationBean));
+                if (!LoginTypeEnum.iteratorIsExit(jsonAuthenticationBean.get(SecurityConstant.LOGIN_TYPE))){
+                    throw new ServiceException(ResultCode.PARAM_ERROR,String.format("所传的loginType:【%s】枚举不存在,请检查",jsonAuthenticationBean.get(SecurityConstant.LOGIN_TYPE)));
+                }
+                authenticationDetailsBo.setPhone(jsonAuthenticationBean.get(SecurityConstant.PHONE));
+                authenticationDetailsBo.setVerifyCode(jsonAuthenticationBean.get(SecurityConstant.VERIFY_CODE));
+                authenticationDetailsBo.setOpenId(jsonAuthenticationBean.get(SecurityConstant.OPEN_ID));
+                authenticationDetailsBo.setLoginType(LoginTypeEnum.valueOf(jsonAuthenticationBean.get(SecurityConstant.LOGIN_TYPE)));
+                authenticationDetailsBo.setUsername(jsonAuthenticationBean.get(SecurityConstant.LOGIN_NAME_PARAM));
+                authenticationDetailsBo.setPassword(jsonAuthenticationBean.get(SecurityConstant.LOGIN_PASSWOED_PARAM));
 
-                phone = jsonAuthenticationBean.get(SecurityConstant.PHONE);
-                verifyCode = jsonAuthenticationBean.get(SecurityConstant.VERIFY_CODE);
-                unionId = jsonAuthenticationBean.get(SecurityConstant.UNION_ID);
-                loginType = LoginTypeEnum.valueOf(jsonAuthenticationBean.get(SecurityConstant.LOGIN_TYPE));
-
-
-            } catch (IOException e) {
+            } catch (Exception e) {
                 //异常处理
                 log.error(e.getMessage());
-                throw new ServiceException(ResultCode.FAIL, "根据输入流获取json来获取额外信息异常!");
-
+                if (e instanceof ServiceException) {
+                    throw new ServiceException(ResultCode.PARAM_ERROR,String.format("所传的loginType枚举不存在,请检查"));
+                }
+                else if (e instanceof IOException){
+                    throw new ServiceException(ResultCode.FAIL, "根据输入流获取json来获取额外信息异常!");
+                }
             }
         }
 
         //表单处理方式
         else {
-            phone = request.getParameter("phone");
-            verifyCode = request.getParameter("verifyCode");
+            authenticationDetailsBo.setPhone(request.getParameter(SecurityConstant.PHONE));
+            authenticationDetailsBo.setVerifyCode(request.getParameter(SecurityConstant.VERIFY_CODE));
             //登录类型
-            loginType = LoginTypeEnum.valueOf(request.getParameter("loginType"));
-            unionId = request.getParameter("unionId");
+            authenticationDetailsBo.setLoginType(LoginTypeEnum.valueOf(request.getParameter(SecurityConstant.LOGIN_TYPE)));
+            authenticationDetailsBo.setOpenId(request.getParameter(SecurityConstant.OPEN_ID));
+            authenticationDetailsBo.setUsername(request.getParameter(SecurityConstant.LOGIN_NAME_PARAM));
+            authenticationDetailsBo.setPassword(request.getParameter(SecurityConstant.LOGIN_PASSWOED_PARAM));
+
         }
     }
 }

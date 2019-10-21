@@ -61,9 +61,11 @@ public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuth
         if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
 
+
             ObjectMapper objectMapper = new ObjectMapper();
             UsernamePasswordAuthenticationToken authentication = null;
-            try(InputStream jsonData = request.getInputStream()){
+            //因为流只能获取一次，故不能在这里获取
+            /*try(InputStream jsonData = request.getInputStream()){
 
                 log.info(request.getInputStream().toString());
 
@@ -89,7 +91,10 @@ public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuth
                 //默认的实现类是ProviderManager的authenticate(Authentication authentication)方法
                 //该方法遍历AuthenticationProvider,获取额外字段需实现AuthenticationProvider接口
                 return authenticationProvider.authenticate(authentication);
-            }
+            }*/
+            authentication = new UsernamePasswordAuthenticationToken("","");
+            setDetails(request,authentication);
+            return this.getAuthenticationManager().authenticate(authentication);
         }
         //get请求，直接使用默认接口实现类
         else {
