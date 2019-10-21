@@ -29,6 +29,9 @@ public class AuthenticationDetailsBo {
     //登录方式
     private LoginTypeEnum loginType;
 
-    //通过第三方登录获得的用户唯一idf
+    //通过第三方登录获得的用户唯一id
     private String openId;
+
+    //微信小程序访问的code
+    private String code;
 }

@@ -1,6 +1,8 @@
 package com.track.security.provider;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.track.common.enums.third.ValidCodeEnum;
+import com.track.core.base.service.Service;
 import com.track.core.exception.LoginFailLimitException;
 import com.track.data.bo.user.permission.PermissionBo;
 import com.track.data.bo.user.permission.RoleBo;
@@ -45,6 +47,9 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private IBaseMapper<SysRolePermissionMapper> rolePermissionMapper;
+
+    @Autowired
+    private Service<UmUserPo> service;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
@@ -133,18 +138,28 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                 }else if (userPo.getStatus()==-1){
                     throw new LockedException("账户被禁用，请联系管理员");
                 }
-
+                //验证码验证
+                boolean checkCode = service.validVerifyCode(details.getAuthenticationDetailsBo().getVerifyCode(),
+                        details.getAuthenticationDetailsBo().getPhone(),
+                        ValidCodeEnum.LOGIN_CODE);
+                if (!checkCode){
+                    throw new LoginFailLimitException("验证码错误！");
+                }
                 SecurityUserDetails manageCodeUserDetail = new SecurityUserDetails(userInfo);
                 //获取给予的授权
                 Collection<? extends GrantedAuthority> manageCodeUserDetailAuthorities = manageCodeUserDetail.getAuthorities();
                 return new UsernamePasswordAuthenticationToken(manageCodeUserDetail,encryptPass,manageCodeUserDetailAuthorities);
-
 
             case APP_PASSWORD:
                 break;
             case APP_CODE:
                 break;
             case THIRD_WECHAT:
+                //获取小程序传过来的code
+                String code = details.getAuthenticationDetailsBo().getCode();
+                //解析获取openId,根据openId查询数据库
+                String openId = "";
+
                 break;
         }
         return null;

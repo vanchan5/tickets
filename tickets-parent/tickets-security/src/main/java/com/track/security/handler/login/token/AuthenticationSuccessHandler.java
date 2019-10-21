@@ -153,7 +153,8 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
                     .compact();
         }
         UserInfoVo userInfoVo = new UserInfoVo();
-        if (details.getAuthenticationDetailsBo().getLoginType().equals(LoginTypeEnum.MANAGE_PASSWORD)) {
+        if (details.getAuthenticationDetailsBo().getLoginType().equals(LoginTypeEnum.MANAGE_PASSWORD) ||
+            details.getAuthenticationDetailsBo().getLoginType().equals(LoginTypeEnum.MANAGE_CODE)) {
             ResponseUtil.out(response, new JsonViewData<String>(token));
         }else if (details.getAuthenticationDetailsBo().getLoginType().equals(LoginTypeEnum.THIRD_WECHAT)){
             UmUserPo userPo =umUserPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()

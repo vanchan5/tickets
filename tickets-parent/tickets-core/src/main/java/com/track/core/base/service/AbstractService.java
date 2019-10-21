@@ -2,8 +2,11 @@ package com.track.core.base.service;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.track.common.enums.third.ValidCodeEnum;
+import com.track.common.utils.RedisUtil;
 import com.track.data.domain.po.test.TbUserPo;
 import com.track.data.mapper.base.IBaseMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
@@ -19,12 +22,15 @@ public abstract class AbstractService<M extends BaseMapper<T>,T> extends Service
     @Autowired
     private IBaseMapper<T> iBaseMapper;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
 
     protected static int defaultPageSize = 10;
 
     protected static int defaultPageNo = 1;
 
-    protected static String defaultSoft="id desc";
+    protected static String defaultSoft = "id desc";
 
     @Override
     public Map<String, Object> findByUserName(String username) {
@@ -34,5 +40,32 @@ public abstract class AbstractService<M extends BaseMapper<T>,T> extends Service
     @Override
     public TbUserPo findByUserNames(String username) {
         return iBaseMapper.findByUserNames(username);
+    }
+
+    /**
+     * @param verifyCode
+     * @param phone
+     * @param validCodeEnum
+     * @return boolean
+     * @Author chauncy
+     * @Date 2019-10-21 22:39
+     * @Description //验证码是否正确
+     * @Update chauncy
+     **/
+    @Override
+    public boolean validVerifyCode(String verifyCode, String phone, ValidCodeEnum validCodeEnum) {
+        String redisKey = String.format(validCodeEnum.getRedisKey(), phone);
+        Object redisValue = redisUtil.get(redisKey);
+        //默认8888
+        if ("8888".equals(verifyCode.trim())) {
+            return true;
+        }
+        if (redisValue == null) {
+            return false;
+        }
+        if (StringUtils.equals(verifyCode.trim(), redisValue.toString().trim())) {
+            return true;
+        }
+        return false;
     }
 }

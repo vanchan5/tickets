@@ -1,6 +1,7 @@
 package com.track.core.base.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.track.common.enums.third.ValidCodeEnum;
 import com.track.data.domain.po.test.TbUserPo;
 
 import java.util.Map;
@@ -19,5 +20,17 @@ public interface Service<T> extends IService<T> {
     //测试
     TbUserPo findByUserNames(String username);
 
-
+    /**
+     * @Author chauncy
+     * @Date 2019-10-21 22:38
+     * @Description //验证码是否正确
+     *
+     * @Update chauncy
+     *
+     * @param  verifyCode
+     * @param  phone
+     * @param  validCodeEnum
+     * @return boolean
+     **/
+    boolean validVerifyCode(String verifyCode, String phone, ValidCodeEnum validCodeEnum) ;
 }

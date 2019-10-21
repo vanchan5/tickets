@@ -1,50 +1,36 @@
 package com.track.common.utils.wetch.applet;
 
 import com.track.common.constant.wetch.applet.WxAppletConstant;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
+import lombok.extern.slf4j.Slf4j;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.util.Map;
 
 /**
  * @description: 小程序工具类
  * @author yeJH
  * @since 2019/10/16 23:37
  */
+@Slf4j
 public class WxAppletUtil {
 
-    private WxAppletConfig wxAppletConfig;
-
-    public int getHttpConnectTimeoutMs() {
+    public static int getHttpConnectTimeoutMs() {
         return 8000;
     }
 
-    public int getHttpReadTimeoutMs() {
+    public static int getHttpReadTimeoutMs() {
         return 10000;
     }
 
-    public WxAppletUtil(WxAppletConfig wxAppletConfig) {
-        this.wxAppletConfig = wxAppletConfig;
-    }
 
-    public String codeToSession(String code) throws Exception {
+    public static String codeToSession(String code) throws Exception {
+
+//        log.error("测试====----"+WxAppletConfig.APP_ID);
 
         //替换参数
-        String strUrl = WxAppletConstant.CODE_2_SESSION.replace("APPID", wxAppletConfig.getAPP_ID())
-                .replace("SECRET", wxAppletConfig.getSECRET())
+        String strUrl = WxAppletConstant.CODE_2_SESSION.replace("APPID", WxAppletConfig.APP_ID)
+                .replace("SECRET", WxAppletConfig.SECRET)
                 .replace("JSCODE", code);
 
         String responseData = getRequest(strUrl, getHttpConnectTimeoutMs(), getHttpReadTimeoutMs());
@@ -57,7 +43,7 @@ public class WxAppletUtil {
 
     }
 
-    public String getRequest(String strUrl, int connectTimeoutMs, int readTimeoutMs) throws Exception {
+    public static String getRequest(String strUrl, int connectTimeoutMs, int readTimeoutMs) throws Exception {
         String UTF8 = "UTF-8";
         URL httpUrl = new URL(strUrl);
         HttpURLConnection httpURLConnection = (HttpURLConnection)httpUrl.openConnection();

@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.*;
-
 /**
  * @author yeJH
  * @description: //TODO
@@ -21,13 +19,12 @@ import static org.junit.Assert.*;
 public class WxAppletUtilTest {
 
     @Autowired
-    private WxAppletConfig wxAppletConfig;
+    private WxAppletBo wxAppletConfig;
 
     @Test
     public void codeToSession() {
-        WxAppletUtil wxAppletUtil = new WxAppletUtil(wxAppletConfig);
         try {
-            String data = wxAppletUtil.codeToSession("033pKJB42gQj0P0CBeB42CfPB42pKJBb");
+            String data = WxAppletUtil.codeToSession("033pKJB42gQj0P0CBeB42CfPB42pKJBb");
             data = data.replace("session_key", "sessionKey")
                     .replace("openid", "openId")
                     .replace("errcode", "errCode")

@@ -10,6 +10,7 @@ import com.track.web.base.BaseWeb;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,21 +24,24 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @RequestMapping(value = "/common/sms")
-//@PropertySource("classpath:config/redis.properties")
 @Api(tags = "发送短信验证码")
 public class SmsApi extends BaseWeb {
 
     @Autowired
     private RedisUtil redisUtil;
 
+    @Value("${tickets.sms.redis.saveTime}")
+    private Long saveTime;
+
     @PostMapping("/send")
     @ApiOperation(value = "发送验证码")
     public JsonViewData send(@Validated @RequestBody VerifyCodeDto verifyCodeDto) {
+        saveTime = saveTime * 60;
         //生成4位随机验证码
         String verifyCode = CreateVerifyCodeUtil.randomNumber(4);
         String redisKey=String.format(verifyCodeDto.getValidCodeEnum().getRedisKey(),verifyCodeDto.getPhone());
         //5分钟内有效
-        redisUtil.set(redisKey,verifyCode,3000);
+        redisUtil.set(redisKey,verifyCode,saveTime);
         SendSms.send(verifyCodeDto.getPhone(), verifyCode,
                 verifyCodeDto.getValidCodeEnum().getTemplateCode());
         return setJsonViewData(ResultCode.SUCCESS);
