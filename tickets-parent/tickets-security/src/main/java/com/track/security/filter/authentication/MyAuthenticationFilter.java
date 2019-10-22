@@ -1,13 +1,17 @@
 package com.track.security.filter.authentication;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.track.common.constant.SecurityConstant;
 import com.track.common.enums.manage.sys.LoginTypeEnum;
 import com.track.common.enums.system.ResultCode;
 import com.track.common.utils.LoggerUtil;
+import com.track.core.exception.ServiceException;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.bo.security.TokenUserBo;
+import com.track.data.domain.po.user.UmUserPo;
+import com.track.data.mapper.base.IBaseMapper;
 import com.track.security.util.ResponseUtil;
 import com.track.security.util.SecurityUtil;
 import io.jsonwebtoken.Claims;
@@ -17,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -59,6 +65,8 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
     private StringRedisTemplate redisTemplate;
 
     private SecurityUtil securityUtil;
+
+    private IBaseMapper<UmUserPo> userPoIBaseMapper;
 
 
     public MyAuthenticationFilter(AuthenticationManager authenticationManager, Boolean tokenRedis, Integer tokenExpireTime,
@@ -148,6 +156,13 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
                 username = tokenUserBo.getUsername();
                 password = tokenUserBo.getPassword();
                 loginType = tokenUserBo.getLoginType();
+                UmUserPo userPo = userPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
+                        .eq(UmUserPo::getUsername,username));
+                if (userPo == null){
+                    throw new DisabledException(String.format("该用户[%s]已被删除",username));
+                }else if (userPo.getStatus()==-1){
+                    throw new LockedException(String.format("账户[%s]被禁用，请联系管理员",username));
+                }
                 //只有后台用户才有操作权限
                 if (loginType.equals(LoginTypeEnum.MANAGE_PASSWORD.name()) || loginType.equals(LoginTypeEnum.MANAGE_CODE.name())) {
                     //缓存了权限

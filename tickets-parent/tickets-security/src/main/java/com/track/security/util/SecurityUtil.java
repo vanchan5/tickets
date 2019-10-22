@@ -10,6 +10,8 @@ import com.track.data.mapper.base.IBaseMapper;
 import com.track.data.mapper.permission.SysRolePermissionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -71,9 +73,9 @@ public class SecurityUtil {
         UmUserPo userPo = userPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
                 .eq(UmUserPo::getUsername,username));
         if (userPo == null){
-            throw new ServiceException(ResultCode.NO_EXISTS,"该用户已被删除");
+            throw new DisabledException(String.format("该用户[%s]已被删除",username));
         }else if (userPo.getStatus()==-1){
-            throw new ServiceException(ResultCode.LOCKED,"账户被禁用，请联系管理员");
+            throw new LockedException(String.format("账户[%s]被禁用，请联系管理员",username));
         }
         List<PermissionBo> permissions = rolePermissionMapper.findPermissionByUserId(userPo.getId());
         if (!ListUtil.isListNullAndEmpty(permissions)){
