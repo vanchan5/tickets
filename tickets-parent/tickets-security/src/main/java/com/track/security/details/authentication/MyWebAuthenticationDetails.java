@@ -69,6 +69,8 @@ public class MyWebAuthenticationDetails extends WebAuthenticationDetails {
                         CodeToSessionBo.class);
                 String openId = codeToSessionBo.getOpenId();
                 authenticationDetailsBo.setOpenId(openId);
+                //是否保持登录
+                authenticationDetailsBo.setSaveLogin(jsonAuthenticationBean.get(SecurityConstant.SAVE_LOGIN));
 
             } catch (Exception e) {
                 //异常处理
@@ -98,6 +100,8 @@ public class MyWebAuthenticationDetails extends WebAuthenticationDetails {
                     CodeToSessionBo.class);
             String openId = codeToSessionBo.getOpenId();
             authenticationDetailsBo.setOpenId(openId);
+            //是否保持登录
+            authenticationDetailsBo.setSaveLogin(SecurityConstant.SAVE_LOGIN);
 
         }
     }

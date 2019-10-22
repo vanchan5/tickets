@@ -107,7 +107,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         UmUserPo userPo = new UmUserPo();
 
         switch (details.getAuthenticationDetailsBo().getLoginType()) {
-            //后台用户管理，涉及权限管理
+            //后台账号密码灯登录，涉及权限管理
             case MANAGE_PASSWORD:
                 //用户基本信息
                 userPo = userMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
@@ -134,6 +134,8 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                 Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
                 //默认的实现类也会包装,加密的权限会在FilterAuthenticationIntecepter实现类中用到，用于每次请求的添加权限
                 return new UsernamePasswordAuthenticationToken(userDetails,encryptPass,authorities);
+
+            //后台手机验证码登录
             case MANAGE_CODE:
                 //用户基本信息
                 userPo = userMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
@@ -158,10 +160,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                 Collection<? extends GrantedAuthority> manageCodeUserDetailAuthorities = manageCodeUserDetail.getAuthorities();
                 return new UsernamePasswordAuthenticationToken(manageCodeUserDetail,encryptPass,manageCodeUserDetailAuthorities);
 
-            case APP_PASSWORD:
-                break;
-            case APP_CODE:
-                break;
+            //微信小程序登录
             case THIRD_WECHAT:
                 //小程序登录默认密码
                 String defaultEntryPassword = bCryptPasswordEncoder.encode(SecurityConstant.USER_DEFAULT_PASSWORD);
@@ -194,10 +193,26 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                     return new UsernamePasswordAuthenticationToken(wxchatUserDetails,defaultEntryPassword);
                 }
 
+            case APP_PASSWORD:
+                break;
+            case APP_CODE:
+                break;
+
         }
         return null;
     }
 
+    /**
+     * @Author chauncy
+     * @Date 2019-10-22 10:11
+     * @Description //获取用户信息
+     *
+     * @Update chauncy
+     *
+     * @param  userInfo
+     * @param  userPo
+     * @return void
+     **/
     private void getUserInfo(UserInfoBo userInfo, UmUserPo userPo) {
         if (userPo != null) {
             BeanUtils.copyProperties(userPo, userInfo);

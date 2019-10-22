@@ -34,4 +34,7 @@ public class AuthenticationDetailsBo {
 
     //微信小程序访问的code
     private String code;
+
+    //是否保持登录
+    private String saveLogin;
 }

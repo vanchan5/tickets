@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -79,9 +80,17 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 
         MyWebAuthenticationDetails details = (MyWebAuthenticationDetails) authentication.getDetails();
 
-
         //获取用户请求是否保持登陆状态:saveLogin
-        String saveLogin = request.getParameter(SecurityConstant.SAVE_LOGIN);
+        String saveLogin = "";
+        //json方式登录
+        if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
+            saveLogin = ((MyWebAuthenticationDetails) authentication.getDetails()).getAuthenticationDetailsBo().getSaveLogin();
+        }
+        //表单方式
+        else {
+            saveLogin = request.getParameter(SecurityConstant.SAVE_LOGIN);
+        }
         Boolean isSave = false;
 
         if (StringUtils.isNotBlank(saveLogin) && Boolean.valueOf(saveLogin)){
