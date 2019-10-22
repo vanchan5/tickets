@@ -35,7 +35,7 @@ public class SysRolePo implements Serializable {
 
     @ApiModelProperty(value = "唯一标识")
     @TableId(value = "id", type = IdType.ID_WORKER)
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "创建者Id")
     private Long createBy;

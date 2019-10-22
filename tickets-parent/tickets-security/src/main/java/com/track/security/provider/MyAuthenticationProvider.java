@@ -5,11 +5,8 @@ import com.track.common.constant.SecurityConstant;
 import com.track.common.enums.manage.user.UserTypeEnum;
 import com.track.common.enums.system.ResultCode;
 import com.track.common.enums.third.ValidCodeEnum;
-import com.track.common.utils.JSONUtils;
-import com.track.common.utils.wetch.applet.WxAppletUtil;
 import com.track.core.base.service.Service;
 import com.track.core.exception.LoginFailLimitException;
-import com.track.data.bo.applet.CodeToSessionBo;
 import com.track.data.bo.user.permission.PermissionBo;
 import com.track.data.bo.user.permission.RoleBo;
 import com.track.data.bo.user.permission.UserInfoBo;
@@ -160,7 +157,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                 Collection<? extends GrantedAuthority> manageCodeUserDetailAuthorities = manageCodeUserDetail.getAuthorities();
                 return new UsernamePasswordAuthenticationToken(manageCodeUserDetail,encryptPass,manageCodeUserDetailAuthorities);
 
-            //微信小程序登录
+            //微信小程序登录,将openId的值赋给username
             case THIRD_WECHAT:
                 //小程序登录默认密码
                 String defaultEntryPassword = bCryptPasswordEncoder.encode(SecurityConstant.USER_DEFAULT_PASSWORD);
@@ -179,7 +176,9 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                             .setStatus(SecurityConstant.STATUS_NORMAL)
                             .setSex(SecurityConstant.USER_DEFAULT_SEX)
                             .setPhoto(SecurityConstant.USER_DEFAULT_AVATAR)
-                            .setUserType(UserTypeEnum.WECHAT_USER.getId());
+                            .setUserType(UserTypeEnum.WECHAT_USER.getId())
+                            //账号就是openId
+                            .setUsername(openId);
                     userMapper.insert(wxUser);
                     userPo = userMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
                             .eq(UmUserPo::getOpenId,openId));

@@ -105,6 +105,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
         String username = ((UserDetails)authentication.getPrincipal()).getUsername();
         //SecurityContextHolder.getContext().getAuthentication().getPrincipal()拿到的是用户主题，userDetails
         String password = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPassword();
+        String loginType = ((MyWebAuthenticationDetails) authentication.getDetails()).getAuthenticationDetailsBo().getLoginType().name();
         List<GrantedAuthority> authorityList = (List<GrantedAuthority>) ((UserDetails)authentication.getPrincipal()).getAuthorities();
 
         //这里的权限指的是操作类型权限，
@@ -119,7 +120,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
         if (tokenRedis){
             //生成token并保存到redis
             token = UUID.randomUUID().toString().replace("-","");
-            TokenUserBo userInfo = new TokenUserBo(username,password,permissions,isSave);
+            TokenUserBo userInfo = new TokenUserBo(username,password,permissions,isSave,loginType);
 
             //不缓存权限
             if (!storePerms){

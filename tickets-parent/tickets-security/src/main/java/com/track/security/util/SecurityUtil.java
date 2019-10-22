@@ -1,11 +1,17 @@
 package com.track.security.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.track.core.base.service.Service;
+import com.track.common.enums.system.ResultCode;
+import com.track.common.utils.ListUtil;
+import com.track.core.exception.ServiceException;
+import com.track.data.bo.user.permission.PermissionBo;
 import com.track.data.domain.po.user.UmUserPo;
+import com.track.data.mapper.base.IBaseMapper;
+import com.track.data.mapper.permission.SysRolePermissionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -27,7 +33,10 @@ import java.util.List;
 public class SecurityUtil {
 
     @Autowired
-    private Service<UmUserPo> service;
+    private IBaseMapper<UmUserPo> userPoIBaseMapper;
+
+    @Autowired
+    private IBaseMapper<SysRolePermissionMapper> rolePermissionMapper;
 
     /**
      * @Author chauncy
@@ -41,7 +50,7 @@ public class SecurityUtil {
      **/
     public UmUserPo getSysCurrUser(){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return service.getOne(new QueryWrapper<UmUserPo>().lambda().eq(UmUserPo::getUsername,userDetails.getUsername()));
+        return userPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda().eq(UmUserPo::getUsername,userDetails.getUsername()));
     }
 
     /**
@@ -59,6 +68,19 @@ public class SecurityUtil {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         //处理根据用户账号获取权限操作
+        UmUserPo userPo = userPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
+                .eq(UmUserPo::getUsername,username));
+        if (userPo == null){
+            throw new ServiceException(ResultCode.NO_EXISTS,"该用户已被删除");
+        }else if (userPo.getStatus()==-1){
+            throw new ServiceException(ResultCode.LOCKED,"账户被禁用，请联系管理员");
+        }
+        List<PermissionBo> permissions = rolePermissionMapper.findPermissionByUserId(userPo.getId());
+        if (!ListUtil.isListNullAndEmpty(permissions)){
+            for (PermissionBo permission: permissions) {
+                authorities.add(new SimpleGrantedAuthority(permission.getTitle()));
+            }
+        }
 
         return authorities;
     }

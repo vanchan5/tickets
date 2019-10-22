@@ -3,7 +3,6 @@ package com.track.security.handler.login.token;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.exception.LoginFailLimitException;
 import com.track.core.interaction.JsonViewData;
-import com.track.security.details.authentication.MyWebAuthenticationDetails;
 import com.track.security.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +67,6 @@ public class AuthenticationFailHandler extends SimpleUrlAuthenticationFailureHan
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response, AuthenticationException e)
             throws IOException, ServletException {
-
 
         String username;
         //json方式登录

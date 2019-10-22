@@ -33,6 +33,8 @@ public enum ResultCode {
 
     OPEN_ID_EXPIRED(11,"openId已过期！"),
 
+    LOCKED(12,"用户已被禁用！"),
+
     //快递100
     LOGISTICS_ERROR1(600,"您不是合法的订阅者（即授权Key出错)"),
     LOGISTICS_ERROR2(601,"POLL:KEY已过期"),

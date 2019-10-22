@@ -3,6 +3,7 @@ package com.track.security.filter.authentication;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.track.common.constant.SecurityConstant;
+import com.track.common.enums.manage.sys.LoginTypeEnum;
 import com.track.common.enums.system.ResultCode;
 import com.track.common.utils.LoggerUtil;
 import com.track.core.interaction.JsonViewData;
@@ -126,6 +127,7 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
         //用户名
         String username = null;
         String password = null;
+        String loginType = null;
         //权限
         List<GrantedAuthority> authorities = new ArrayList<>();
 
@@ -145,15 +147,19 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
                 TokenUserBo tokenUserBo = new Gson().fromJson(v,TokenUserBo.class);
                 username = tokenUserBo.getUsername();
                 password = tokenUserBo.getPassword();
-                //缓存了权限
-                if (storePerms){
-                    for (String ga : tokenUserBo.getPermissions()){
-                        authorities.add(new SimpleGrantedAuthority(ga));
+                loginType = tokenUserBo.getLoginType();
+                //只有后台用户才有操作权限
+                if (loginType.equals(LoginTypeEnum.MANAGE_PASSWORD.name()) || loginType.equals(LoginTypeEnum.MANAGE_CODE.name())) {
+                    //缓存了权限
+                    if (storePerms) {
+                        for (String ga : tokenUserBo.getPermissions()) {
+                            authorities.add(new SimpleGrantedAuthority(ga));
+                        }
                     }
-                }
-                //不缓存权限,需要读取权限(需要从数据库获取)
-                else {
-                    authorities = securityUtil.getSysCurrUserPerms(username);
+                    //不缓存权限,需要读取权限(需要从数据库获取)
+                    else {
+                        authorities = securityUtil.getSysCurrUserPerms(username);
+                    }
                 }
                 //判断用户是否选择的是保持登录状态,若不是则需要重新更新失效时间，否则不更新时间
                 if (!tokenUserBo.getSaveLogin()){
@@ -174,18 +180,21 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
                 //获取用户名
                 username = claims.getSubject();
                 password = claims.get("password").toString();
-                //获取权限，缓存了权限
-                if (storePerms){
-                    String authority = claims.get(SecurityConstant.AUTHORITIES).toString();
-                    if (StringUtils.isNotBlank(authority)){
-                        List<String> list = new Gson().fromJson(authority,new TypeToken<List<String>>(){}.getType());
-                        for (String ga : list){
-                            authorities.add(new SimpleGrantedAuthority(ga));
+                if (loginType.equals(LoginTypeEnum.MANAGE_PASSWORD) || loginType.equals(LoginTypeEnum.MANAGE_CODE)) {
+                    //获取权限，缓存了权限
+                    if (storePerms) {
+                        String authority = claims.get(SecurityConstant.AUTHORITIES).toString();
+                        if (StringUtils.isNotBlank(authority)) {
+                            List<String> list = new Gson().fromJson(authority, new TypeToken<List<String>>() {
+                            }.getType());
+                            for (String ga : list) {
+                                authorities.add(new SimpleGrantedAuthority(ga));
+                            }
                         }
                     }
+                    //不缓存权限
+                    authorities = securityUtil.getSysCurrUserPerms(username);
                 }
-                //不缓存权限
-                authorities = securityUtil.getSysCurrUserPerms(username);
 
             }catch (ExpiredJwtException e){
                 log.error(String.valueOf(e));
