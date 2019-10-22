@@ -51,7 +51,7 @@ public class UmUserServiceImpl extends AbstractService<UmUserMapper, UmUserPo> i
     public void saveUser(SaveUserDto userDto) {
 
         //保存系统用户信息
-        if (userDto.getUserType() != UserTypeEnum.CONSUMER.getId()){
+        if (userDto.getUserType() != UserTypeEnum.WECHAT_USER.getId()){
             //新增操作
             if (userDto.getId() == 0){
                 //不能为空

@@ -5,7 +5,10 @@ import com.google.gson.Gson;
 import com.track.common.constant.SecurityConstant;
 import com.track.common.enums.manage.sys.LoginTypeEnum;
 import com.track.common.enums.system.ResultCode;
+import com.track.common.utils.JSONUtils;
+import com.track.common.utils.wetch.applet.WxAppletUtil;
 import com.track.core.exception.ServiceException;
+import com.track.data.bo.applet.CodeToSessionBo;
 import com.track.security.Bo.AuthenticationDetailsBo;
 import com.track.security.util.ResponseUtil;
 import lombok.Data;
@@ -59,6 +62,13 @@ public class MyWebAuthenticationDetails extends WebAuthenticationDetails {
                 authenticationDetailsBo.setLoginType(LoginTypeEnum.valueOf(jsonAuthenticationBean.get(SecurityConstant.LOGIN_TYPE)));
                 authenticationDetailsBo.setUsername(jsonAuthenticationBean.get(SecurityConstant.LOGIN_NAME_PARAM));
                 authenticationDetailsBo.setPassword(jsonAuthenticationBean.get(SecurityConstant.LOGIN_PASSWOED_PARAM));
+                authenticationDetailsBo.setCode(jsonAuthenticationBean.get(SecurityConstant.CODE));
+                //解析code获取openId
+                CodeToSessionBo codeToSessionBo = JSONUtils.toBean(
+                        WxAppletUtil.codeToSession(jsonAuthenticationBean.get(SecurityConstant.CODE)),
+                        CodeToSessionBo.class);
+                String openId = codeToSessionBo.getOpenId();
+                authenticationDetailsBo.setOpenId(openId);
 
             } catch (Exception e) {
                 //异常处理
@@ -81,6 +91,13 @@ public class MyWebAuthenticationDetails extends WebAuthenticationDetails {
             authenticationDetailsBo.setOpenId(request.getParameter(SecurityConstant.OPEN_ID));
             authenticationDetailsBo.setUsername(request.getParameter(SecurityConstant.LOGIN_NAME_PARAM));
             authenticationDetailsBo.setPassword(request.getParameter(SecurityConstant.LOGIN_PASSWOED_PARAM));
+            authenticationDetailsBo.setCode(request.getParameter(SecurityConstant.CODE));
+            //解析code获取openId
+            CodeToSessionBo codeToSessionBo = JSONUtils.toBean(
+                    WxAppletUtil.codeToSession(request.getParameter(SecurityConstant.CODE)),
+                    CodeToSessionBo.class);
+            String openId = codeToSessionBo.getOpenId();
+            authenticationDetailsBo.setOpenId(openId);
 
         }
     }

@@ -24,7 +24,7 @@ public class WxAppletUtil {
     }
 
 
-    public static String codeToSession(String code) throws Exception {
+    public static String codeToSession(String code) {
 
 //        log.error("测试====----"+WxAppletConfig.APP_ID);
 
@@ -33,7 +33,12 @@ public class WxAppletUtil {
                 .replace("SECRET", WxAppletConfig.SECRET)
                 .replace("JSCODE", code);
 
-        String responseData = getRequest(strUrl, getHttpConnectTimeoutMs(), getHttpReadTimeoutMs());
+        String responseData = null;
+        try {
+            responseData = getRequest(strUrl, getHttpConnectTimeoutMs(), getHttpReadTimeoutMs());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
         responseData = responseData.replace("session_key", "sessionKey")
                 .replace("openid", "openId")
                 .replace("errcode", "errCode")

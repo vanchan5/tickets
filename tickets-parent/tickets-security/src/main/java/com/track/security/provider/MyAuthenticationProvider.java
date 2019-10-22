@@ -1,9 +1,15 @@
 package com.track.security.provider;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.track.common.constant.SecurityConstant;
+import com.track.common.enums.manage.user.UserTypeEnum;
+import com.track.common.enums.system.ResultCode;
 import com.track.common.enums.third.ValidCodeEnum;
+import com.track.common.utils.JSONUtils;
+import com.track.common.utils.wetch.applet.WxAppletUtil;
 import com.track.core.base.service.Service;
 import com.track.core.exception.LoginFailLimitException;
+import com.track.data.bo.applet.CodeToSessionBo;
 import com.track.data.bo.user.permission.PermissionBo;
 import com.track.data.bo.user.permission.RoleBo;
 import com.track.data.bo.user.permission.UserInfoBo;
@@ -81,6 +87,8 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         String username = details.getAuthenticationDetailsBo().getUsername();
         //获取密码
         String password = details.getAuthenticationDetailsBo().getPassword();
+        //获取小程序传过来的code
+        String code = details.getAuthenticationDetailsBo().getCode();
 
         //处理超过登录限制异常
         String flagKey = "loginFailFlag:"+username;
@@ -155,12 +163,37 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
             case APP_CODE:
                 break;
             case THIRD_WECHAT:
-                //获取小程序传过来的code
-                String code = details.getAuthenticationDetailsBo().getCode();
-                //解析获取openId,根据openId查询数据库
-                String openId = "";
+                //小程序登录默认密码
+                String defaultEntryPassword = bCryptPasswordEncoder.encode(SecurityConstant.USER_DEFAULT_PASSWORD);
+                //获取解析的openId,根据openId查询数据库
+                String openId = details.getAuthenticationDetailsBo().getOpenId();
+                if (StringUtils.isBlank(openId)){
+                    throw new LoginFailLimitException(ResultCode.OPEN_ID_EXPIRED,"openId已过期，请重新获取");
+                }
+                //判断该openId是否在数据库中，若无，则保存
+                userPo = userMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
+                        .eq(UmUserPo::getOpenId,openId));
+                //新增操作
+                if (userPo == null ){
+                    UmUserPo wxUser = new UmUserPo();
+                    wxUser.setId(null).setOpenId(openId).setPassword(defaultEntryPassword)
+                            .setStatus(SecurityConstant.STATUS_NORMAL)
+                            .setSex(SecurityConstant.USER_DEFAULT_SEX)
+                            .setPhoto(SecurityConstant.USER_DEFAULT_AVATAR)
+                            .setUserType(UserTypeEnum.WECHAT_USER.getId());
+                    userMapper.insert(wxUser);
+                    userPo = userMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
+                            .eq(UmUserPo::getOpenId,openId));
+                    BeanUtils.copyProperties(userPo,userInfo);
+                    SecurityUserDetails appletUserDetails = new SecurityUserDetails(userInfo);
+                    return new UsernamePasswordAuthenticationToken(appletUserDetails,defaultEntryPassword);
 
-                break;
+                }else {
+                    BeanUtils.copyProperties(userPo,userInfo);
+                    SecurityUserDetails wxchatUserDetails = new SecurityUserDetails(userInfo);
+                    return new UsernamePasswordAuthenticationToken(wxchatUserDetails,defaultEntryPassword);
+                }
+
         }
         return null;
     }

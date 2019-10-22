@@ -47,7 +47,12 @@ public interface SecurityConstant {
     /**
      * 用户默认头像
      */
-    String USER_DEFAULT_AVATAR = "https://i.loli.net/2019/04/28/5cc5a71a6e3b6.png";
+    String USER_DEFAULT_PASSWORD = "123456";
+
+    /**
+     * 用户默认头像
+     */
+    String USER_DEFAULT_AVATAR = "http://bo2h.com/20190716/png/c1d1afe8c96248a48542a17cc53a6de8.png";
 
     /**
      * 用户默认昵称
@@ -55,7 +60,7 @@ public interface SecurityConstant {
     String USER_DEFAULT_NICKNAME = "昵称";
 
     /**
-     * 用户默认性别--保密
+     * 用户默认性别--2-保密
      */
     Integer USER_DEFAULT_SEX = 2;
 
@@ -78,6 +83,11 @@ public interface SecurityConstant {
      * 登录额外字段--手机号
      */
     String PHONE = "phone";
+
+    /**
+     * 登录额外字段--微信传的code
+     */
+    String CODE = "code";
 
     /**
      * 登录额外字段--通过第三方登录获得的用户唯一idf

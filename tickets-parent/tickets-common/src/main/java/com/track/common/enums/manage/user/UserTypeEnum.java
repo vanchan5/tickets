@@ -17,7 +17,7 @@ public enum UserTypeEnum implements BaseEnum {
 
     SYS_SUPER_USER(1,"超级管理员"),
     SYS_GENERAL_USER(2,"系统普通用户"),
-    CONSUMER(3,"消费者");
+    WECHAT_USER(3,"消费者");
 
     private Integer id;
 
