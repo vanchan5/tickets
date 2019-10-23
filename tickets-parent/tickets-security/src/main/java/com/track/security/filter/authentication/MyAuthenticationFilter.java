@@ -7,6 +7,7 @@ import com.track.common.constant.SecurityConstant;
 import com.track.common.enums.manage.sys.LoginTypeEnum;
 import com.track.common.enums.system.ResultCode;
 import com.track.common.utils.LoggerUtil;
+import com.track.core.base.service.Service;
 import com.track.core.exception.ServiceException;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.bo.security.TokenUserBo;
@@ -17,8 +18,10 @@ import com.track.security.util.SecurityUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -30,6 +33,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -66,7 +70,9 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
 
     private SecurityUtil securityUtil;
 
-    private IBaseMapper<UmUserPo> userPoIBaseMapper;
+    //注入失败--待解决，还另一种方式捕捉异常
+    @Autowired
+    private Service<UmUserPo> service;
 
 
     public MyAuthenticationFilter(AuthenticationManager authenticationManager, Boolean tokenRedis, Integer tokenExpireTime,
@@ -77,10 +83,6 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
         this.storePerms = storePerms;
         this.redisTemplate = redisTemplate;
         this.securityUtil = securityUtil;
-    }
-
-    public MyAuthenticationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint) {
-        super(authenticationManager, authenticationEntryPoint);
     }
 
     /**
@@ -112,8 +114,12 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
             UsernamePasswordAuthenticationToken authentication = getAuthentication(header, response);
             //将用户个体信息、权限等set进Authentication中
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (Exception e) {
-            LoggerUtil.error(e);
+        } catch (DisabledException e) {
+            log.error(e.getMessage());
+            ResponseUtil.out(response, new JsonViewData<Object>(ResultCode.NO_LOGIN,"用户已被删除！"));
+        }catch (LockedException e){
+            log.error(e.getMessage());
+            ResponseUtil.out(response, new JsonViewData<Object>(ResultCode.NO_LOGIN,"账户被禁用，请联系管理员"));
         }
 
         chain.doFilter(request, response);
@@ -156,13 +162,10 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
                 username = tokenUserBo.getUsername();
                 password = tokenUserBo.getPassword();
                 loginType = tokenUserBo.getLoginType();
-                UmUserPo userPo = userPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
-                        .eq(UmUserPo::getUsername,username));
-                if (userPo == null){
-                    throw new DisabledException(String.format("该用户[%s]已被删除",username));
-                }else if (userPo.getStatus()==-1){
-                    throw new LockedException(String.format("账户[%s]被禁用，请联系管理员",username));
-                }
+
+                //判断用户是否存在
+                securityUtil.userIsExit(username);
+
                 //只有后台用户才有操作权限
                 if (loginType.equals(LoginTypeEnum.MANAGE_PASSWORD.name()) || loginType.equals(LoginTypeEnum.MANAGE_CODE.name())) {
                     //缓存了权限
@@ -194,6 +197,8 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
                         .getBody();
                 //获取用户名
                 username = claims.getSubject();
+                //判断用户是否存在
+                securityUtil.userIsExit(username);
                 password = claims.get("password").toString();
                 if (loginType.equals(LoginTypeEnum.MANAGE_PASSWORD) || loginType.equals(LoginTypeEnum.MANAGE_CODE)) {
                     //获取权限，缓存了权限

@@ -27,6 +27,7 @@
             <version>0.9.0</version>
         </dependency>
 
+        <!--核心模块-->
         <dependency>
             <groupId>com.track</groupId>
             <artifactId>tickets-core</artifactId>

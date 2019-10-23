@@ -72,11 +72,7 @@ public class SecurityUtil {
         //处理根据用户账号获取权限操作
         UmUserPo userPo = userPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
                 .eq(UmUserPo::getUsername,username));
-        if (userPo == null){
-            throw new DisabledException(String.format("该用户[%s]已被删除",username));
-        }else if (userPo.getStatus()==-1){
-            throw new LockedException(String.format("账户[%s]被禁用，请联系管理员",username));
-        }
+
         List<PermissionBo> permissions = rolePermissionMapper.findPermissionByUserId(userPo.getId());
         if (!ListUtil.isListNullAndEmpty(permissions)){
             for (PermissionBo permission: permissions) {
@@ -85,5 +81,19 @@ public class SecurityUtil {
         }
 
         return authorities;
+    }
+
+    public boolean userIsExit(String username){
+
+        UmUserPo userPo = userPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
+                .eq(UmUserPo::getUsername,username));
+
+        if (userPo == null){
+            throw new DisabledException(String.format("该用户[%s]已被删除",username));
+        }else if (userPo.getStatus()==-1){
+            throw new LockedException(String.format("账户[%s]被禁用，请联系管理员",username));
+        }
+
+        return userPo == null ? false : true;
     }
 }
