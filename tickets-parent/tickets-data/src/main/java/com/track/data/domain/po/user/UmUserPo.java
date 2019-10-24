@@ -62,8 +62,8 @@ public class UmUserPo implements Serializable {
     @ApiModelProperty(value = "0-女  1-男 2-保密")
     private Integer sex;
 
-    @ApiModelProperty(value = "状态 默认0正常 -1拉黑")
-    private Integer status;
+    @ApiModelProperty(value = "状态 默认1启用 0禁用")
+    private Boolean enabled;
 
     @ApiModelProperty(value = "密码")
     private String password;

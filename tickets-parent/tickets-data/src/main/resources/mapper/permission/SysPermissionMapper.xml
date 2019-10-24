@@ -22,13 +22,13 @@
         <result column="icon" property="icon" />
         <result column="level" property="level" />
         <result column="button_type" property="buttonType" />
-        <result column="status" property="status" />
+        <result column="enabled" property="enabled" />
         <result column="url" property="url" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, create_by, create_time, del_flag, update_by, update_time, description, name, parent_id, type, sort_order, component, path, title, system_type, icon, level, button_type, status, url
+        id, create_by, create_time, del_flag, update_by, update_time, description, name, parent_id, type, sort_order, component, path, title, system_type, icon, level, button_type, enabled, url
     </sql>
 
 </mapper>

@@ -90,7 +90,7 @@ public class SecurityUtil {
 
         if (userPo == null){
             throw new DisabledException(String.format("该用户[%s]已被删除",username));
-        }else if (userPo.getStatus()==-1){
+        }else if (!userPo.getEnabled()){
             throw new LockedException(String.format("账户[%s]被禁用，请联系管理员",username));
         }
 

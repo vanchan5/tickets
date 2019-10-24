@@ -44,7 +44,7 @@ public class SysRoleUserPo implements Serializable {
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "删除标志 默认0")
-    @TableLogic
+//    @TableLogic
     private Integer delFlag;
 
     @ApiModelProperty(value = "修改者Id")
@@ -54,10 +54,10 @@ public class SysRoleUserPo implements Serializable {
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "角色唯一id")
-    private String roleId;
+    private Long roleId;
 
     @ApiModelProperty(value = "用户唯一id")
-    private String userId;
+    private Long userId;
 
 
 }

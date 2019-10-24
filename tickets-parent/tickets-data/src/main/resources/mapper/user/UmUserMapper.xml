@@ -18,12 +18,35 @@
         <result column="open_id" property="openId" />
         <result column="username" property="username" />
         <result column="user_type" property="userType" />
-        <result column="status" property="status" />
+        <result column="enabled" property="enabled" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, phone, create_by, create_time, update_by, update_time, del_flag, nick_name, sex, password, photo, open_id, username, user_type, status
+        id, phone, create_by, create_time, update_by, update_time, del_flag, nick_name, sex, password, photo, open_id, username, user_type, enabled
     </sql>
+    <!-- 分页查询用户信息 -->
+    <select id="searchUsers" resultType="com.track.data.vo.user.SearchUsersVo">
+        select distinct uu.id,uu.create_time,uu.user_type,uu.sex,uu.username,uu.`enabled`,uu.phone,uu.nick_name,uu.photo
+        from um_user uu
+        left JOIN sys_role_user sru on sru.del_flag = 0 and uu.id = sru.user_id
+        left join sys_role sr on sru.role_id = sr.id and sr.del_flag = 0
+        where uu.del_flag	= 0 and uu.user_type != 3
+            <if test="phone != null and phone != ''">
+                and uu.phone like concat('%', #{phone} ,'%')
+            </if>
+            <if test="username != null and username != ''">
+                and uu.username like concat('%', #{username} ,'%')
+            </if>
+            <if test="roleName != null and roleName != ''">
+                and sr.roleName like concat('%', #{roleName} ,'%')
+            </if>
+            <if test="enabled != null">
+                and uu.enabled = #{enabled}
+            </if>
+            <if test="userType != null and userType != ''">
+                and uu.userType = #{userType}
+            </if>
+    </select>
 
 </mapper>

@@ -19,7 +19,7 @@ public class RoleBo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "唯一标识")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "角色名 以ROLE_开头")
     private String name;

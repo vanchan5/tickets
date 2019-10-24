@@ -54,7 +54,7 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
         //获取所有为删除的已经启用的具体操作请求--url
         List<SysPermissionPo> permissionPos = permissionMapper.selectList(new QueryWrapper<SysPermissionPo>()
                 .lambda().and(obj->obj.eq(SysPermissionPo::getType, SecurityConstant.PERMISSION_OPERATION)
-                        .eq(SysPermissionPo::getStatus,SecurityConstant.STATUS_NORMAL)));
+                        .eq(SysPermissionPo::getEnabled,true)));
         log.info(String.valueOf(permissionPos.size()));
         map = new HashMap<>(16);
         Collection<ConfigAttribute> configAttributes;

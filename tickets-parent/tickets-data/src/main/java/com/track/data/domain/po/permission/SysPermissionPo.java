@@ -62,7 +62,7 @@ public class SysPermissionPo implements Serializable {
     private String name;
 
     @ApiModelProperty(value = "父id")
-    private String parentId;
+    private Long parentId;
 
     @ApiModelProperty(value = "类型 0页面 1具体操作")
     private Integer type;
@@ -91,8 +91,8 @@ public class SysPermissionPo implements Serializable {
     @ApiModelProperty(value = "按钮权限类型")
     private String buttonType;
 
-    @ApiModelProperty(value = "是否启用 0启用 -1禁用")
-    private Integer status;
+    @ApiModelProperty(value = "是否启用 1启用 0禁用")
+    private Boolean enabled;
 
     @ApiModelProperty(value = "网页链接")
     private String url;

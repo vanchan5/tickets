@@ -53,11 +53,11 @@ public class SysRolePermissionPo implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private LocalDateTime updateTime;
 
-    @ApiModelProperty(value = "角色id")
-    private String permissionId;
-
     @ApiModelProperty(value = "权限id")
-    private String roleId;
+    private Long permissionId;
+
+    @ApiModelProperty(value = "角色id")
+    private Long roleId;
 
 
 }

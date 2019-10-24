@@ -65,7 +65,7 @@ public class SysRolePo implements Serializable {
     @ApiModelProperty(value = "数据权限类型 0全部默认 1自定义")
     private Integer dataType;
 
-    @ApiModelProperty(value = "角色级别")
+    @ApiModelProperty(value = "角色级别 1-超级管理员 2-财务 3-运营 4-客服等等")
     private Integer level;
 
     @ApiModelProperty(value = "系统类型 1-平台 2-商家")
