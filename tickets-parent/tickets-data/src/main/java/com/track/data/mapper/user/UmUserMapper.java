@@ -1,7 +1,11 @@
 package com.track.data.mapper.user;
 
 import com.track.data.domain.po.user.UmUserPo;
+import com.track.data.dto.manage.user.search.SearchUsersDto;
 import com.track.data.mapper.base.IBaseMapper;
+import com.track.data.vo.user.SearchUsersVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.track.data.mapper.base.IBaseMapper;
  */
 public interface UmUserMapper extends IBaseMapper<UmUserPo> {
 
+    List<SearchUsersVo> searchUsers(SearchUsersDto searchUsersDto);
 }

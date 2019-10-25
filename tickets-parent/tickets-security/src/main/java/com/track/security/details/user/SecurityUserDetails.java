@@ -49,7 +49,7 @@ public class SecurityUserDetails extends UserInfoBo implements UserDetails {
             //必须对username和password赋值
             this.setUsername(userInfoBo.getUsername());
             this.setPassword(userInfoBo.getPassword());
-            this.setStatus(userInfoBo.getStatus());
+            this.setEnabled(userInfoBo.getEnabled());
             this.setPermissions(userInfoBo.getPermissions());
             this.setRoles(userInfoBo.getRoles());
         }
@@ -108,7 +108,7 @@ public class SecurityUserDetails extends UserInfoBo implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
 
-        return SecurityConstant.USER_STATUS_LOCK.equals(this.getStatus()) ? false : true;
+        return this.getEnabled();
     }
 
     /**
@@ -127,6 +127,6 @@ public class SecurityUserDetails extends UserInfoBo implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-        return SecurityConstant.USER_STATUS_NORMAL.equals(this.getStatus()) ? true : false;
+        return this.getEnabled();
     }
 }

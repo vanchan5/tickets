@@ -24,7 +24,7 @@ public class PermissionBo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "唯一标识")
-    private String id;
+    private Long id;
 
     @ApiModelProperty(value = "说明备注")
     private String description;
@@ -62,8 +62,8 @@ public class PermissionBo implements Serializable {
     @ApiModelProperty(value = "按钮权限类型")
     private String buttonType;
 
-    @ApiModelProperty(value = "是否启用 0启用 -1禁用")
-    private Integer status;
+    @ApiModelProperty(value = "是否启用 1启用 0禁用")
+    private Boolean enabled;
 
     @ApiModelProperty(value = "网页链接")
     private String url;

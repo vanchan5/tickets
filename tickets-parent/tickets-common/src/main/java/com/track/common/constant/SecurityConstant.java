@@ -67,7 +67,7 @@ public interface SecurityConstant {
     /**
      * 用户正常状态
      */
-    Integer USER_STATUS_NORMAL = 0;
+//    Integer USER_STATUS_NORMAL = 0;
 
     /**
      * 用户默认登录名字段
@@ -112,7 +112,7 @@ public interface SecurityConstant {
     /**
      * 用户禁用状态
      */
-    Integer USER_STATUS_LOCK = -1;
+//    Integer USER_STATUS_LOCK = -1;
 
     /**
      * 普通用户
@@ -147,12 +147,12 @@ public interface SecurityConstant {
     /**
      * 正常状态
      */
-    Integer STATUS_NORMAL = 0;
+//    Integer STATUS_NORMAL = 0;
 
     /**
      * 禁用状态
      */
-    Integer STATUS_DISABLE = -1;
+//    Integer STATUS_DISABLE = -1;
 
     /**
      * 删除标志

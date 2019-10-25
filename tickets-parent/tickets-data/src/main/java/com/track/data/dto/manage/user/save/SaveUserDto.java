@@ -1,4 +1,4 @@
-package com.track.data.dto.manage.user;
+package com.track.data.dto.manage.user.save;
 
 import com.track.common.constant.SecurityConstant;
 import com.track.common.constant.login.LoginConstant;
@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @Author cheng
@@ -51,5 +52,8 @@ public class SaveUserDto {
     @NotNull(message = "用户类型不能为空")
     @EnumConstraint(target = UserTypeEnum.class)
     private Integer userType;
+
+    @ApiModelProperty(value = "绑定的角色id")
+    private List<Long> roleIds;
 
 }

@@ -119,7 +119,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                     throw new DisabledException("用户名不存在");
                 }else if (!bCryptPasswordEncoder.matches(password, userPo.getPassword())) {
                     throw new BadCredentialsException("密码不正确");
-                }else if (userPo.getStatus()==-1){
+                }else if (!userPo.getEnabled()){
                     throw new LockedException("账户被禁用，请联系管理员");
                 }
 
@@ -142,7 +142,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                     throw new DisabledException("用户名不存在");
                 }else if (!bCryptPasswordEncoder.matches(password, userPo.getPassword())) {
                     throw new BadCredentialsException("密码不正确");
-                }else if (userPo.getStatus()==-1){
+                }else if (!userPo.getEnabled()){
                     throw new LockedException("账户被禁用，请联系管理员");
                 }
                 //验证码验证
@@ -173,7 +173,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
                 if (userPo == null ){
                     UmUserPo wxUser = new UmUserPo();
                     wxUser.setId(null).setOpenId(openId).setPassword(defaultEntryPassword)
-                            .setStatus(SecurityConstant.STATUS_NORMAL)
+                            .setEnabled(true)
                             .setSex(SecurityConstant.USER_DEFAULT_SEX)
                             .setPhoto(SecurityConstant.USER_DEFAULT_AVATAR)
                             .setUserType(UserTypeEnum.WECHAT_USER.getId())

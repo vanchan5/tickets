@@ -34,8 +34,8 @@ public class UmUserBo implements Serializable {
     @ApiModelProperty(value = "0-女  1-男")
     private Boolean sex;
 
-    @ApiModelProperty(value = "状态 默认0正常 -1拉黑")
-    private Integer status;
+    @ApiModelProperty(value = "是否启用 1启用 0禁用")
+    private Boolean enabled;
 
     @ApiModelProperty(value = "密码")
     private String password;
