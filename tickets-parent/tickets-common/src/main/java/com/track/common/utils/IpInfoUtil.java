@@ -25,7 +25,7 @@ import java.net.UnknownHostException;
 @Component
 public class IpInfoUtil {
 
-//    @Value("${tickets.mob.appKey}")
+    @Value("${tickets.mob.appKey}")
     private String appKey;
 
     /**
