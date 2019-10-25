@@ -89,7 +89,7 @@ ignored:
     - /test/findByUserName
     - /security/**
     - /login/self
-    - /common/sms/send
+    - /ipInfo/**
 
 # 配置文件加密key
 jasypt:

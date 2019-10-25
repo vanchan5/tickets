@@ -10,7 +10,10 @@ import java.util.Random;
 /**
  * @Author cheng
  * @create 2019-09-02 15:06
+ *
  * 随机字符验证码生成工具类
+ * 思路是:用户进来的页面调用一次验证码，用只有ID和验证码code的实体类来接受，
+ * 并将其存入到redis并设置过期时间，返回该实体给前端，验证的时候一起送给后端
  *
  */
 public class CreateVerifyCodeUtil {

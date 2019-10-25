@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.dto.base.EditEnabledDto;
+import com.track.data.dto.manage.user.edit.EditPasswordDto;
 import com.track.data.dto.manage.user.save.SaveUserDto;
 import com.track.data.dto.manage.user.search.SearchUsersDto;
 import com.track.data.vo.user.SearchUsersVo;
@@ -109,4 +110,24 @@ public class UmUserApi extends BaseWeb {
         service.delUsersByIds(ids);
         return setJsonViewData(ResultCode.SUCCESS,"删除成功!");
     }
+
+    /**
+     * @Author chauncy
+     * @Date 2019-10-25 17:34
+     * @Description //修改密码
+     *
+     * @Update chauncy
+     *
+     * @param  editPasswordDto
+     * @return com.track.core.interaction.JsonViewData
+     **/
+    @PostMapping("/editPassword")
+    @ApiOperation("修改密码")
+    public JsonViewData editPassword(@RequestBody @ApiParam(required = true,name = "editPasswordDto",value = "修改用户密码")
+                                     @Validated EditPasswordDto editPasswordDto){
+        service.editPassword(editPasswordDto);
+        return setJsonViewData(ResultCode.SUCCESS,"修改密码成功!");
+    }
+
+//    public
 }

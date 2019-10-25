@@ -158,6 +158,13 @@
         </dependency>
         <!--极光推送  end-->
 
+        <!-- Hutool工具包 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.5.10</version>
+        </dependency>
+
     </dependencies>
 
 </project>

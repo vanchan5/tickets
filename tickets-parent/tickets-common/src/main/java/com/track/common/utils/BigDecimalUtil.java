@@ -39,7 +39,7 @@ public class BigDecimalUtil {
      * @param b1 第一个数
      * @param bn 需要加的加法数组
      * @return
-     * @注 ： Optional  是属于com.google.common.base.Optional<T> 下面的class
+     * @注 ： Optional  是属于com.google.ipInfo.base.Optional<T> 下面的class
      */
     public static Integer safeAdd(Integer b1, Integer... bn) {
         if (null == b1) {

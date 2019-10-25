@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.track.common.enums.system.ResultCode;
 import com.track.data.domain.po.user.UmUserPo;
 import com.track.core.base.service.Service;
+import com.track.data.dto.manage.user.edit.EditPasswordDto;
 import com.track.data.dto.manage.user.save.SaveUserDto;
 import com.track.data.dto.manage.user.search.SearchUsersDto;
 import com.track.data.vo.user.SearchUsersVo;
@@ -55,4 +56,16 @@ public interface IUmUserService extends Service<UmUserPo> {
      * @return void
      **/
     void delUsersByIds(List<Long> ids);
+
+    /**
+     * @Author chauncy
+     * @Date 2019-10-25 17:36
+     * @Description //修改密码
+     *
+     * @Update chauncy
+     *
+     * @param  editPasswordDto
+     * @return void
+     **/
+    void editPassword(EditPasswordDto editPasswordDto);
 }
