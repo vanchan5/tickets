@@ -86,6 +86,11 @@ ignored:
     - /**/*.png
     - /**/*.ico
     - /v2/api-docs
+    - /test/findByUserName
+    - /security/**
+    - /login/self
+    - /common/sms/send
+    - /generator/create
 
 # 配置文件加密key
 jasypt:

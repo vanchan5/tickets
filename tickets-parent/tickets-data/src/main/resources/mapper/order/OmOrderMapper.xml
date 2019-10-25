@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.track.data.mapper.order.OmOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.track.data.domain.po.order.OmOrderPo">
+        <id column="id" property="id" />
+        <result column="pay_order_no" property="payOrderNo" />
+        <result column="pre_pay_id" property="prePayId" />
+        <result column="user_ip" property="userIp" />
+        <result column="error_code" property="errorCode" />
+        <result column="error_msg" property="errorMsg" />
+        <result column="pay_amount" property="payAmount" />
+        <result column="order_num" property="orderNum" />
+        <result column="sell_price" property="sellPrice" />
+        <result column="expire_time" property="expireTime" />
+        <result column="state" property="state" />
+        <result column="ship_name" property="shipName" />
+        <result column="ship_phone" property="shipPhone" />
+        <result column="remark" property="remark" />
+        <result column="um_user_id" property="umUserId" />
+        <result column="pay_time" property="payTime" />
+        <result column="start_time" property="startTime" />
+        <result column="close_time" property="closeTime" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, pay_order_no, pre_pay_id, user_ip, error_code, error_msg, pay_amount, order_num, sell_price, expire_time, state, ship_name, ship_phone, remark, um_user_id, pay_time, start_time, close_time, create_time, update_time
+    </sql>
+
+</mapper>

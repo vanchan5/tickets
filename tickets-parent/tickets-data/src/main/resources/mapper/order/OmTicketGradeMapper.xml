@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.track.data.mapper.order.OmTicketGradeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.track.data.domain.po.order.OmTicketGradePo">
+        <id column="id" property="id" />
+        <result column="scene_id" property="sceneId" />
+        <result column="name" property="name" />
+        <result column="sell_price" property="sellPrice" />
+        <result column="seat_sum" property="seatSum" />
+        <result column="remaining_sum" property="remainingSum" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, scene_id, name, sell_price, seat_sum, remaining_sum
+    </sql>
+
+</mapper>

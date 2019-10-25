@@ -90,6 +90,7 @@ ignored:
     - /security/**
     - /login/self
     - /common/sms/send
+    - /generator/create
 
 # 配置文件加密key
 jasypt:
