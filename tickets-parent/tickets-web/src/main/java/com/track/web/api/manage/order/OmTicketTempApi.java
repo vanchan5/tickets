@@ -1,6 +1,7 @@
 package com.track.web.api.manage.order;
 
 
+import com.track.order.service.IOmTicketTempService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.annotations.Api;
@@ -21,8 +22,8 @@ import com.track.web.base.BaseWeb;
 @Api(tags = "订单快照信息")
 public class OmTicketTempApi extends BaseWeb {
 
- @Autowired
- private IOmTicketTempService service;
+    @Autowired
+    private IOmTicketTempService service;
 
 
 }

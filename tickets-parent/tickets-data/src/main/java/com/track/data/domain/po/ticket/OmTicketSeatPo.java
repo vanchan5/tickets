@@ -1,4 +1,4 @@
-package com.track.data.domain.po.order;
+package com.track.data.domain.po.ticket;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 订单关联座位表
+ * 门票座位信息表
  * </p>
  *
  * @author admin
@@ -23,30 +23,23 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("om_order_rel_seat")
-@ApiModel(value = "OmOrderRelSeatPo对象", description = "订单关联座位表")
-public class OmOrderRelSeatPo implements Serializable {
+@TableName("om_ticket_seat")
+@ApiModel(value = "OmTicketSeatPo对象", description = "门票座位信息表")
+public class OmTicketSeatPo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "id")
+    @ApiModelProperty(value = "门票座位id")
     @TableId(value = "id", type = IdType.ID_WORKER)
     private Long id;
 
-    @ApiModelProperty(value = "订单id")
-    private Long orderId;
+    @ApiModelProperty(value = "档次id")
+    private Long gradeId;
 
-    @ApiModelProperty(value = "几排几座")
-    private String seatStr;
-
-    @ApiModelProperty(value = "座位区id")
-    private Long seatId;
-
-    @ApiModelProperty(value = "第几排")
+    @ApiModelProperty(value = "座位区（第几排）")
     private Integer seatRow;
 
-    @ApiModelProperty(value = "第几位")
-    private Integer seatNum;
-
+    @ApiModelProperty(value = "当前座位区座位数量")
+    private Integer seatSum;
 
 }

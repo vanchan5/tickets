@@ -1,4 +1,4 @@
-package com.track.data.domain.po.order;
+package com.track.data.domain.po.ticket;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 意见反馈表
+ * 平台基本设置
  * </p>
  *
  * @author admin
@@ -26,13 +26,13 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("om_feed_back")
-@ApiModel(value = "OmFeedBackPo对象", description = "意见反馈表")
-public class OmFeedBackPo implements Serializable {
+@TableName("basic_setting")
+@ApiModel(value = "BasicSettingPo对象", description = "平台基本设置")
+public class BasicSettingPo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "意见反馈ID")
+    @ApiModelProperty(value = "ID")
     @TableId(value = "id", type = IdType.ID_WORKER)
     private Long id;
 
@@ -42,17 +42,14 @@ public class OmFeedBackPo implements Serializable {
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
-    @ApiModelProperty(value = "创建者")
+    @ApiModelProperty(value = "修改者")
     private Long updateBy;
 
     @ApiModelProperty(value = "修改时间")
     private LocalDateTime updateTime;
 
-    @ApiModelProperty(value = "反馈内容")
-    private String content;
-
-    @ApiModelProperty(value = "0 未处理 1 已处理，默认为0")
-    private Integer state;
+    @ApiModelProperty(value = "客服电话")
+    private String phone;
 
 
 }

@@ -1,6 +1,7 @@
 package com.track.web.api.manage.order;
 
 
+import com.track.order.service.IOmOrderService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.annotations.Api;
@@ -21,8 +22,8 @@ import com.track.web.base.BaseWeb;
 @Api(tags = "支付订单")
 public class OmOrderApi extends BaseWeb {
 
- @Autowired
- private IOmOrderService service;
+    @Autowired
+    private IOmOrderService service;
 
 
 }

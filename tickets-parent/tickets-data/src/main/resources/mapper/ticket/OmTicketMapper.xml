@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.track.data.mapper.ticket.OmTicketMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.track.data.domain.po.ticket.OmTicketPo">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="addr_id" property="addrId" />
+        <result column="addr_name" property="addrName" />
+        <result column="addr_detail" property="addrDetail" />
+        <result column="longitude" property="longitude" />
+        <result column="latitude" property="latitude" />
+        <result column="sort" property="sort" />
+        <result column="publish_state" property="publishState" />
+        <result column="picture" property="picture" />
+        <result column="sales_volume" property="salesVolume" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, addr_id, addr_name, addr_detail, longitude, latitude, sort, publish_state, picture, sales_volume, create_by, create_time, update_by, update_time
+    </sql>
+    <select id="searchTicketList" resultType="com.track.data.vo.manage.ticket.ManageTicketListVo">
+        SELECT ot.id AS ticketId,
+            ot.name, ot.sales_volume,
+            MIN(otg.sell_price) AS minSellPrice,
+            ot.`publish_state`,
+            ot.`sort`,
+            MIN(ots.`start_time`) AS minStartTime,
+            MAX(ots.`start_time`) AS maxStartTime,
+            COUNT(ots.id) as sceneCount
+        FROM om_ticket ot
+        INNER JOIN om_ticket_grade otg ON ot.id = otg.`ticket_id`
+        INNER JOIN om_ticket_scene ots ON ots.`ticket_id` = ot.id
+        <where>
+            <if test="null != publishState">
+                and ot.publishState = #{publishState}
+            </if>
+            <if test="startDate != null">
+                and DATE_FORMAT(ots.`start_time`,'%Y-%m-%d')  <![CDATA[>= ]]> = #{startDate}
+            </if>
+            <if test="endDate != null">
+                and DATE_FORMAT(ots.`start_time`,'%Y-%m-%d')  <![CDATA[<= ]]> = #{endDate}
+            </if>
+            <if test="null != ticketName and ticketName != ''">
+                and ot.name like concat('%',#{ticketName},'%')
+            </if>
+        </where>
+        GROUP BY ot.id
+        ORDER BY ot.`create_time` DESC
+    </select>
+
+</mapper>

@@ -36,6 +36,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!--订单模块-->
+        <dependency>
+            <groupId>com.track</groupId>
+            <artifactId>tickets-order</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!--security 安全认证模块-->
         <dependency>
             <groupId>com.track</groupId>
