@@ -1,3 +1,9 @@
+
+# 配置文件加密key
+jasypt:
+  encryptor:
+    password: project2019
+
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -58,6 +64,10 @@ spring:
         prefetch: 1 # 每次只处理1个信息
         retry:
           enabled: true
+    # Elasticsearch
+  data:
+    elasticsearch:
+      cluster-nodes: 127.0.0.1:9300
 
 #server:
 #  max-http-header-size: 200MB
@@ -90,11 +100,6 @@ ignored:
     - /security/**
     - /login/self
     - /ipInfo/**
-
-# 配置文件加密key
-jasypt:
-  encryptor:
-    password: 123456
 
 tickets:
   #短信认证码存在redis的过期时间(分钟)
