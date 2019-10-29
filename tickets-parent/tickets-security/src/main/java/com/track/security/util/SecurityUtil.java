@@ -83,6 +83,16 @@ public class SecurityUtil {
         return authorities;
     }
 
+    /**
+     * @Author chauncy
+     * @Date 2019-10-29 09:42
+     * @Description //根据用户名判断用户是否存在
+     *
+     * @Update chauncy
+     *
+     * @param  username
+     * @return boolean
+     **/
     public boolean userIsExit(String username){
 
         UmUserPo userPo = userPoIBaseMapper.selectOne(new QueryWrapper<UmUserPo>().lambda()

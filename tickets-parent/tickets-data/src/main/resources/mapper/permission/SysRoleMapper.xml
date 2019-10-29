@@ -36,5 +36,11 @@
             and level = #{level}
         </if>
     </select>
+    <select id="getPermission" resultType="com.track.data.vo.permission.role.GetRolePermissionVo">
+        select sp.id,sp.`name`,sp.parent_id,sp.title,srp.role_id
+        from sys_role_permission srp
+        INNER JOIN	sys_permission sp on srp.permission_id = sp.id and sp.del_flag = 0
+        where srp.del_flag = 0 and srp.role_id = #{roleId}
+    </select>
 
 </mapper>

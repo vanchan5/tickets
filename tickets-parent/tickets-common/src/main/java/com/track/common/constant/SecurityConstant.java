@@ -45,6 +45,11 @@ public interface SecurityConstant {
     String USER_TOKEN = "DISTRIBUTION_USER_TOKEN:";
 
     /**
+     * 缓存用户页面菜单数据
+     */
+    String USER_MENU_LIST = "permission::userMenuList:";
+
+    /**
      * 用户默认头像
      */
     String USER_DEFAULT_PASSWORD = "123456";
