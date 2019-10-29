@@ -20,7 +20,7 @@ public class SearchRoleVo {
     @ApiModelProperty(value = "角色名 建议以ROLE_开头")
     private String name;
 
-    @ApiModelProperty(value = "是否为注册默认角色")
+    @ApiModelProperty(value = "是否为注册默认角色,true-是，false-否")
     private Boolean defaultRole;
 
     @ApiModelProperty(value = "备注")

@@ -118,7 +118,7 @@ tickets:
     # 默认redis 设置为true后，token将存入redis，并具有单点登录功能 设为false将使用JWT交互
     redis: true
     # token中存储用户权限数据 设为true开启后可避免每次请求再获取用户权限，但有可能导致编辑权限菜单后无法读取到最新权限数据（需用户重新登录）
-    storePerms: false
+    storePerms: true
   # token过期时间（分钟）
   tokenExpireTime: 6000
   # 用户选择保存登录状态对应token过期时间（天）

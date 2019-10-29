@@ -28,7 +28,7 @@ public class TreeUtil {
         for (int i = 0; i < originalList.size(); i++) {
             T t = originalList.get(i);
             String parentId = BeanUtils.getProperty(t, parentFieldName);
-            if (StringUtils.isBlank(parentId)) {
+            if (StringUtils.isBlank(parentId) || Long.valueOf(parentId) == 0) {
                 topList.add(t);
             }
         }

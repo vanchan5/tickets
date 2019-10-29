@@ -44,7 +44,6 @@ public class SysRolePermissionPo implements Serializable {
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "删除标志 默认0")
-    @TableLogic
     private Integer delFlag;
 
     @ApiModelProperty(value = "修改者Id")

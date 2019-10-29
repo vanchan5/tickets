@@ -184,6 +184,7 @@ public class UmUserServiceImpl extends AbstractService<UmUserMapper, UmUserPo> i
                 //更新用户信息操作
                 BeanUtils.copyProperties(userDto,umUserPo);
                 umUserPo.setUpdateBy(urrUser.getId());
+                umUserPo.setPassword(urrUser.getPassword());
                 mapper.updateById(umUserPo);
 
             }
