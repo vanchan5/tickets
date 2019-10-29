@@ -1,13 +1,14 @@
 package com.track.ticket.service;
 
 import com.github.pagehelper.PageInfo;
-import com.track.common.enums.system.ResultCode;
 import com.track.data.domain.po.ticket.OmTicketPo;
 import com.track.core.base.service.Service;
 import com.track.data.domain.po.user.UmUserPo;
+import com.track.data.dto.applet.ticket.SearchTicketDto;
 import com.track.data.dto.base.EditEnabledDto;
 import com.track.data.dto.manage.ticket.save.SaveTicketDto;
-import com.track.data.dto.manage.ticket.search.SearchTicketDto;
+import com.track.data.dto.manage.ticket.search.SearchManageTicketDto;
+import com.track.data.vo.applet.ticket.TicketListVo;
 import com.track.data.vo.manage.ticket.ManageTicketInfoVo;
 import com.track.data.vo.manage.ticket.ManageTicketListVo;
 
@@ -24,14 +25,14 @@ public interface IOmTicketService extends Service<OmTicketPo> {
     /**
      * @Author yeJH
      * @Date 2019/10/25 11:29
-     * @Description 查询演唱会门票列表
+     * @Description 平台查询演唱会门票列表
      *
      * @Update yeJH
      *
-     * @param  searchTicketDto
+     * @param  searchManageTicketDto
      * @return com.github.pagehelper.PageInfo<com.track.data.vo.manage.ticket.ManageTicketListVo>
      **/
-    PageInfo<ManageTicketListVo> searchTicketList(SearchTicketDto searchTicketDto);
+    PageInfo<ManageTicketListVo> searchManageTicketList(SearchManageTicketDto searchManageTicketDto);
 
     /**
      * @Author yeJH
@@ -69,4 +70,16 @@ public interface IOmTicketService extends Service<OmTicketPo> {
      * @return void
      **/
     void saveTicket(SaveTicketDto saveTicketDto, UmUserPo operator);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/29 20:42
+     * @Description 小程序条件查询门票列表
+     *
+     * @Update yeJH
+     *
+     * @param  searchTicketDto
+     * @return com.github.pagehelper.PageInfo<com.track.data.vo.applet.ticket.TicketListVo>
+     **/
+    PageInfo<TicketListVo> searchTicketList(SearchTicketDto searchTicketDto);
 }

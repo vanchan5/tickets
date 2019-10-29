@@ -14,7 +14,7 @@ import java.time.LocalDate;
  */
 @Data
 @ApiModel(description = "查询门票列表条件")
-public class SearchTicketDto extends BaseSearchDto {
+public class SearchManageTicketDto extends BaseSearchDto {
 
     @ApiModelProperty(value = "演唱会门票名称")
     private String ticketName;

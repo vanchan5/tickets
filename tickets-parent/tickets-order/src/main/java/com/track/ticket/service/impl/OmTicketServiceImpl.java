@@ -9,11 +9,13 @@ import com.track.common.enums.system.ResultCode;
 import com.track.core.exception.ServiceException;
 import com.track.data.domain.po.ticket.*;
 import com.track.data.domain.po.user.UmUserPo;
+import com.track.data.dto.applet.ticket.SearchTicketDto;
 import com.track.data.dto.base.EditEnabledDto;
 import com.track.data.dto.manage.ticket.save.SaveTicketDto;
-import com.track.data.dto.manage.ticket.search.SearchTicketDto;
+import com.track.data.dto.manage.ticket.search.SearchManageTicketDto;
 import com.track.data.mapper.order.OmOrderMapper;
 import com.track.data.mapper.ticket.*;
+import com.track.data.vo.applet.ticket.TicketListVo;
 import com.track.data.vo.manage.ticket.ManageTicketInfoVo;
 import com.track.data.vo.manage.ticket.ManageTicketListVo;
 import com.track.data.vo.manage.ticket.TicketGradeInfoVo;
@@ -87,17 +89,17 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
      *
      * @Update yeJH
      *
-     * @param  searchTicketDto
+     * @param  searchManageTicketDto
      * @return com.github.pagehelper.PageInfo<com.track.data.vo.manage.ticket.ManageTicketListVo>
      **/
     @Override
-    public PageInfo<ManageTicketListVo> searchTicketList(SearchTicketDto searchTicketDto) {
+    public PageInfo<ManageTicketListVo> searchManageTicketList(SearchManageTicketDto searchManageTicketDto) {
 
-        Integer pageNo = searchTicketDto.getPageNo()==null ? defaultPageNo : searchTicketDto.getPageNo();
-        Integer pageSize = searchTicketDto.getPageSize()==null ? defaultPageSize : searchTicketDto.getPageSize();
+        Integer pageNo = searchManageTicketDto.getPageNo()==null ? defaultPageNo : searchManageTicketDto.getPageNo();
+        Integer pageSize = searchManageTicketDto.getPageSize()==null ? defaultPageSize : searchManageTicketDto.getPageSize();
 
         PageInfo<ManageTicketListVo> manageTicketListVoPageInfo = PageHelper.startPage(pageNo, pageSize)
-                .doSelectPageInfo(() -> mapper.searchTicketList(searchTicketDto));
+                .doSelectPageInfo(() -> mapper.searchManageTicketList(searchManageTicketDto));
 
         return manageTicketListVoPageInfo;
     }
@@ -348,4 +350,28 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
         //批量插入关联
         omSceneRelGradeService.saveBatch(omSceneRelGradePoList);
     }
+
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/29 20:43
+     * @Description 小程序条件查询门票列表
+     *
+     * @Update yeJH
+     *
+     * @param  searchTicketDto
+     * @return com.github.pagehelper.PageInfo<com.track.data.vo.applet.ticket.TicketListVo>
+     **/
+    @Override
+    public PageInfo<TicketListVo> searchTicketList(SearchTicketDto searchTicketDto) {
+
+        Integer pageNo = searchTicketDto.getPageNo()==null ? defaultPageNo : searchTicketDto.getPageNo();
+        Integer pageSize = searchTicketDto.getPageSize()==null ? defaultPageSize : searchTicketDto.getPageSize();
+
+        PageInfo<TicketListVo> ticketListVoPageInfo = PageHelper.startPage(pageNo, pageSize)
+                .doSelectPageInfo(() -> mapper.searchTicketList(searchTicketDto));
+
+        return ticketListVoPageInfo;
+    }
+
 }

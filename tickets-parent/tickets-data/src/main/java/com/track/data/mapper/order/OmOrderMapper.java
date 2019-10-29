@@ -1,7 +1,11 @@
 package com.track.data.mapper.order;
 
 import com.track.data.domain.po.order.OmOrderPo;
+import com.track.data.dto.manage.order.search.SearchOrderDto;
 import com.track.data.mapper.base.IBaseMapper;
+import com.track.data.vo.manage.order.ManageOrderListVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -24,4 +28,16 @@ public interface OmOrderMapper extends IBaseMapper<OmOrderPo> {
      * @return boolean
      **/
     boolean isOrderByTicketId(Long ticketId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/29 16:07
+     * @Description 查询订单列表
+     *
+     * @Update yeJH
+     *
+     * @param  searchOrderDto  查询条件
+     * @return java.util.List<com.track.data.vo.manage.order.ManageOrderListVo>
+     **/
+    List<ManageOrderListVo> searchOrderList(SearchOrderDto searchOrderDto);
 }

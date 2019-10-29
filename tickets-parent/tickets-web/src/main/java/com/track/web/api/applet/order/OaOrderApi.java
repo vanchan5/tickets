@@ -1,38 +1,29 @@
-package com.track.web.api.manage.order;
+package com.track.web.api.applet.order;
 
-
-import com.github.pagehelper.PageInfo;
-import com.track.common.enums.system.ResultCode;
-import com.track.core.interaction.JsonViewData;
-import com.track.data.dto.manage.order.search.SearchOrderDto;
-import com.track.data.vo.manage.order.ManageOrderListVo;
 import com.track.order.service.IOmOrderService;
+import com.track.web.base.BaseWeb;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Autowired;
-import io.swagger.annotations.Api;
-
 import org.springframework.web.bind.annotation.RestController;
-import com.track.web.base.BaseWeb;
 
 /**
+ * @author yeJH
+ * @since 2019/10/29 17:17
  * <p>
- * 支付订单 前端控制器
- * </p>
- *
- * @author admin
- * @since 2019-10-25
+ * 小程序订单接口
  */
-@Api(tags = "后台_订单管理接口")
+@Api(tags = "小程序_订单接口")
 @RestController
-@RequestMapping("/manage/order")
+@RequestMapping("/applet/order")
 @Slf4j
-public class OmOrderApi extends BaseWeb {
+public class OaOrderApi extends BaseWeb {
 
     @Autowired
     private IOmOrderService service;
@@ -48,7 +39,7 @@ public class OmOrderApi extends BaseWeb {
      * @param  searchOrderDto  查询条件
      * @return com.track.core.interaction.JsonViewData<com.github.pagehelper.PageInfo<com.track.data.vo.manage.order.ManageOrderListVo>>
      **/
-    @ApiOperation(value = "查询订单列表", notes = "根据下单时间，订单号，订单状态，购买人手机以及购买场次等条件查询")
+    /*@ApiOperation(value = "查询订单列表", notes = "根据下单时间，订单号，订单状态，购买人手机以及购买场次等条件查询")
     @PostMapping("/searchOrderList")
     public JsonViewData<PageInfo<ManageOrderListVo>> searchOrderList(
             @ApiParam(required = true, name = "searchOrderDto", value = "查询条件")
@@ -58,6 +49,7 @@ public class OmOrderApi extends BaseWeb {
         return new JsonViewData(ResultCode.SUCCESS, "查找成功",
                 manageOrderListVoPageInfo);
 
-    }
+    }*/
 
 }
+

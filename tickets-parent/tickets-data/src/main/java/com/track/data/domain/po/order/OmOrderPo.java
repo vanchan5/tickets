@@ -37,6 +37,9 @@ public class OmOrderPo implements Serializable {
     @TableId(value = "id", type = IdType.ID_WORKER)
     private Long id;
 
+    @ApiModelProperty(value = "票号")
+    private Long ticketNo;
+
     @ApiModelProperty(value = "用于微信商户交易流水号,唯一索引。")
     private String payOrderNo;
 
@@ -80,13 +83,13 @@ public class OmOrderPo implements Serializable {
     @ApiModelProperty(value = "支付时间")
     private LocalDateTime payTime;
 
-    @ApiModelProperty(value = "支付申请时间")
-    private LocalDateTime startTime;
+    @ApiModelProperty(value = "退款时间")
+    private LocalDateTime refundTime;
 
     @ApiModelProperty(value = "取消时间")
     private LocalDateTime closeTime;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "支付申请时间")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "修改时间")

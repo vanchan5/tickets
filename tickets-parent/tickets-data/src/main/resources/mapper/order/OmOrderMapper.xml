@@ -38,5 +38,44 @@
             WHERE ott.ticket_id = 1 AND (oo.state = 3 OR oo.state = 4)
         ) AS temp
     </select>
+    <select id="searchOrderList" resultType="com.track.data.vo.manage.order.ManageOrderListVo">
+        SELECT oo.id AS orderId,
+            oo.ticket_no,
+            ott.scene_id,
+            ott.scene_name,
+            uu.nick_name,
+            oo.order_num,
+            oo.pay_amount,
+            uu.phone,
+            oo.create_time,
+            oo.pay_time,
+            oo.update_time,
+            oo.refund_time,
+            oo.state AS orderState
+        FROM om_order oo
+        INNER JOIN om_ticket_temp ott ON ott.order_id = oo.id
+        INNER JOIN um_user uu ON uu.id = oo.um_user_id
+        <where>
+            <if test="orderId != null and orderId != 0">
+                and oo.id = #{orderId}
+            </if>
+            <if test="orderState != null and orderState != 0">
+                and oo.state = #{orderState}
+            </if>
+            <if test="sceneId != null and sceneId != 0">
+                and ott.scene_id = #{sceneId}
+            </if>
+            <if test="phone != null and phone != ''">
+                and uu.phone = #{phone}
+            </if>
+            <if test="startDate != null">
+                and DATE_FORMAT(oo.create_time,'%Y-%m-%d')  <![CDATA[>= ]]> = #{startDate}
+            </if>
+            <if test="endDate != null">
+                and DATE_FORMAT(oo.create_time,'%Y-%m-%d')  <![CDATA[<= ]]> = #{endDate}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
 
 </mapper>

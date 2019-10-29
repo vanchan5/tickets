@@ -4,11 +4,10 @@ package com.track.web.api.manage.ticket;
 import com.github.pagehelper.PageInfo;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.interaction.JsonViewData;
-import com.track.data.domain.po.ticket.OmTicketPo;
 import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.base.EditEnabledDto;
 import com.track.data.dto.manage.ticket.save.SaveTicketDto;
-import com.track.data.dto.manage.ticket.search.SearchTicketDto;
+import com.track.data.dto.manage.ticket.search.SearchManageTicketDto;
 import com.track.data.vo.manage.ticket.ManageTicketInfoVo;
 import com.track.data.vo.manage.ticket.ManageTicketListVo;
 import com.track.security.util.SecurityUtil;
@@ -50,17 +49,17 @@ public class OmTicketApi extends BaseWeb {
      *
      * @Update yeJH
      *
-     * @param  searchTicketDto
+     * @param  searchManageTicketDto
      * @return com.track.core.interaction.JsonViewData<com.github.pagehelper.PageInfo>
      **/
     @ApiOperation(value = "查询演唱会门票列表", notes = "根据门票开始时间范围，门票名称，上下架状态查询")
     @PostMapping("/searchTicketList")
     public JsonViewData<PageInfo<ManageTicketListVo>> searchTicketList(
-            @ApiParam(required = true, name = "searchTicketDto", value = "查询条件")
-            @Validated @RequestBody SearchTicketDto searchTicketDto) {
+            @ApiParam(required = true, name = "searchManageTicketDto", value = "查询条件")
+            @Validated @RequestBody SearchManageTicketDto searchManageTicketDto) {
 
         PageInfo<ManageTicketListVo> manageTicketListVoPageInfo =
-                service.searchTicketList(searchTicketDto);
+                service.searchManageTicketList(searchManageTicketDto);
         return new JsonViewData(ResultCode.SUCCESS, "查找成功",
                 manageTicketListVoPageInfo);
 

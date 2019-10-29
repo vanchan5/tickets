@@ -1,8 +1,10 @@
 package com.track.data.mapper.ticket;
 
 import com.track.data.domain.po.ticket.OmTicketPo;
-import com.track.data.dto.manage.ticket.search.SearchTicketDto;
+import com.track.data.dto.applet.ticket.SearchTicketDto;
+import com.track.data.dto.manage.ticket.search.SearchManageTicketDto;
 import com.track.data.mapper.base.IBaseMapper;
+import com.track.data.vo.applet.ticket.TicketListVo;
 import com.track.data.vo.manage.ticket.ManageTicketInfoVo;
 import com.track.data.vo.manage.ticket.ManageTicketListVo;
 import com.track.data.vo.manage.ticket.TicketGradeInfoVo;
@@ -26,10 +28,10 @@ public interface OmTicketMapper extends IBaseMapper<OmTicketPo> {
      *
      * @Update yeJH
      *
-     * @param  searchTicketDto
+     * @param  searchManageTicketDto
      * @return List<ManageTicketListVo>
      **/
-    List<ManageTicketListVo> searchTicketList(SearchTicketDto searchTicketDto);
+    List<ManageTicketListVo> searchManageTicketList(SearchManageTicketDto searchManageTicketDto);
 
     /**
      * @Author yeJH
@@ -54,4 +56,16 @@ public interface OmTicketMapper extends IBaseMapper<OmTicketPo> {
      * @return java.util.List<com.track.data.vo.manage.ticket.TicketGradeInfoVo>
      **/
     List<TicketGradeInfoVo> getTicketGradeInfo(Long ticketId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/29 20:45
+     * @Description 小程序条件查询门票列表
+     *
+     * @Update yeJH
+     *
+     * @param  searchTicketDto
+     * @return java.util.List<com.track.data.vo.applet.ticket.TicketListVo>
+     **/
+    List<TicketListVo> searchTicketList(SearchTicketDto searchTicketDto);
 }

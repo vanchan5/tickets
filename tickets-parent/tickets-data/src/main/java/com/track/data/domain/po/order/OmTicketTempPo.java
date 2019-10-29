@@ -56,8 +56,14 @@ public class OmTicketTempPo implements Serializable {
     @ApiModelProperty(value = "场次跟座位区关联id")
     private Long relId;
 
+    @ApiModelProperty(value = "场次id")
+    private Long sceneId;
+
     @ApiModelProperty(value = "场次名称")
     private String sceneName;
+
+    @ApiModelProperty(value = "档次id")
+    private Long gradeId;
 
     @ApiModelProperty(value = "档次名称")
     private String gradeName;

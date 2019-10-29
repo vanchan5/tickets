@@ -25,7 +25,7 @@
     <sql id="Base_Column_List">
         id, name, addr_id, addr_name, addr_detail, longitude, latitude, sort, publish_state, picture, sales_volume, create_by, create_time, update_by, update_time
     </sql>
-    <select id="searchTicketList" resultType="com.track.data.vo.manage.ticket.ManageTicketListVo">
+    <select id="searchManageTicketList" resultType="com.track.data.vo.manage.ticket.ManageTicketListVo">
         SELECT ot.id AS ticketId,
             ot.name, ot.sales_volume,
             MIN(otg.sell_price) AS minSellPrice,
@@ -52,7 +52,7 @@
             </if>
         </where>
         GROUP BY ot.id
-        ORDER BY ot.`create_time` DESC
+        ORDER BY ot.`update_time` DESC
     </select>
 
     <resultMap id="manageTicketInfoVo" type="com.track.data.vo.manage.ticket.ManageTicketInfoVo">
@@ -122,6 +122,39 @@
         INNER JOIN om_ticket_seat ots ON ots.grade_id = otg.`id`
         WHERE otg.`ticket_id` = #{ticketId}
         ORDER BY ots.seat_row ASC
+    </select>
+
+    <select id="searchTicketList" resultType="com.track.data.vo.applet.ticket.TicketListVo">
+        SELECT ot.id AS ticketId,
+            ot.`name`,
+            ot.`picture`,
+            ot.`addr_detail`,
+            MIN(ots.`start_time`) AS minStartTime,
+            MIN(otg.`sell_price`) AS minSellPrice
+        FROM om_ticket ot
+        INNER JOIN om_ticket_scene ots ON ots.`ticket_id` = ot.`id`
+        INNER JOIN om_ticket_grade otg ON otg.`ticket_id` = ot.`id`
+        GROUP BY ot.`id`
+        <where>
+            <if test="null != ticketName and ticketName != ''">
+                and ot.ticketName like concat('%', #{ticketName}, '%')
+            </if>
+            <if test="null != timeScreening and timeScreening == 2">
+                and ots.`start_time` <![CDATA[<= ]]> (SELECT now() + INTERVAL 7 DAY)
+            </if>
+            <if test="null != timeScreening and timeScreening == 3">
+                and ots.`start_time` <![CDATA[<= ]]> (SELECT NOW() + INTERVAL 1 MONTH)
+            </if>
+        </where>
+        <if test="null != sortFile and sortFile == 1">
+            ORDER BY ot.`update_time` DESC
+        </if>
+        <if test="null != sortFile and sortFile == 2">
+            ORDER BY ot.`update_time` DESC
+        </if>
+        <if test="null != sortFile and sortFile == 3">
+            ORDER BY ot.`minSellPrice` ASC
+        </if>
     </select>
 
 </mapper>
