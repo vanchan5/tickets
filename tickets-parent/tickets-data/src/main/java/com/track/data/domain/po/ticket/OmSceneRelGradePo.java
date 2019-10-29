@@ -33,6 +33,9 @@ public class OmSceneRelGradePo implements Serializable {
     @TableId(value = "id", type = IdType.ID_WORKER)
     private Long id;
 
+    @ApiModelProperty(value = "门票id")
+    private Long ticketId;
+
     @ApiModelProperty(value = "门票场次id")
     private Long sceneId;
 

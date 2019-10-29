@@ -5,16 +5,21 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.track.data.domain.po.ticket.OmTicketGradePo">
         <id column="id" property="id" />
-        <result column="scene_id" property="sceneId" />
+        <result column="ticket_id" property="ticketId" />
         <result column="name" property="name" />
         <result column="sell_price" property="sellPrice" />
         <result column="seat_sum" property="seatSum" />
-        <result column="remaining_sum" property="remainingSum" />
+        <result column="row_sum" property="rowSum" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, scene_id, name, sell_price, seat_sum, remaining_sum
     </sql>
+    <select id="getGradeIdsByTicketId" resultType="java.lang.Long">
+        SELECT otg.id
+        FROM om_ticket_grade otg
+        WHERE otg.`ticket_id` = #{ticketId}
+    </select>
 
 </mapper>

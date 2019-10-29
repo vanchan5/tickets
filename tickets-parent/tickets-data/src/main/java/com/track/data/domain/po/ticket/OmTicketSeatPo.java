@@ -29,9 +29,12 @@ public class OmTicketSeatPo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "门票座位id")
+    @ApiModelProperty(value = "门票座位区id")
     @TableId(value = "id", type = IdType.ID_WORKER)
     private Long id;
+
+    @ApiModelProperty(value = "门票id")
+    private Long ticketId;
 
     @ApiModelProperty(value = "档次id")
     private Long gradeId;

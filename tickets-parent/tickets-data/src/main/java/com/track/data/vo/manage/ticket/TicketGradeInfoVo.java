@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author yeJH
@@ -29,5 +30,8 @@ public class TicketGradeInfoVo implements Serializable {
 
     @ApiModelProperty(value = "该档位有多少排座位")
     private Integer rowSum;
+
+    @ApiModelProperty(value = "座位区列表")
+    private List<TicketSeatInfoVo> ticketSeatInfoList;
 
 }

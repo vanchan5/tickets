@@ -17,8 +17,8 @@ public class TicketSeatInfoVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "档次id")
-    private Long gradeId;
+    @ApiModelProperty(value = "座位区id")
+    private Long seatId;
 
     @ApiModelProperty(value = "档次名称")
     private String gradeName;

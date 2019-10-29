@@ -5,8 +5,10 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.track.data.domain.po.ticket.OmSceneRelGradePo">
         <id column="id" property="id" />
+        <result column="ticket_id" property="ticketId" />
         <result column="scene_id" property="sceneId" />
         <result column="grade_id" property="gradeId" />
+        <result column="seat_id" property="seatId" />
         <result column="remaining_sum" property="remainingSum" />
     </resultMap>
 

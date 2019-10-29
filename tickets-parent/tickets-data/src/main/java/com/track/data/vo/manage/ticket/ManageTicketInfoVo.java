@@ -76,9 +76,4 @@ public class ManageTicketInfoVo  implements Serializable {
     @JSONField(ordinal = 13)
     private List<TicketGradeInfoVo> ticketGradeInfoList;
 
-    @ApiModelProperty(value = "座位区列表")
-    @JSONField(ordinal = 14)
-    private List<TicketSeatInfoVo> ticketSeatInfoList;
-
-
 }

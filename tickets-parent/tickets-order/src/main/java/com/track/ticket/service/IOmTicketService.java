@@ -4,7 +4,9 @@ import com.github.pagehelper.PageInfo;
 import com.track.common.enums.system.ResultCode;
 import com.track.data.domain.po.ticket.OmTicketPo;
 import com.track.core.base.service.Service;
+import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.base.EditEnabledDto;
+import com.track.data.dto.manage.ticket.save.SaveTicketDto;
 import com.track.data.dto.manage.ticket.search.SearchTicketDto;
 import com.track.data.vo.manage.ticket.ManageTicketInfoVo;
 import com.track.data.vo.manage.ticket.ManageTicketListVo;
@@ -54,4 +56,17 @@ public interface IOmTicketService extends Service<OmTicketPo> {
      * @return com.track.data.vo.manage.ticket.ManageTicketInfoVo
      **/
     ManageTicketInfoVo getTicket(Long ticketId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/28 18:07
+     * @Description 新增/编辑演唱会门票
+     *
+     * @Update yeJH
+     *
+     * @param  saveTicketDto  新增/编辑演唱会门票参数
+     * @param  operator  操作用户
+     * @return void
+     **/
+    void saveTicket(SaveTicketDto saveTicketDto, UmUserPo operator);
 }

@@ -30,5 +30,13 @@
     <sql id="Base_Column_List">
         id, pay_order_no, pre_pay_id, user_ip, error_code, error_msg, pay_amount, order_num, sell_price, expire_time, state, ship_name, ship_phone, remark, um_user_id, pay_time, start_time, close_time, create_time, update_time
     </sql>
+    <select id="isOrderByTicketId" resultType="java.lang.Boolean">
+        SELECT EXISTS (
+            SELECT oo.`id`
+            FROM om_order oo
+            INNER JOIN om_ticket_temp ott ON ott.order_id = oo.id
+            WHERE ott.ticket_id = 1 AND (oo.state = 3 OR oo.state = 4)
+        ) AS temp
+    </select>
 
 </mapper>

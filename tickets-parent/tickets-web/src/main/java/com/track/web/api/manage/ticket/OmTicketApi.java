@@ -5,10 +5,13 @@ import com.github.pagehelper.PageInfo;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.domain.po.ticket.OmTicketPo;
+import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.base.EditEnabledDto;
+import com.track.data.dto.manage.ticket.save.SaveTicketDto;
 import com.track.data.dto.manage.ticket.search.SearchTicketDto;
 import com.track.data.vo.manage.ticket.ManageTicketInfoVo;
 import com.track.data.vo.manage.ticket.ManageTicketListVo;
+import com.track.security.util.SecurityUtil;
 import com.track.ticket.service.IOmTicketService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -28,7 +31,7 @@ import com.track.web.base.BaseWeb;
  * @author admin
  * @since 2019-10-25
  */
-@Api(tags = "平台_门票管理接口")
+@Api(tags = "后台_门票管理接口")
 @RestController
 @RequestMapping("/manage/ticket")
 @Slf4j
@@ -36,6 +39,9 @@ public class OmTicketApi extends BaseWeb {
 
     @Autowired
     private IOmTicketService service;
+
+    @Autowired
+    private SecurityUtil securityUtil;
 
     /**
      * @Author yeJH
@@ -99,5 +105,28 @@ public class OmTicketApi extends BaseWeb {
     }
 
 
+    /**
+     * @Author yeJH
+     * @Date 2019/10/28 17:58
+     * @Description 新增/编辑演唱会门票
+     *
+     * @Update yeJH
+     *
+     * @param  saveTicketDto  新增/编辑演唱会门票参数
+     * @return com.track.core.interaction.JsonViewData
+     **/
+    @ApiOperation(value = "新增/编辑演唱会门票", notes = "新增/编辑演唱会门票")
+    @PostMapping("/saveTicket")
+    public JsonViewData saveTicket(
+            @ApiParam(required = true, name = "saveTicketDto", value = "新增/编辑演唱会门票参数")
+            @Validated @RequestBody SaveTicketDto saveTicketDto) {
+
+        //操作人员
+        UmUserPo operator =securityUtil.getSysCurrUser();
+
+        service.saveTicket(saveTicketDto, operator);
+        return new JsonViewData(ResultCode.SUCCESS, "操作成功");
+
+    }
 
 }

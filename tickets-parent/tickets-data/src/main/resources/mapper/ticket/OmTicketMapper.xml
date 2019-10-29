@@ -55,4 +55,73 @@
         ORDER BY ot.`create_time` DESC
     </select>
 
+    <resultMap id="manageTicketInfoVo" type="com.track.data.vo.manage.ticket.ManageTicketInfoVo">
+        <id column="ticketId" property="ticketId" />
+        <result column="name" property="name" />
+        <result column="addr_id" property="addrId" />
+        <result column="addr_name" property="addrName" />
+        <result column="addr_detail" property="addrDetail" />
+        <result column="longitude" property="longitude" />
+        <result column="latitude" property="latitude" />
+        <result column="sort" property="sort" />
+        <result column="publish_state" property="publishState" />
+        <result column="picture" property="picture" />
+        <result column="purchase_html" property="purchaseHtml" />
+        <result column="detail_html" property="detailHtml" />
+        <collection property="ticketSceneInfoList" ofType="com.track.data.vo.manage.ticket.TicketSceneInfoVo">
+            <id column="sceneId" property="sceneId" />
+            <result column="sceneName" property="sceneName" />
+            <result column="start_time" property="startTime" />
+        </collection>
+    </resultMap>
+    <select id="getTicketDetail" resultMap="manageTicketInfoVo">
+        SELECT ot.id AS ticketId,
+            ot.`name`,
+            ots.id AS sceneId,
+            ots.`name` AS sceneName,
+            ots.`start_time`,
+            ot.`addr_id`,
+            ot.`addr_name`,
+            ot.`addr_detail`,
+            ot.`longitude`,
+            ot.`latitude`,
+            ot.`sort`,
+            ot.`publish_state`,
+            ot.`picture`,
+            otd.purchase_html,
+            otd.detail_html
+        FROM om_ticket ot
+        LEFT JOIN om_ticket_detail otd ON otd.`id` = ot.`id`
+        LEFT JOIN om_ticket_scene  ots ON ots.`ticket_id` = ot.`id`
+        WHERE ot.id = #{ticketId}
+        ORDER BY ots.`start_time` ASC
+    </select>
+
+    <resultMap id="ticketGradeInfoVo" type="com.track.data.vo.manage.ticket.TicketGradeInfoVo">
+        <id column="gradeId" property="gradeId" />
+        <result column="gradeName" property="gradeName" />
+        <result column="sell_price" property="sellPrice" />
+        <result column="row_sum" property="rowSum" />
+        <collection property="ticketSeatInfoList" ofType="com.track.data.vo.manage.ticket.TicketSeatInfoVo">
+            <id column="seatId" property="seatId" />
+            <result column="gradeName1" property="gradeName" />
+            <result column="seatRow" property="seatRow" />
+            <result column="seat_sum" property="seatSum" />
+        </collection>
+    </resultMap>
+    <select id="getTicketGradeInfo" resultMap="ticketGradeInfoVo">
+        SELECT otg.id AS gradeId,
+            otg.`name` AS gradeName,
+            otg.`sell_price`,
+            otg.`row_sum`,
+            ots.id as seatId,
+            otg.`name` AS gradeName1,
+            ots.seat_row,
+            ots.seat_sum
+        FROM om_ticket_grade otg
+        INNER JOIN om_ticket_seat ots ON ots.grade_id = otg.`id`
+        WHERE otg.`ticket_id` = #{ticketId}
+        ORDER BY ots.seat_row ASC
+    </select>
+
 </mapper>
