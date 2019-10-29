@@ -145,7 +145,7 @@ public class GeneratorController {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-//        strategy.setSuperEntityClass("com.chauncy.common.base.BaseEntity");
+//        strategy.setSuperEntityClass("com.chauncy.ipInfo.base.BaseEntity");
         strategy.setSuperServiceClass("com.track.core.base.service.Service");
         strategy.setSuperServiceImplClass("com.track.core.base.service.AbstractService");
         strategy.setSuperMapperClass("com.track.data.mapper.base.IBaseMapper");

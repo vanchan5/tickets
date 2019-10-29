@@ -22,7 +22,7 @@ public final class RedisUtil {
         this.redisTemplate = redisTemplate;
     }
 
-    // =============================common============================
+    // =============================ipInfo============================
     /**
      * 指定缓存失效时间
      * @param key 键

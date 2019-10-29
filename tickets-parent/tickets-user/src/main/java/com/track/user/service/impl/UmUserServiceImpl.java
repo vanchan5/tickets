@@ -1,5 +1,6 @@
 package com.track.user.service.impl;
 
+import com.alibaba.fastjson.support.spring.FastjsonSockJsMessageCodec;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -10,10 +11,12 @@ import com.track.common.utils.ListUtil;
 import com.track.common.utils.RedisUtil;
 import com.track.core.base.service.AbstractService;
 import com.track.core.exception.ServiceException;
+import com.track.data.bo.user.permission.UmUserBo;
 import com.track.data.domain.po.permission.SysRolePo;
 import com.track.data.domain.po.permission.SysRoleUserPo;
 import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.manage.permission.search.SearchRoleDto;
+import com.track.data.dto.manage.user.edit.EditPasswordDto;
 import com.track.data.dto.manage.user.save.SaveUserDto;
 import com.track.data.dto.manage.user.search.SearchUsersDto;
 import com.track.data.mapper.permission.SysRoleMapper;
@@ -265,5 +268,33 @@ public class UmUserServiceImpl extends AbstractService<UmUserMapper, UmUserPo> i
             }
         });
         mapper.deleteBatchIds(ids);
+    }
+
+    /**
+     * @Author chauncy
+     * @Date 2019-10-25 17:36
+     * @Description //修改密码
+     *
+     * @Update chauncy
+     *
+     * @param  editPasswordDto
+     * @return void
+     **/
+    @Override
+    public void editPassword(EditPasswordDto editPasswordDto) {
+        //获取用户信息
+        UmUserPo userPo = mapper.selectOne(new QueryWrapper<UmUserPo>().lambda()
+                .eq(UmUserPo::getId,editPasswordDto.getUserId()));
+
+        if (userPo == null){
+            throw new ServiceException(ResultCode.FAIL,"该用户不存在");
+        }
+
+        if (new BCryptPasswordEncoder().matches(editPasswordDto.getPassword(),userPo.getPassword())){
+            throw new ServiceException(ResultCode.FAIL,"不能和原来密码相同!");
+        }else {
+            userPo.setPassword(new BCryptPasswordEncoder().encode(editPasswordDto.getPassword()));
+        }
+        mapper.updateById(userPo);
     }
 }
