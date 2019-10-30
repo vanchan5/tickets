@@ -21,5 +21,13 @@
         FROM om_ticket_grade otg
         WHERE otg.`ticket_id` = #{ticketId}
     </select>
+    <select id="getTicketGradeBase" resultType="com.track.data.vo.applet.ticket.TicketGradeBaseVo">
+        SELECT otg.`id` AS gradeId,
+            otg.`name` AS gradeName,
+            otg.`sell_price`
+        FROM om_ticket_grade otg
+        WHERE otg.`ticket_id` = #{ticketId}
+        ORDER BY otg.`sell_price` ASC
+    </select>
 
 </mapper>

@@ -16,5 +16,11 @@
     <sql id="Base_Column_List">
         id, scene_id, grade_id, remaining_sum
     </sql>
+    <select id="getSceneRelGradeInfoList" resultType="com.track.data.vo.applet.ticket.SceneRelGradeInfoVo">
+        SELECT osrg.scene_id, osrg.grade_id, SUM(osrg.remaining_sum) AS remainingSum
+        FROM om_scene_rel_grade osrg
+        WHERE osrg.`ticket_id` = #{ticketId}
+        GROUP BY osrg.scene_id, osrg.grade_id
+    </select>
 
 </mapper>

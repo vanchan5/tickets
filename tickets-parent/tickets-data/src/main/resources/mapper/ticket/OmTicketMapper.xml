@@ -74,7 +74,7 @@
             <result column="start_time" property="startTime" />
         </collection>
     </resultMap>
-    <select id="getTicketDetail" resultMap="manageTicketInfoVo">
+    <select id="getTicketInfo" resultMap="manageTicketInfoVo">
         SELECT ot.id AS ticketId,
             ot.`name`,
             ots.id AS sceneId,
@@ -155,6 +155,25 @@
         <if test="null != sortFile and sortFile == 3">
             ORDER BY ot.`minSellPrice` ASC
         </if>
+    </select>
+    <select id="getTicketDetail" resultType="com.track.data.vo.applet.ticket.TicketDetailVo">
+        SELECT ot.id AS ticketId,
+            ot.name,
+            ot.addr_detail,
+            ot.longitude,
+            ot.latitude,
+            ot.picture,
+            otd.purchase_html,
+            otd.detail_html,
+            MIN(ots.start_time) AS minStartTime,
+            MAX(ots.start_time) AS maxStartTime,
+            MIN(otg.sell_price) AS minSellPrice,
+            MAX(otg.sell_price) AS maxSellPrice
+        FROM om_ticket ot
+        INNER JOIN om_ticket_detail otd ON otd.id = ot.id AND ot.`id` = #{ticketId}
+        INNER JOIN om_ticket_scene ots ON ots.ticket_id = ot.id
+        INNER JOIN om_ticket_grade otg ON otg.ticket_id = ot.id
+        GROUP BY ot.`id`
     </select>
 
 </mapper>

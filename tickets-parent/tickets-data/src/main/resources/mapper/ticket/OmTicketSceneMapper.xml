@@ -14,5 +14,14 @@
     <sql id="Base_Column_List">
         id, ticket_id, name, start_time
     </sql>
+    <select id="getTicketSceneBase" resultType="com.track.data.vo.applet.ticket.TicketSceneBaseVo">
+        SELECT ots.id AS sceneId,
+            ots.`name` AS sceneName,
+            ots.`start_time`,
+            (ots.`start_time` > NOW()) AS canBuy
+        FROM om_ticket_scene ots
+        where ots.`ticket_id` = #{ticketId}
+        ORDER BY ots.`start_time` ASC
+    </select>
 
 </mapper>

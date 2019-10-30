@@ -20,7 +20,7 @@
         <result column="remark" property="remark" />
         <result column="um_user_id" property="umUserId" />
         <result column="pay_time" property="payTime" />
-        <result column="start_time" property="startTime" />
+        <result column="refund_time" property="refundTime" />
         <result column="close_time" property="closeTime" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -76,6 +76,25 @@
             </if>
         </where>
         ORDER BY create_time DESC
+    </select>
+    <select id="settlement" resultType="com.track.data.vo.applet.order.OrderSettlementVo">
+        SELECT osrg.ticket_id,
+            osrg.scene_id,
+            osrg.grade_id,
+            ot.`name`,
+            ot.`picture`,
+            ots.`name` AS sceneName,
+            ots.`start_time`,
+            otg.`name` AS gradeName,
+            otg.`sell_price`,
+            SUM(osrg.remaining_sum) AS remainingSum
+        FROM om_scene_rel_grade osrg
+        INNER JOIN om_ticket ot ON ot.id = osrg.ticket_id
+        AND osrg.scene_id = #{sceneId}
+        AND osrg.grade_id = #{gradeId}
+        INNER JOIN om_ticket_scene ots ON ots.`id` = osrg.scene_id
+        INNER JOIN om_ticket_grade otg ON otg.`id` = osrg.grade_id
+        GROUP BY osrg.ticket_id, osrg.scene_id, osrg.grade_id
     </select>
 
 </mapper>

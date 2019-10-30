@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.dto.applet.ticket.SearchTicketDto;
+import com.track.data.vo.applet.ticket.TicketDetailVo;
 import com.track.data.vo.applet.ticket.TicketListVo;
 import com.track.security.util.SecurityUtil;
 import com.track.ticket.service.IOmTicketService;
@@ -14,10 +15,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author yeJH
@@ -58,6 +56,23 @@ public class OaTicketApi extends BaseWeb {
         return new JsonViewData(ResultCode.SUCCESS, "查找成功",
                 ticketListVoPageInfo);
 
+    }
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/30 10:36
+     * @Description 小程序根据门票id获取演出详情
+     *
+     * @Update yeJH
+     *
+     * @param  ticketId 门票id
+     * @return com.track.core.interaction.JsonViewData<com.track.data.vo.applet.ticket.TicketDetailVo>
+     **/
+    @ApiOperation(value="查询演出详情",notes = "编辑时根据门票id获取演出详情")
+    @GetMapping("/getTicketDetail/{ticketId}")
+    public JsonViewData<TicketDetailVo> getTicketDetail(@PathVariable Long ticketId){
+
+        return setJsonViewData(service.getTicketDetail(ticketId));
     }
 
 }

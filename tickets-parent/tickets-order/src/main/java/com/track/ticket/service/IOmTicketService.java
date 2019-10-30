@@ -1,6 +1,7 @@
 package com.track.ticket.service;
 
 import com.github.pagehelper.PageInfo;
+import com.track.common.enums.system.ResultCode;
 import com.track.data.domain.po.ticket.OmTicketPo;
 import com.track.core.base.service.Service;
 import com.track.data.domain.po.user.UmUserPo;
@@ -8,6 +9,7 @@ import com.track.data.dto.applet.ticket.SearchTicketDto;
 import com.track.data.dto.base.EditEnabledDto;
 import com.track.data.dto.manage.ticket.save.SaveTicketDto;
 import com.track.data.dto.manage.ticket.search.SearchManageTicketDto;
+import com.track.data.vo.applet.ticket.TicketDetailVo;
 import com.track.data.vo.applet.ticket.TicketListVo;
 import com.track.data.vo.manage.ticket.ManageTicketInfoVo;
 import com.track.data.vo.manage.ticket.ManageTicketListVo;
@@ -82,4 +84,16 @@ public interface IOmTicketService extends Service<OmTicketPo> {
      * @return com.github.pagehelper.PageInfo<com.track.data.vo.applet.ticket.TicketListVo>
      **/
     PageInfo<TicketListVo> searchTicketList(SearchTicketDto searchTicketDto);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/30 10:37
+     * @Description 小程序根据门票id获取演出详情
+     *
+     * @Update yeJH
+     *
+     * @param  ticketId 门票id
+     * @return com.track.data.vo.applet.ticket.TicketDetailVo
+     **/
+    TicketDetailVo getTicketDetail(Long ticketId);
 }

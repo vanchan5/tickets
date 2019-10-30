@@ -3,7 +3,9 @@ package com.track.order.service;
 import com.github.pagehelper.PageInfo;
 import com.track.data.domain.po.order.OmOrderPo;
 import com.track.core.base.service.Service;
+import com.track.data.dto.applet.order.OrderSettlementDto;
 import com.track.data.dto.manage.order.search.SearchOrderDto;
+import com.track.data.vo.applet.order.OrderSettlementVo;
 import com.track.data.vo.manage.order.ManageOrderListVo;
 
 /**
@@ -27,4 +29,17 @@ public interface IOmOrderService extends Service<OmOrderPo> {
      * @return com.github.pagehelper.PageInfo<com.track.data.vo.manage.order.ManageOrderListVo>
      **/
     PageInfo<ManageOrderListVo> searchOrderList(SearchOrderDto searchOrderDto);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/30 17:51
+     * @Description 订单结算
+     *              选择门票场次，档次，添加数量去结算
+     *
+     * @Update yeJH
+     *
+     * @param  orderSettlementDto
+     * @return com.track.data.vo.applet.order.OrderSettlementVo
+     **/
+    OrderSettlementVo settlement(OrderSettlementDto orderSettlementDto);
 }

@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author yeJH
  * @since 2019/10/29 18:11
@@ -13,7 +15,9 @@ import lombok.Data;
  */
 @Data
 @ApiModel(description = "查询门票列表条件")
-public class SearchTicketDto extends BaseSearchDto {
+public class SearchTicketDto extends BaseSearchDto  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "演唱会门票名称")
     private String ticketName;

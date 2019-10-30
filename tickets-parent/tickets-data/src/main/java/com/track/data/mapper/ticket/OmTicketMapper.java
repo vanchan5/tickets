@@ -4,10 +4,12 @@ import com.track.data.domain.po.ticket.OmTicketPo;
 import com.track.data.dto.applet.ticket.SearchTicketDto;
 import com.track.data.dto.manage.ticket.search.SearchManageTicketDto;
 import com.track.data.mapper.base.IBaseMapper;
+import com.track.data.vo.applet.ticket.TicketDetailVo;
 import com.track.data.vo.applet.ticket.TicketListVo;
 import com.track.data.vo.manage.ticket.ManageTicketInfoVo;
 import com.track.data.vo.manage.ticket.ManageTicketListVo;
 import com.track.data.vo.manage.ticket.TicketGradeInfoVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -43,7 +45,7 @@ public interface OmTicketMapper extends IBaseMapper<OmTicketPo> {
      * @param  ticketId
      * @return com.track.data.vo.manage.ticket.ManageTicketInfoVo
      **/
-    ManageTicketInfoVo getTicketDetail(Long ticketId);
+    ManageTicketInfoVo getTicketInfo(Long ticketId);
 
     /**
      * @Author yeJH
@@ -68,4 +70,16 @@ public interface OmTicketMapper extends IBaseMapper<OmTicketPo> {
      * @return java.util.List<com.track.data.vo.applet.ticket.TicketListVo>
      **/
     List<TicketListVo> searchTicketList(SearchTicketDto searchTicketDto);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/30 10:54
+     * @Description 小程序根据门票id获取演出详情
+     *
+     * @Update yeJH
+     *
+     * @param  ticketId 门票id
+     * @return com.track.data.vo.applet.ticket.TicketDetailVo
+     **/
+    TicketDetailVo getTicketDetail(@Param("ticketId") Long ticketId);
 }

@@ -15,7 +15,7 @@ import com.track.data.dto.manage.ticket.save.SaveTicketDto;
 import com.track.data.dto.manage.ticket.search.SearchManageTicketDto;
 import com.track.data.mapper.order.OmOrderMapper;
 import com.track.data.mapper.ticket.*;
-import com.track.data.vo.applet.ticket.TicketListVo;
+import com.track.data.vo.applet.ticket.*;
 import com.track.data.vo.manage.ticket.ManageTicketInfoVo;
 import com.track.data.vo.manage.ticket.ManageTicketListVo;
 import com.track.data.vo.manage.ticket.TicketGradeInfoVo;
@@ -32,9 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -72,6 +70,9 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
 
     @Autowired
     private AreaRegionMapper areaRegionMapper;
+
+    @Autowired
+    private BasicSettingMapper basicSettingMapper;
 
     @Autowired
     private IOmTicketSceneService omTicketSceneService;
@@ -142,7 +143,7 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
         }
 
         //获取门票基本信息
-        ManageTicketInfoVo manageTicketInfoVo = mapper.getTicketDetail(ticketId);
+        ManageTicketInfoVo manageTicketInfoVo = mapper.getTicketInfo(ticketId);
 
         //获取门票档次及作座位区信息
         List<TicketGradeInfoVo> ticketGradeInfoList = mapper.getTicketGradeInfo(ticketId);
@@ -372,6 +373,54 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
                 .doSelectPageInfo(() -> mapper.searchTicketList(searchTicketDto));
 
         return ticketListVoPageInfo;
+    }
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/30 10:38
+     * @Description 小程序根据门票id获取演出详情
+     *
+     * @Update yeJH
+     *
+     * @param  ticketId 门票id
+     * @return com.track.data.vo.applet.ticket.TicketDetailVo
+     **/
+    @Override
+    public TicketDetailVo getTicketDetail(Long ticketId) {
+
+        OmTicketPo omTicketPo = mapper.selectById(ticketId);
+        if(null == omTicketPo) {
+            throw new ServiceException(ResultCode.NO_EXISTS, "门票记录不存在");
+        }
+
+        //获取演出详情
+        TicketDetailVo ticketDetailVo = mapper.getTicketDetail(ticketId);
+
+        //获取客服电话
+        BasicSettingPo basicSettingPo = basicSettingMapper.selectOne(new QueryWrapper<>());
+        ticketDetailVo.setPhone(basicSettingPo.getPhone());
+
+        //获取场次信息
+        List<TicketSceneBaseVo> ticketSceneBaseList = omTicketSceneMapper.getTicketSceneBase(ticketId);
+        ticketDetailVo.setTicketSceneBaseList(ticketSceneBaseList);
+
+        //获取档次信息
+        List<TicketGradeBaseVo> ticketGradeBaseList = omTicketGradeMapper.getTicketGradeBase(ticketId);
+        ticketDetailVo.setTicketGradeBaseList(ticketGradeBaseList);
+
+        //获取场次跟档次关联的信息（规格）
+        List<SceneRelGradeInfoVo> sceneRelGradeInfoList = omSceneRelGradeMapper.getSceneRelGradeInfoList(ticketId);
+        Map<String, SceneRelGradeInfoVo> sceneRelGradeInfoMap = new HashMap<>();
+        if(null != sceneRelGradeInfoList && sceneRelGradeInfoList.size() > 0) {
+            sceneRelGradeInfoList.stream().forEach(sceneRelGradeInfoVo -> {
+                //组装场次跟档次，sceneId:gradeId;  作为key，sceneRelGradeInfoVo作为value
+                String key = sceneRelGradeInfoVo.getSceneId() + ":" + sceneRelGradeInfoVo.getGradeId() + ";";
+                sceneRelGradeInfoMap.put(key, sceneRelGradeInfoVo);
+            });
+        }
+        ticketDetailVo.setSceneRelGradeInfo(sceneRelGradeInfoMap);
+
+        return ticketDetailVo;
     }
 
 }

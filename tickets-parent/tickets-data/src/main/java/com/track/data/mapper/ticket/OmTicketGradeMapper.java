@@ -2,6 +2,7 @@ package com.track.data.mapper.ticket;
 
 import com.track.data.domain.po.ticket.OmTicketGradePo;
 import com.track.data.mapper.base.IBaseMapper;
+import com.track.data.vo.applet.ticket.TicketGradeBaseVo;
 
 import java.util.List;
 
@@ -26,4 +27,16 @@ public interface OmTicketGradeMapper extends IBaseMapper<OmTicketGradePo> {
      * @return java.util.List<java.lang.Long>
      **/
     List<Long> getGradeIdsByTicketId(Long ticketId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/30 14:17
+     * @Description 小程序根据门票id获取对应的档次信息
+     *
+     * @Update yeJH
+     *
+     * @param  ticketId
+     * @return java.util.List<com.track.data.vo.applet.ticket.TicketGradeBaseVo>
+     **/
+    List<TicketGradeBaseVo> getTicketGradeBase(Long ticketId);
 }

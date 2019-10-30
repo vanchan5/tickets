@@ -1,8 +1,10 @@
 package com.track.data.mapper.order;
 
 import com.track.data.domain.po.order.OmOrderPo;
+import com.track.data.dto.applet.order.OrderSettlementDto;
 import com.track.data.dto.manage.order.search.SearchOrderDto;
 import com.track.data.mapper.base.IBaseMapper;
+import com.track.data.vo.applet.order.OrderSettlementVo;
 import com.track.data.vo.manage.order.ManageOrderListVo;
 
 import java.util.List;
@@ -40,4 +42,16 @@ public interface OmOrderMapper extends IBaseMapper<OmOrderPo> {
      * @return java.util.List<com.track.data.vo.manage.order.ManageOrderListVo>
      **/
     List<ManageOrderListVo> searchOrderList(SearchOrderDto searchOrderDto);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/30 18:17
+     * @Description 订单结算
+     *
+     * @Update yeJH
+     *
+     * @param  orderSettlementDto 选择门票场次，档次，添加数量去结算
+     * @return com.track.data.vo.applet.order.OrderSettlementVo
+     **/
+    OrderSettlementVo settlement(OrderSettlementDto orderSettlementDto);
 }
