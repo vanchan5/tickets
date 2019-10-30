@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.track.data.mapper.quartz.QuartzLogJobMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.track.data.domain.po.quartz.QuartzLogJobPo">
+        <id column="job_log_id" property="jobLogId" />
+        <result column="job_name" property="jobName" />
+        <result column="job_group" property="jobGroup" />
+        <result column="method_name" property="methodName" />
+        <result column="method_params" property="methodParams" />
+        <result column="job_message" property="jobMessage" />
+        <result column="status" property="status" />
+        <result column="exception_info" property="exceptionInfo" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        job_log_id, job_name, job_group, method_name, method_params, job_message, status, exception_info, create_time, create_by, update_time, update_by, remark
+    </sql>
+
+    <sql id="selectJobTaskLogVo">
+        select job_log_id, job_name, job_group, method_name, method_params, job_message, status, exception_info, create_time
+		from quartz_log_job
+    </sql>
+
+    <insert id="insertJobLog">
+        insert into quartz_log_job(
+        <if test="jobLogId != null and jobLogId != 0">job_log_id,</if>
+        <if test="jobName != null and jobName != ''">job_name,</if>
+        <if test="jobGroup != null and jobGroup != ''">job_group,</if>
+        <if test="methodName != null and methodName != ''">method_name,</if>
+        <if test="methodParams != null and methodParams != ''">method_params,</if>
+        <if test="jobMessage != null and jobMessage != ''">job_message,</if>
+        <if test="status != null and status != ''">status,</if>
+        <if test="exceptionInfo != null and exceptionInfo != ''">exception_info,</if>
+        create_time
+        )values(
+        <if test="jobLogId != null and jobLogId != 0">#{jobLogId},</if>
+        <if test="jobName != null and jobName != ''">#{jobName},</if>
+        <if test="jobGroup != null and jobGroup != ''">#{jobGroup},</if>
+        <if test="methodName != null and methodName != ''">#{methodName},</if>
+        <if test="methodParams != null and methodParams != ''">#{methodParams},</if>
+        <if test="jobMessage != null and jobMessage != ''">#{jobMessage},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        <if test="exceptionInfo != null and exceptionInfo != ''">#{exceptionInfo},</if>
+        sysdate()
+        )
+    </insert>
+
+    <update id="cleanJobLog">
+        truncate table quartz_log_job
+    </update>
+
+    <delete id="deleteJobLogByIds">
+        delete from quartz_log_job where job_log_id in
+        <foreach collection="array" item="jobLogId" open="(" separator="," close=")">
+            #{jobLogId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteJobLogById">
+        delete from quartz_log_job where job_log_id = #{jobLogId}
+    </delete>
+
+    <select id="selectJobLogList" resultType="com.track.data.domain.po.quartz.QuartzLogJobPo">
+        <include refid="selectJobTaskLogVo"/>
+        <where>
+            <if test="jobName != null and jobName != ''">
+                AND job_name like concat('%', #{jobName}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="methodName != null and methodName != ''">
+                AND method_name like concat('%', #{methodName}, '%')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectJobLogById" resultType="com.track.data.domain.po.quartz.QuartzLogJobPo">
+        include refid="selectJobTaskLogVo"/>
+        where job_log_id = #{jobLogId}
+    </select>
+
+</mapper>
