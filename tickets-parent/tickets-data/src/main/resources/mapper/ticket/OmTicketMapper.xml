@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.track.data.mapper.ticket.OmTicketMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.track.data.domain.po.ticket.OmTicketPo">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="addr_id" property="addrId" />
+        <result column="addr_name" property="addrName" />
+        <result column="addr_detail" property="addrDetail" />
+        <result column="longitude" property="longitude" />
+        <result column="latitude" property="latitude" />
+        <result column="sort" property="sort" />
+        <result column="publish_state" property="publishState" />
+        <result column="picture" property="picture" />
+        <result column="sales_volume" property="salesVolume" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, addr_id, addr_name, addr_detail, longitude, latitude, sort, publish_state, picture, sales_volume, create_by, create_time, update_by, update_time
+    </sql>
+    <select id="searchManageTicketList" resultType="com.track.data.vo.manage.ticket.ManageTicketListVo">
+        SELECT ot.id AS ticketId,
+            ot.name, ot.sales_volume,
+            MIN(otg.sell_price) AS minSellPrice,
+            ot.`publish_state`,
+            ot.`sort`,
+            MIN(ots.`start_time`) AS minStartTime,
+            MAX(ots.`start_time`) AS maxStartTime,
+            COUNT(ots.id) as sceneCount
+        FROM om_ticket ot
+        INNER JOIN om_ticket_grade otg ON ot.id = otg.`ticket_id`
+        INNER JOIN om_ticket_scene ots ON ots.`ticket_id` = ot.id
+        <where>
+            <if test="null != publishState">
+                and ot.publishState = #{publishState}
+            </if>
+            <if test="startDate != null">
+                and DATE_FORMAT(ots.`start_time`,'%Y-%m-%d')  <![CDATA[>= ]]> = #{startDate}
+            </if>
+            <if test="endDate != null">
+                and DATE_FORMAT(ots.`start_time`,'%Y-%m-%d')  <![CDATA[<= ]]> = #{endDate}
+            </if>
+            <if test="null != ticketName and ticketName != ''">
+                and ot.name like concat('%',#{ticketName},'%')
+            </if>
+        </where>
+        GROUP BY ot.id
+        ORDER BY ot.`update_time` DESC
+    </select>
+
+    <resultMap id="manageTicketInfoVo" type="com.track.data.vo.manage.ticket.ManageTicketInfoVo">
+        <id column="ticketId" property="ticketId" />
+        <result column="name" property="name" />
+        <result column="addr_id" property="addrId" />
+        <result column="addr_name" property="addrName" />
+        <result column="addr_detail" property="addrDetail" />
+        <result column="longitude" property="longitude" />
+        <result column="latitude" property="latitude" />
+        <result column="sort" property="sort" />
+        <result column="publish_state" property="publishState" />
+        <result column="picture" property="picture" />
+        <result column="purchase_html" property="purchaseHtml" />
+        <result column="detail_html" property="detailHtml" />
+        <collection property="ticketSceneInfoList" ofType="com.track.data.vo.manage.ticket.TicketSceneInfoVo">
+            <id column="sceneId" property="sceneId" />
+            <result column="sceneName" property="sceneName" />
+            <result column="start_time" property="startTime" />
+        </collection>
+    </resultMap>
+    <select id="getTicketInfo" resultMap="manageTicketInfoVo">
+        SELECT ot.id AS ticketId,
+            ot.`name`,
+            ots.id AS sceneId,
+            ots.`name` AS sceneName,
+            ots.`start_time`,
+            ot.`addr_id`,
+            ot.`addr_name`,
+            ot.`addr_detail`,
+            ot.`longitude`,
+            ot.`latitude`,
+            ot.`sort`,
+            ot.`publish_state`,
+            ot.`picture`,
+            otd.purchase_html,
+            otd.detail_html
+        FROM om_ticket ot
+        LEFT JOIN om_ticket_detail otd ON otd.`id` = ot.`id`
+        LEFT JOIN om_ticket_scene  ots ON ots.`ticket_id` = ot.`id`
+        WHERE ot.id = #{ticketId}
+        ORDER BY ots.`start_time` ASC
+    </select>
+
+    <resultMap id="ticketGradeInfoVo" type="com.track.data.vo.manage.ticket.TicketGradeInfoVo">
+        <id column="gradeId" property="gradeId" />
+        <result column="gradeName" property="gradeName" />
+        <result column="sell_price" property="sellPrice" />
+        <result column="row_sum" property="rowSum" />
+        <collection property="ticketSeatInfoList" ofType="com.track.data.vo.manage.ticket.TicketSeatInfoVo">
+            <id column="seatId" property="seatId" />
+            <result column="gradeName1" property="gradeName" />
+            <result column="seatRow" property="seatRow" />
+            <result column="seat_sum" property="seatSum" />
+        </collection>
+    </resultMap>
+    <select id="getTicketGradeInfo" resultMap="ticketGradeInfoVo">
+        SELECT otg.id AS gradeId,
+            otg.`name` AS gradeName,
+            otg.`sell_price`,
+            otg.`row_sum`,
+            ots.id as seatId,
+            otg.`name` AS gradeName1,
+            ots.seat_row,
+            ots.seat_sum
+        FROM om_ticket_grade otg
+        INNER JOIN om_ticket_seat ots ON ots.grade_id = otg.`id`
+        WHERE otg.`ticket_id` = #{ticketId}
+        ORDER BY ots.seat_row ASC
+    </select>
+
+    <select id="searchTicketList" resultType="com.track.data.vo.applet.ticket.TicketListVo">
+        SELECT ot.id AS ticketId,
+            ot.`name`,
+            ot.`picture`,
+            ot.`addr_detail`,
+            MIN(ots.`start_time`) AS minStartTime,
+            MIN(otg.`sell_price`) AS minSellPrice
+        FROM om_ticket ot
+        INNER JOIN om_ticket_scene ots ON ots.`ticket_id` = ot.`id`
+        INNER JOIN om_ticket_grade otg ON otg.`ticket_id` = ot.`id`
+        GROUP BY ot.`id`
+        <where>
+            <if test="null != ticketName and ticketName != ''">
+                and ot.ticketName like concat('%', #{ticketName}, '%')
+            </if>
+            <if test="null != timeScreening and timeScreening == 2">
+                and ots.`start_time` <![CDATA[<= ]]> (SELECT now() + INTERVAL 7 DAY)
+            </if>
+            <if test="null != timeScreening and timeScreening == 3">
+                and ots.`start_time` <![CDATA[<= ]]> (SELECT NOW() + INTERVAL 1 MONTH)
+            </if>
+        </where>
+        <if test="null != sortFile and sortFile == 1">
+            ORDER BY ot.`update_time` DESC
+        </if>
+        <if test="null != sortFile and sortFile == 2">
+            ORDER BY ot.`update_time` DESC
+        </if>
+        <if test="null != sortFile and sortFile == 3">
+            ORDER BY ot.`minSellPrice` ASC
+        </if>
+    </select>
+    <select id="getTicketDetail" resultType="com.track.data.vo.applet.ticket.TicketDetailVo">
+        SELECT ot.id AS ticketId,
+            ot.name,
+            ot.addr_detail,
+            ot.longitude,
+            ot.latitude,
+            ot.picture,
+            otd.purchase_html,
+            otd.detail_html,
+            MIN(ots.start_time) AS minStartTime,
+            MAX(ots.start_time) AS maxStartTime,
+            MIN(otg.sell_price) AS minSellPrice,
+            MAX(otg.sell_price) AS maxSellPrice
+        FROM om_ticket ot
+        INNER JOIN om_ticket_detail otd ON otd.id = ot.id AND ot.`id` = #{ticketId}
+        INNER JOIN om_ticket_scene ots ON ots.ticket_id = ot.id
+        INNER JOIN om_ticket_grade otg ON otg.ticket_id = ot.id
+        GROUP BY ot.`id`
+    </select>
+
+</mapper>

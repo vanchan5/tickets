@@ -85,7 +85,7 @@ public abstract class AbstractService<M extends BaseMapper<T>,T> extends Service
     public void editEnabledBatch(EditEnabledDto editEnabledDto) {
 
         UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.in("id", editEnabledDto.getId());
+        updateWrapper.in("id", editEnabledDto.getIds());
         updateWrapper.set("enabled", editEnabledDto.getEnabled());
         this.update(updateWrapper);
     }

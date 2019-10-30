@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.track.data.mapper.ticket.OmTicketSceneMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.track.data.domain.po.ticket.OmTicketScenePo">
+        <id column="id" property="id" />
+        <result column="ticket_id" property="ticketId" />
+        <result column="name" property="name" />
+        <result column="start_time" property="startTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, ticket_id, name, start_time
+    </sql>
+    <select id="getTicketSceneBase" resultType="com.track.data.vo.applet.ticket.TicketSceneBaseVo">
+        SELECT ots.id AS sceneId,
+            ots.`name` AS sceneName,
+            ots.`start_time`,
+            (ots.`start_time` > NOW()) AS canBuy
+        FROM om_ticket_scene ots
+        where ots.`ticket_id` = #{ticketId}
+        ORDER BY ots.`start_time` ASC
+    </select>
+
+</mapper>

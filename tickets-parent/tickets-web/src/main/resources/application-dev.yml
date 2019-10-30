@@ -99,6 +99,8 @@ ignored:
     - /test/findByUserName
     - /security/**
     - /login/self
+    - /common/sms/send
+    - /generator/create
     - /ipInfo/**
 
 tickets:

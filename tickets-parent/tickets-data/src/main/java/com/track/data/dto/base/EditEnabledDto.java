@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 public class EditEnabledDto {
 
     @NotNull(message = "id参数不能为空")
-    private Long[] id;
+    private Long[] ids;
 
     @ApiModelProperty("改变状态 1：启用/通过  0：禁用/驳回")
     @NotNull(message = "enabled参数不能为空")

@@ -15,6 +15,7 @@
         <module>tickets-web</module>
         <module>tickets-test</module>
         <module>tickets-user</module>
+        <module>tickets-order</module>
         <module>tickets-security</module>
         <module>tickets-permission</module>
         <module>tickets-quartz</module>
