@@ -13,7 +13,7 @@ import java.io.Serializable;
  * 场次关联档次信息（剩余库存）
  */
 @Data
-@ApiModel(value = "场次关联档次信息（剩余库存）")
+@ApiModel(description = "场次关联档次信息（剩余库存）")
 public class SceneRelGradeInfoVo  implements Serializable {
 
     private static final long serialVersionUID = 1L;

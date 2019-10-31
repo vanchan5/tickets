@@ -20,7 +20,7 @@ import java.util.List;
  *
  */
 @Data
-@ApiModel(value = "保存演唱会档次参数")
+@ApiModel(description = "保存演唱会档次参数")
 public class SaveTicketGradeDto  implements Serializable {
 
     private static final long serialVersionUID = 1L;

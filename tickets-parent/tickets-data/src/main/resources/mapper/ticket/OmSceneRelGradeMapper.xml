@@ -22,5 +22,12 @@
         WHERE osrg.`ticket_id` = #{ticketId}
         GROUP BY osrg.scene_id, osrg.grade_id
     </select>
+    <select id="getRemainingSum" resultType="java.lang.Integer">
+        SELECT SUM(osrg.remaining_sum) AS remainingSum
+        FROM om_scene_rel_grade osrg
+        WHERE osrg.`scene_id` = #{sceneId} AND osrg.`grade_id` = #{gradeId}
+        GROUP BY osrg.scene_id, osrg.grade_id
+        FOR UPDATE
+    </select>
 
 </mapper>

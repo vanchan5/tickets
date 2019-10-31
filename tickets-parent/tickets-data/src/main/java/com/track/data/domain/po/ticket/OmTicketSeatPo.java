@@ -45,4 +45,10 @@ public class OmTicketSeatPo implements Serializable {
     @ApiModelProperty(value = "当前座位区座位数量")
     private Integer seatSum;
 
+    @ApiModelProperty(value = "最小编号")
+    private Integer minRange;
+
+    @ApiModelProperty(value = "最大编号")
+    private Integer maxRange;
+
 }

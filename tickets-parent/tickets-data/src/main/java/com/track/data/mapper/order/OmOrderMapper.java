@@ -2,8 +2,11 @@ package com.track.data.mapper.order;
 
 import com.track.data.domain.po.order.OmOrderPo;
 import com.track.data.dto.applet.order.OrderSettlementDto;
+import com.track.data.dto.applet.order.SearchMyOrderDto;
 import com.track.data.dto.manage.order.search.SearchOrderDto;
 import com.track.data.mapper.base.IBaseMapper;
+import com.track.data.vo.applet.order.MyOrderDetailVo;
+import com.track.data.vo.applet.order.MyOrderListVo;
 import com.track.data.vo.applet.order.OrderSettlementVo;
 import com.track.data.vo.manage.order.ManageOrderListVo;
 
@@ -34,7 +37,7 @@ public interface OmOrderMapper extends IBaseMapper<OmOrderPo> {
     /**
      * @Author yeJH
      * @Date 2019/10/29 16:07
-     * @Description 查询订单列表
+     * @Description 查询平台订单列表
      *
      * @Update yeJH
      *
@@ -54,4 +57,28 @@ public interface OmOrderMapper extends IBaseMapper<OmOrderPo> {
      * @return com.track.data.vo.applet.order.OrderSettlementVo
      **/
     OrderSettlementVo settlement(OrderSettlementDto orderSettlementDto);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/30 22:39
+     * @Description 查询我的订单列表
+     *
+     * @Update yeJH
+     *
+     * @param  searchMyOrderDto  查询条件
+     * @return java.util.List<MyOrderListVo>
+     **/
+    List<MyOrderListVo> searchMyOrder(SearchMyOrderDto searchMyOrderDto);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/31 10:18
+     * @Description 根据订单id获取订单详情
+     *
+     * @Update yeJH
+     *
+     * @param  orderId 订单id
+     * @return com.track.data.vo.applet.order.MyOrderDetailVo
+     **/
+    MyOrderDetailVo getOrderDetail(Long orderId);
 }

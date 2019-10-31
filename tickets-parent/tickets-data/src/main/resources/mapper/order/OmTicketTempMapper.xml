@@ -21,5 +21,20 @@
     <sql id="Base_Column_List">
         id, order_id, sell_price, order_num, picture, ticket_id, ticket_name, scene_id, scene_name, grade_id, grade_name
     </sql>
+    <select id="getTempByOrder" resultType="com.track.data.domain.po.order.OmTicketTempPo">
+        SELECT otg.sell_price,
+            ot.picture,
+            ot.`id` AS ticketId,
+            ot.name AS ticketName,
+            ot.addr_detail,
+            ots.`id` AS sceneId,
+            ots.`name` AS sceneName,
+            ots.`start_time`,
+            otg.id AS gradeId,
+            otg.`name` AS gradeName
+        FROM om_ticket ot
+        INNER JOIN om_ticket_scene ots ON ot.id  = ots.ticket_id AND ots.`id` = #{sceneId}
+        INNER JOIN om_ticket_grade otg ON otg.`id` = ot.id AND otg.`id` = #{gradeId}
+    </select>
 
 </mapper>

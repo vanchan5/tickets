@@ -2,6 +2,9 @@ package com.track.common.utils.wetch.applet;
 
 import com.track.common.utils.JSONUtils;
 import com.track.data.bo.applet.CodeToSessionBo;
+import com.track.data.dto.applet.order.OrderSubmitDto;
+import com.track.data.mapper.ticket.OmSceneRelGradeMapper;
+import com.track.order.service.IOmOrderService;
 import com.track.web.StartApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +24,9 @@ public class WxAppletUtilTest {
     @Autowired
     private WxAppletBo wxAppletConfig;
 
+    @Autowired
+    private IOmOrderService omOrderService;
+
     @Test
     public void codeToSession() {
         try {
@@ -36,5 +42,13 @@ public class WxAppletUtilTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @Test
+    public void getRemainingSum() {
+        OrderSubmitDto orderSubmitDto = new OrderSubmitDto();
+        orderSubmitDto.setGradeId(1L);
+        orderSubmitDto.setSceneId(2L);
+        Long  remainingSum = omOrderService.submit(orderSubmitDto, null);
+
     }
 }

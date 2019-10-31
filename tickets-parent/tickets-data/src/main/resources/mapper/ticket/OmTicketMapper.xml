@@ -117,7 +117,9 @@
             ots.id as seatId,
             otg.`name` AS gradeName1,
             ots.seat_row,
-            ots.seat_sum
+            ots.seat_sum,
+            ots.min_range,
+            ots.max_range
         FROM om_ticket_grade otg
         INNER JOIN om_ticket_seat ots ON ots.grade_id = otg.`id`
         WHERE otg.`ticket_id` = #{ticketId}

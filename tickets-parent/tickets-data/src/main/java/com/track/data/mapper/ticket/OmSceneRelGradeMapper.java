@@ -1,6 +1,7 @@
 package com.track.data.mapper.ticket;
 
 import com.track.data.domain.po.ticket.OmSceneRelGradePo;
+import com.track.data.dto.applet.order.OrderSubmitDto;
 import com.track.data.mapper.base.IBaseMapper;
 import com.track.data.vo.applet.ticket.SceneRelGradeInfoVo;
 
@@ -27,4 +28,16 @@ public interface OmSceneRelGradeMapper extends IBaseMapper<OmSceneRelGradePo> {
      * @return java.util.List<com.track.data.vo.applet.ticket.SceneRelGradeInfoVo>
      **/
     List<SceneRelGradeInfoVo> getSceneRelGradeInfoList(Long ticketId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/31 12:26
+     * @Description 根据场次档次获取门票所剩余的座位数
+     *
+     * @Update yeJH
+     *
+     * @param  orderSubmitDto 提交订单参数
+     * @return java.lang.Integer
+     **/
+    Integer getRemainingSum(OrderSubmitDto orderSubmitDto);
 }

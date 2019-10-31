@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2019/10/25 14:15
  */
 @Data
-@ApiModel(value = "平台门票详细信息")
+@ApiModel(description = "平台门票详细信息")
 public class ManageTicketInfoVo  implements Serializable {
 
     private static final long serialVersionUID = 1L;

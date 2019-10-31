@@ -56,11 +56,11 @@ public class OmOrderPo implements Serializable {
     @ApiModelProperty(value = "支付金额")
     private BigDecimal payAmount;
 
-    @ApiModelProperty(value = "购买票数")
+    /*@ApiModelProperty(value = "购买票数")
     private Integer orderNum;
 
     @ApiModelProperty(value = "门票价格")
-    private BigDecimal sellPrice;
+    private BigDecimal sellPrice;*/
 
     @ApiModelProperty(value = "支付过期时间， 默认为2小时")
     private LocalDateTime expireTime;

@@ -19,7 +19,7 @@ import java.util.List;
  *
  */
 @Data
-@ApiModel(value = "新增/编辑门票参数")
+@ApiModel(description = "新增/编辑门票参数")
 public class SaveTicketDto  implements Serializable {
 
     private static final long serialVersionUID = 1L;

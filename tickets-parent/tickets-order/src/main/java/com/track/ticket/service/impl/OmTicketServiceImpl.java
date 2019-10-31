@@ -147,7 +147,7 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
 
         //获取门票档次及作座位区信息
         List<TicketGradeInfoVo> ticketGradeInfoList = mapper.getTicketGradeInfo(ticketId);
-        if(null != ticketGradeInfoList && ticketGradeInfoList.size() > 0) {
+        /*if(null != ticketGradeInfoList && ticketGradeInfoList.size() > 0) {
             //当前座位号
             int currentSum = 0;
             for(TicketGradeInfoVo ticketGradeInfoVo : ticketGradeInfoList) {
@@ -163,7 +163,7 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
                     }
                 }
             }
-        }
+        }*/
         manageTicketInfoVo.setTicketGradeInfoList(ticketGradeInfoList);
 
         return manageTicketInfoVo;
@@ -237,7 +237,7 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
     private void insertTicket(SaveTicketDto saveTicketDto, UmUserPo operator) {
         OmTicketPo omTicketPo = new OmTicketPo();
         BeanUtils.copyProperties(saveTicketDto, omTicketPo);
-        AreaRegionPo areaRegionPo = areaRegionMapper.selectById(omTicketPo);
+        AreaRegionPo areaRegionPo = areaRegionMapper.selectById(omTicketPo.getAddrId());
         if(null != areaRegionPo && AreaRegionLevelEnum.DISTRICT.getId().equals(areaRegionPo.getLevelType())) {
             //查询省市区  地点等级为区（县）级别
             omTicketPo.setAddrName(areaRegionPo.getMergerName().replace(",", "/"));

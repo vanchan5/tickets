@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  * 小程序根据门票id获取对应的档次信息
  */
 @Data
-@ApiModel(value = "小程序根据门票id获取对应的档次信息")
+@ApiModel(description = "小程序根据门票id获取对应的档次信息")
 public class TicketGradeBaseVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

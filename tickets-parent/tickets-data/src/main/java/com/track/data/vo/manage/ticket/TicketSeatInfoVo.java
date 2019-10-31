@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @since 2019/10/25 15:58
  */
 @Data
-@ApiModel(value = "平台门票座位数据")
+@ApiModel(description = "平台门票座位数据")
 public class TicketSeatInfoVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
