@@ -18,4 +18,26 @@
         id, create_by, create_time, update_by, update_time, content, state
     </sql>
 
+    <select id="searchFeedBack" resultType="com.track.data.vo.manage.feedBack.SearchFeedBackVo">
+        select ofb.id,uu.nick_name,ofb.content,ofb.create_time as feed_back_time,ofb.state,uuu.username as deal_people,
+               ofb.update_time as deal_time
+        from om_feed_back ofb
+        inner join um_user uu on ofb.create_by = uu.id
+        left join um_user uuu on ofb.update_by = uuu.id and uuu.del_flag = 0
+        where uu.del_flag = 0
+        <if test="state != null">
+            and ofb.state = #{state}
+        </if>
+        <if test="keyWord != null and keyWord != '' ">
+            and ofb.content like concat('%', #{keyword} ,'%')
+        </if>
+        <if test="startTime != null">
+            and DATE_FORMAT(ofb.create_time,'%Y-%m-%d') &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and DATE_FORMAT(ofb.create_time,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+        order by ofb.create_time DESC
+    </select>
+
 </mapper>
