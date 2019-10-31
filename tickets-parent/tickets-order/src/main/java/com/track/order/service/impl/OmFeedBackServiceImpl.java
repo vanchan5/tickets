@@ -80,6 +80,10 @@ public class OmFeedBackServiceImpl extends AbstractService<OmFeedBackMapper, OmF
         Integer pageNo = searchFeedBackDto.getPageNo() == null ? defaultPageNo : searchFeedBackDto.getPageNo();
         Integer pageSize = searchFeedBackDto.getPageSize() == null ? defaultPageSize : searchFeedBackDto.getPageSize();
 
+        if (searchFeedBackDto.getStartTime().isAfter(searchFeedBackDto.getEndTime())){
+            throw new ServiceException(ResultCode.FAIL,"查询条件:反馈开始时间不能大于反馈截止时间");
+        }
+
         PageInfo<SearchFeedBackVo> feedBackVoPageInfo = PageHelper.startPage(pageNo,pageSize)
                 .doSelectPageInfo(()->mapper.searchFeedBack(searchFeedBackDto));
 
