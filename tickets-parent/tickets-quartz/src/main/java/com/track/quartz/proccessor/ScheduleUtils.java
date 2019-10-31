@@ -84,7 +84,7 @@ public class ScheduleUtils {
                 pauseJob(scheduler, job.getJobId());
             }
         } catch (SchedulerException e) {
-            log.error("createScheduleJob 异常：", e);
+            log.error("%%%%%%%%%%%%%createScheduleJob 异常：定时任务配置异常，如触发时间小于当前时间等%%%%%%%%%%%%%");
         } catch (ServiceException e) {
             log.error("createScheduleJob 异常：", e);
         }
@@ -120,7 +120,7 @@ public class ScheduleUtils {
             }
 
         } catch (SchedulerException e) {
-            log.error("SchedulerException 异常：", e);
+            log.error("%%%%%%%%%%%%%SchedulerException 异常：定时任务配置异常，如触发时间小于当前时间等%%%%%%%%%%%%%");
         } catch (ServiceException e) {
             log.error("SchedulerException 异常：", e);
         }
