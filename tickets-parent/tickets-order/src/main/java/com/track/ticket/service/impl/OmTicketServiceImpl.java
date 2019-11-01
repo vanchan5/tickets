@@ -249,6 +249,7 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
         omTicketPo.setPublishState(false);
         //操作人员
         omTicketPo.setCreateBy(operator.getId());
+        omTicketPo.setUpdateTime(LocalDateTime.now());
         //新增/编辑门票详情信息   购买须知以及详情的 html文本
         OmTicketDetailPo omTicketDetailPo = new OmTicketDetailPo();
         BeanUtils.copyProperties(saveTicketDto, omTicketDetailPo);
@@ -311,15 +312,23 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
             //插入档次信息
             omTicketGradeMapper.insert(omTicketGradePo);
             //3 保存该档次下的座位区
+            //座位区编号
+            final Integer[] number = {0};
             List<OmTicketSeatPo> omTicketSeatPoList = new ArrayList<>();
             saveTicketGradeDto.getTicketSeatList().stream().forEach(saveTicketSeatDto -> {
                 OmTicketSeatPo omTicketSeatPo = new OmTicketSeatPo();
+                omTicketSeatPo.setTicketId(ticketId);
                 //座位区（第几排）
                 omTicketSeatPo.setSeatRow(saveTicketSeatDto.getSeatRow());
                 //当前座位区座位数量
                 omTicketSeatPo.setSeatSum(saveTicketSeatDto.getSeatSum());
                 //档位id
                 omTicketSeatPo.setGradeId(omTicketGradePo.getId());
+                //座位区最小编号
+                omTicketSeatPo.setMinRange(number[0] + 1);
+                //座位区最大编号
+                omTicketSeatPo.setMaxRange(number[0] + saveTicketSeatDto.getSeatSum());
+                number[0] = number[0] + saveTicketSeatDto.getSeatSum();
                 omTicketSeatPoList.add(omTicketSeatPo);
             });
             //批量插入座位区记录

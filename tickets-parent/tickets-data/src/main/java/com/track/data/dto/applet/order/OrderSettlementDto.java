@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -29,6 +30,7 @@ public class OrderSettlementDto  implements Serializable {
 
     @ApiModelProperty(value = "购买票数")
     @NotNull(message = "购买票数参数不能为空")
+    @Min(value = 1, message = "至少购买一张")
     private Integer orderNum;
 
 }

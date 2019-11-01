@@ -127,11 +127,17 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
         if(null == orderSettlementVo) {
             throw new ServiceException(ResultCode.NO_EXISTS, "不存在该数据");
         }
+        if(orderSettlementDto.getOrderNum() > orderSettlementVo.getRemainingSum()) {
+            throw new ServiceException(ResultCode.PARAM_ERROR, "剩余座位不足");
+        }
+
         //购买票数
         orderSettlementVo.setOrderNum(orderSettlementDto.getOrderNum());
+
         //总计金额  购买票数 * 单价
         BigDecimal payAmount = BigDecimalUtil.safeMultiply(orderSettlementDto.getOrderNum(),
                 orderSettlementVo.getSellPrice());
+        orderSettlementVo.setPayAmount(payAmount);
 
         return orderSettlementVo;
     }
@@ -235,8 +241,8 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
         omTicketTempPo.setOrderNum(orderSubmitDto.getOrderNum());
         omTicketTempMapper.insert(omTicketTempPo);
 
-        //分配座位信息
-        arrangeSeat(orderSubmitDto, omOrderPo.getId());
+        //分配座位信息（用户提交订单不分配座位，等到支付完成再根据购票数去分配座位）
+        //arrangeSeat(orderSubmitDto, omOrderPo.getId());
 
 
         return omOrderPo.getId();
