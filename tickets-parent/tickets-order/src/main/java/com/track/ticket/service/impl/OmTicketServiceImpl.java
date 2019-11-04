@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.track.common.constant.QuartzConstants;
 import com.track.common.enums.manage.area.AreaRegionLevelEnum;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.exception.ServiceException;
+import com.track.data.domain.po.quartz.QuartzJobPo;
 import com.track.data.domain.po.ticket.*;
 import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.applet.ticket.SearchTicketDto;
@@ -14,17 +16,17 @@ import com.track.data.dto.base.EditEnabledDto;
 import com.track.data.dto.manage.ticket.save.SaveTicketDto;
 import com.track.data.dto.manage.ticket.search.SearchManageTicketDto;
 import com.track.data.mapper.order.OmOrderMapper;
+import com.track.data.mapper.quartz.QuartzJobMapper;
 import com.track.data.mapper.ticket.*;
 import com.track.data.vo.applet.ticket.*;
 import com.track.data.vo.manage.ticket.ManageTicketInfoVo;
 import com.track.data.vo.manage.ticket.ManageTicketListVo;
 import com.track.data.vo.manage.ticket.TicketGradeInfoVo;
 import com.track.data.vo.manage.ticket.TicketSeatInfoVo;
-import com.track.ticket.service.IOmSceneRelGradeService;
-import com.track.ticket.service.IOmTicketSceneService;
-import com.track.ticket.service.IOmTicketSeatService;
-import com.track.ticket.service.IOmTicketService;
+import com.track.quartz.proccessor.ScheduleUtils;
+import com.track.ticket.service.*;
 import com.track.core.base.service.AbstractService;
+import org.quartz.Scheduler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
@@ -75,10 +77,22 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
     private BasicSettingMapper basicSettingMapper;
 
     @Autowired
+    private OmSceneGradeRelSeatMapper omSceneGradeRelSeatMapper;
+
+    @Autowired
+    private QuartzJobMapper quartzJobMapper;
+
+    @Autowired
+    private IOmSceneGradeRelSeatService omSceneGradeRelSeatService;
+
+    @Autowired
     private IOmTicketSceneService omTicketSceneService;
 
     @Autowired
     private IOmTicketSeatService omTicketSeatService;
+
+    @Autowired
+    private Scheduler scheduler;
 
     @Autowired
     private IOmSceneRelGradeService omSceneRelGradeService;
@@ -212,9 +226,12 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
             //删除座位区信息
             omTicketSeatMapper.delete(new QueryWrapper<OmTicketSeatPo>().lambda().and(obj -> obj
                     .eq(OmTicketSeatPo::getTicketId, omTicketPo.getId())));
-            //删除场次座位区关联的座位信息
+            //删除场次跟档次的关联信息
             omSceneRelGradeMapper.delete(new QueryWrapper<OmSceneRelGradePo>().lambda().and(obj -> obj
                     .eq(OmSceneRelGradePo::getTicketId, omTicketPo.getId())));
+            //删除场次跟档次的关联与座位的关联信息
+            omSceneGradeRelSeatMapper.delete(new QueryWrapper<OmSceneGradeRelSeatPo>().lambda().and(obj -> obj
+                    .eq(OmSceneGradeRelSeatPo::getTicketId, omTicketPo.getId())));
             //新增
             insertTicket(saveTicketDto, operator);
         } else {
@@ -269,6 +286,7 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
 
         //插入关联
         insertTicketRel(saveTicketDto, omTicketPo.getId());
+
     }
 
     /**
@@ -297,6 +315,9 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
         });
         //批量插入
         omTicketSceneService.saveBatch(omTicketScenePoList);
+
+        //新增定时任务  在场次演出开始之后 用户的订单置为已消费状态
+        insertOrderQuartzJob(omTicketScenePoList);
 
         //2.保存门票档次以及座位区信息（无法批量插入 座位区信息关联档次id）
         saveTicketDto.getTicketGradeList().stream().forEach(saveTicketGradeDto -> {
@@ -334,31 +355,43 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
             //批量插入座位区记录
             omTicketSeatService.saveBatch(omTicketSeatPoList);
         });
-
-        //4.保存座位数  场次跟档次的关联
-        List<OmSceneRelGradePo> omSceneRelGradePoList = new ArrayList<>();
-        //获取已插入的档次
-        QueryWrapper<OmTicketSeatPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(OmTicketSeatPo::getTicketId, ticketId);
-        List<OmTicketSeatPo> omTicketSeatPoList = omTicketSeatMapper.selectList(queryWrapper);
-        omTicketScenePoList.stream().forEach(omTicketScenePo -> {
-            omTicketSeatPoList.stream().forEach(omTicketSeatPo -> {
-                OmSceneRelGradePo omSceneRelGradePo = new OmSceneRelGradePo();
-                //门票id
-                omSceneRelGradePo.setTicketId(ticketId);
-                //门票场次id
-                omSceneRelGradePo.setSceneId(omTicketScenePo.getId());
-                //门票档次id
-                omSceneRelGradePo.setGradeId(omTicketSeatPo.getGradeId());
-                //门票座位区id
-                omSceneRelGradePo.setSeatId(omTicketSeatPo.getId());
-                //剩余总座位数
-                omSceneRelGradePo.setRemainingSum(omTicketSeatPo.getSeatSum());
-                omSceneRelGradePoList.add(omSceneRelGradePo);
-            });
-        });
-        //批量插入关联
+        //4.保存场次，档次跟座位区的关联
+        List<OmSceneRelGradePo> omSceneRelGradePoList = omSceneRelGradeMapper.getInsertRelInfo(ticketId);
         omSceneRelGradeService.saveBatch(omSceneRelGradePoList);
+
+        //5.保存场次，档次跟座位具体某一排的关联
+        List<OmSceneGradeRelSeatPo> omSceneGradeRelSeatPoList = omSceneGradeRelSeatMapper.getInsertRelSeatInfo(ticketId);
+        omSceneGradeRelSeatService.saveBatch(omSceneGradeRelSeatPoList);
+    }
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/3 17:53
+     * @Description 新增定时任务  在场次演出开始之后 用户的订单置为已消费状态
+     *
+     * @Update yeJH
+     *
+     * @param  omTicketScenePoList
+     * @return void
+     **/
+    private void insertOrderQuartzJob(List<OmTicketScenePo> omTicketScenePoList) {
+        omTicketScenePoList.stream().forEach(omTicketScenePo -> {
+            QuartzJobPo quartzJobPo = new QuartzJobPo();
+            quartzJobPo.setJobId(omTicketScenePo.getId());
+            quartzJobPo.setJobName("orderQuartz");
+            quartzJobPo.setMethodName("orderFinish");
+            quartzJobPo.setMethodParams(String.valueOf(omTicketScenePo.getId()));
+            //cron 表达式 只在场次开始的时间点执行一次
+            String cronExpression = omTicketScenePo.getStartTime().getSecond() + " " + omTicketScenePo.getStartTime().getMinute()
+                    + " " + omTicketScenePo.getStartTime().getHour() + " "  + omTicketScenePo.getStartTime().getDayOfMonth()
+                    + " " + omTicketScenePo.getStartTime().getMonthValue() + " ? " +  omTicketScenePo.getStartTime().getYear()
+                    + "-" + omTicketScenePo.getStartTime().getYear();
+            quartzJobPo.setCronExpression(cronExpression);
+            //正常状态
+            quartzJobPo.setStatus(QuartzConstants.Status.NORMAL.getValue());
+            quartzJobMapper.insertJob(quartzJobPo);
+            ScheduleUtils.createScheduleJob(scheduler, quartzJobPo);
+        });
     }
 
 

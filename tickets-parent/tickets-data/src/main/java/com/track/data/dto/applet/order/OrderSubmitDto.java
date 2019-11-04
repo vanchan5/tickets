@@ -19,13 +19,17 @@ public class OrderSubmitDto   implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "场次id")
+    /*@ApiModelProperty(value = "场次id")
     @NotNull(message = "场次id参数不能为空")
     private Long sceneId;
 
     @ApiModelProperty(value = "档次id")
     @NotNull(message = "档次id参数不能为空")
-    private Long gradeId;
+    private Long gradeId;*/
+
+    @ApiModelProperty(value = "场次跟档次关联id")
+    @NotNull(message = "relId参数不能为空")
+    private Long relId;
 
     @ApiModelProperty(value = "购买票数")
     @NotNull(message = "购买票数参数不能为空")
@@ -37,6 +41,6 @@ public class OrderSubmitDto   implements Serializable {
 
     @ApiModelProperty(value = "手机尾号")
     @NotNull(message = "手机尾号参数不能为空")
-    private Integer shipPhone;
+    private String shipPhone;
 
 }

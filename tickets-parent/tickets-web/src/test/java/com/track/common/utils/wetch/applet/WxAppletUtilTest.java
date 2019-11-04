@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDateTime;
+
 /**
  * @author yeJH
  * @description:
@@ -45,10 +47,5 @@ public class WxAppletUtilTest {
     }
     @Test
     public void getRemainingSum() {
-        OrderSubmitDto orderSubmitDto = new OrderSubmitDto();
-        orderSubmitDto.setGradeId(1L);
-        orderSubmitDto.setSceneId(2L);
-        Long  remainingSum = omOrderService.submit(orderSubmitDto, null);
-
     }
 }

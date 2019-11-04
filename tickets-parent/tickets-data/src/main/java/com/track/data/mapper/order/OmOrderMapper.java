@@ -81,4 +81,16 @@ public interface OmOrderMapper extends IBaseMapper<OmOrderPo> {
      * @return com.track.data.vo.applet.order.MyOrderDetailVo
      **/
     MyOrderDetailVo getOrderDetail(Long orderId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/3 21:02
+     * @Description 根据场次id获取 用户下单该场次的订单并且状态全部置为已消费
+     *
+     * @Update yeJH
+     *
+     * @param  omTicketSceneId
+     * @return void
+     **/
+    void updateOrderByScene(Long omTicketSceneId);
 }

@@ -85,4 +85,42 @@ public interface IOmOrderService extends Service<OmOrderPo> {
      * @return java.lang.Long   订单id
      **/
     Long submit(OrderSubmitDto orderSubmitDto, UmUserPo umUserPo);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/2 11:28
+     * @Description 删除用户订单
+     *
+     * @Update yeJH
+     *
+     * @param  orderId
+     * @param  umUserPo
+     * @return void
+     **/
+    void deleteMyOrder(Long orderId, UmUserPo umUserPo);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/2 11:28
+     * @Description 用户取消待支付订单
+     *
+     * @Update yeJH
+     *
+     * @param  orderId
+     * @param  umUserPo
+     * @return void
+     **/
+    void cancelMyOrder(Long orderId, UmUserPo umUserPo);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/2 17:39
+     * @Description 用户下单 在规定时间内没有完成支付，关闭订单
+     *
+     * @Update yeJH
+     *
+     * @param  orderId
+     * @return void
+     **/
+    void closeOrder(Long orderId);
 }

@@ -24,8 +24,12 @@ public class MyOrderDetailVo implements Serializable {
 
     @ApiModelProperty(value = "订单状态   \n1.待付款   \n2.已取消   \n3.待消费   \n" +
             "4.已完成   \n5.退款中   \n6.已退款   \n")
-    @JSONField(ordinal = 1)
+    @JSONField(ordinal = 0)
     private Integer orderState;
+
+    @ApiModelProperty(value = "订单状态说明")
+    @JSONField(ordinal = 1)
+    private String stateExplain;
 
     @ApiModelProperty(value = "用户昵称")
     @JSONField(ordinal = 2)
@@ -43,9 +47,9 @@ public class MyOrderDetailVo implements Serializable {
     @JSONField(ordinal = 5)
     private Integer orderNum;
 
-    @ApiModelProperty(value = "座位号")
+    /*@ApiModelProperty(value = "座位号")
     @JSONField(serialize = false)
-    private String seatStr;
+    private String seatStr;*/
 
     @ApiModelProperty(value = "座位号")
     @JSONField(ordinal = 6)
@@ -90,5 +94,13 @@ public class MyOrderDetailVo implements Serializable {
     @ApiModelProperty(value = "支付时间")
     @JSONField(ordinal = 16)
     private LocalDateTime payTime;
+
+    @ApiModelProperty(value = "退款时间")
+    @JSONField(ordinal = 17)
+    private LocalDateTime refundTime;
+
+    @ApiModelProperty(value = "未支付订单支付截止时间")
+    @JSONField(ordinal = 18)
+    private LocalDateTime expireTime;
 
 }

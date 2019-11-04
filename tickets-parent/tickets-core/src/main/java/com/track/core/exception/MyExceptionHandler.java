@@ -1,6 +1,7 @@
 package com.track.core.exception;
 
 import com.track.common.enums.system.ResultCode;
+import com.track.common.utils.LoggerUtil;
 import com.track.core.interaction.JsonViewData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.FieldError;
@@ -28,8 +29,8 @@ public class MyExceptionHandler {
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public JsonViewData handleServiceException(Exception e) {
-        log.error(String.valueOf(e));
-        log.error(e.getLocalizedMessage());
+        LoggerUtil.error(e);
+        LoggerUtil.error(e.getLocalizedMessage());
         if (e instanceof ServiceException) {
             ServiceException serviceException = (ServiceException) e;
             return new JsonViewData(serviceException.getResultCode(), serviceException.getLocalizedMessage(), serviceException.getData());

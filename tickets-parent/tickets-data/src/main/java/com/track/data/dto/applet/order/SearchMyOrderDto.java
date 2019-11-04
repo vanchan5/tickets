@@ -1,5 +1,7 @@
 package com.track.data.dto.applet.order;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.track.common.enums.manage.order.SearchOrderStateEnum;
 import com.track.data.dto.base.BaseSearchDto;
 import io.swagger.annotations.ApiModel;
@@ -23,9 +25,11 @@ public class SearchMyOrderDto extends BaseSearchDto implements Serializable {
 
 
     @ApiModelProperty(value = "订单查询状态（默认全部）   \n1.全部   \n2.待支付   \n3.待消费   \n4.已完成   \n")
-    private SearchOrderStateEnum orderState;
+    @NotNull(message = "订单查询状态不能为空")
+    private Integer orderState;
 
     @ApiModelProperty(value = "小程序用户id")
+    @JsonIgnore
     private Long userId;
 
 

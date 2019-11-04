@@ -27,4 +27,16 @@ public interface OmTicketSceneMapper extends IBaseMapper<OmTicketScenePo> {
      * @return java.util.List<com.track.data.vo.applet.ticket.TicketSceneBaseVo>
      **/
     List<TicketSceneBaseVo> getTicketSceneBase(Long ticketId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/3 17:30
+     * @Description 根据用户下单的场次跟档次的关联id获取场次信息
+     *
+     * @Update yeJH
+     *
+     * @param  relId
+     * @return com.track.data.domain.po.ticket.OmTicketScenePo
+     **/
+    OmTicketScenePo findByRelId(Long relId);
 }

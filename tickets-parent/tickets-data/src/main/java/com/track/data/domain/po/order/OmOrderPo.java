@@ -2,6 +2,7 @@ package com.track.data.domain.po.order;
 
 import java.math.BigDecimal;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 
@@ -62,7 +63,7 @@ public class OmOrderPo implements Serializable {
     @ApiModelProperty(value = "门票价格")
     private BigDecimal sellPrice;*/
 
-    @ApiModelProperty(value = "支付过期时间， 默认为2小时")
+    @ApiModelProperty(value = "支付过期时间， 默认为半小时")
     private LocalDateTime expireTime;
 
     @ApiModelProperty(value = "1-待付款  2-已取消 3-待消费  4-已完成 5-退款中 6-已退款")
@@ -96,6 +97,7 @@ public class OmOrderPo implements Serializable {
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "删除标志 1-删除 0未删除")
+    @TableLogic
     private Boolean delFlag;
 
 

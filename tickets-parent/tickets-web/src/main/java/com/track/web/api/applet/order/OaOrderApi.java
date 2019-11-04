@@ -83,6 +83,42 @@ public class OaOrderApi extends BaseWeb {
 
     /**
      * @Author yeJH
+     * @Date 2019/10/31 9:57
+     * @Description 用户删除订单
+     *
+     * @Update yeJH
+     *
+     * @param  orderId 订单id
+     **/
+    @ApiOperation(value="用户删除订单",notes = "根据订单id删除订单")
+    @GetMapping("/delete/{orderId}")
+    public JsonViewData delete(@PathVariable Long orderId){
+
+        UmUserPo umUserPo =securityUtil.getSysCurrUser();
+        service.deleteMyOrder(orderId, umUserPo);
+        return setJsonViewData(ResultCode.SUCCESS, "删除成功");
+    }
+
+    /**
+     * @Author yeJH
+     * @Date 2019/10/31 9:57
+     * @Description 用户取消待支付订单
+     *
+     * @Update yeJH
+     *
+     * @param  orderId 订单id
+     **/
+    @ApiOperation(value="用户取消待支付订单",notes = "根据订单id取消待支付订单")
+    @GetMapping("/cancel/{orderId}")
+    public JsonViewData cancelMyOrder(@PathVariable Long orderId){
+
+        UmUserPo umUserPo =securityUtil.getSysCurrUser();
+        service.cancelMyOrder(orderId, umUserPo);
+        return setJsonViewData(ResultCode.SUCCESS, "订单取消成功");
+    }
+
+    /**
+     * @Author yeJH
      * @Date 2019/10/30 17:49
      * @Description 订单结算
      *
@@ -98,7 +134,7 @@ public class OaOrderApi extends BaseWeb {
             @Validated @RequestBody OrderSettlementDto orderSettlementDto) {
 
 
-        return new JsonViewData(ResultCode.SUCCESS, "查找成功",
+        return new JsonViewData(ResultCode.SUCCESS, "结算成功",
                 service.settlement(orderSettlementDto));
 
     }
@@ -121,7 +157,7 @@ public class OaOrderApi extends BaseWeb {
 
         UmUserPo umUserPo =securityUtil.getSysCurrUser();
 
-        return new JsonViewData(ResultCode.SUCCESS, "查找成功",
+        return new JsonViewData(ResultCode.SUCCESS, "提交成功",
                 service.submit(orderSubmitDto, umUserPo));
 
     }

@@ -31,10 +31,12 @@
             ots.`name` AS sceneName,
             ots.`start_time`,
             otg.id AS gradeId,
-            otg.`name` AS gradeName
-        FROM om_ticket ot
-        INNER JOIN om_ticket_scene ots ON ot.id  = ots.ticket_id AND ots.`id` = #{sceneId}
-        INNER JOIN om_ticket_grade otg ON otg.`id` = ot.id AND otg.`id` = #{gradeId}
+            otg.`name` AS gradeName,
+            osrg.id AS relId
+        FROM om_scene_rel_grade osrg
+        INNER JOIN om_ticket ot ON ot.id = osrg.ticket_id AND osrg.id = #{relId}
+        INNER JOIN om_ticket_scene ots ON osrg.scene_id  = ots.id
+        INNER JOIN om_ticket_grade otg ON osrg.`grade_id` = otg.id
     </select>
 
 </mapper>
