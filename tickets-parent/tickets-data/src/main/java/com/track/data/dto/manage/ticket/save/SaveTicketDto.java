@@ -37,6 +37,10 @@ public class SaveTicketDto  implements Serializable {
     @NotEmpty(message = "至少添加一个演唱会场次")
     private List<SaveTicketSceneDto> ticketSceneList;
 
+    @ApiModelProperty(value = "省份id")
+    @NotNull(message = "provinceId参数不能为空")
+    private Long provinceId;
+
     @ApiModelProperty(value = "地区ID")
     @NotNull(message = "addrId参数不能为空")
     private Long addrId;

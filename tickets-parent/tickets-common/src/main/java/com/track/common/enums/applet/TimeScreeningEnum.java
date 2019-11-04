@@ -8,7 +8,7 @@ import java.util.Objects;
  * @author yeJH
  * @since 2019/10/29 20:13
  * <p>
- * //TODO
+ * 筛选门票时间枚举
  */
 public enum TimeScreeningEnum implements BaseEnum {
 

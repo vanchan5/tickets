@@ -138,14 +138,23 @@
         INNER JOIN om_ticket_scene ots ON ots.`ticket_id` = ot.`id`
         INNER JOIN om_ticket_grade otg ON otg.`ticket_id` = ot.`id`
         <where>
-            <if test="null != ticketName and ticketName != ''">
-                and ot.name like concat('%', #{ticketName}, '%')
+            <if test="null != cityCodeType and cityCodeType == 1">
+                and ot.province_code = #{cityCode}
+            </if>
+            <if test="null != cityCodeType and cityCodeType == 2">
+                and ot.city_code = #{cityCode}
+            </if>
+            <if test="null != cityCodeType and cityCodeType == 3">
+                and ot.district_code = #{cityCode}
             </if>
             <if test="null != timeScreening and timeScreening == 2">
                 and ots.`start_time` <![CDATA[<= ]]> (SELECT now() + INTERVAL 7 DAY)
             </if>
             <if test="null != timeScreening and timeScreening == 3">
                 and ots.`start_time` <![CDATA[<= ]]> (SELECT NOW() + INTERVAL 1 MONTH)
+            </if>
+            <if test="null != ticketName and ticketName != ''">
+                and ot.name like concat('%', #{ticketName}, '%')
             </if>
         </where>
         GROUP BY ot.`id`

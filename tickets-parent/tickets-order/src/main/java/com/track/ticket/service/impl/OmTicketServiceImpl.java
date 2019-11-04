@@ -262,6 +262,14 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
             //地区id  addrId  查询不到记录，或不是区（县）级别
             throw new ServiceException(ResultCode.PARAM_ERROR, "查询不到地区记录，或地区不是区（县）级别");
         }
+        //省份
+        AreaRegionPo province = areaRegionMapper.selectById(saveTicketDto.getProvinceId());
+        //地址省份编码
+        omTicketPo.setProvinceCode(province.getCityCode());
+        //地址城市编码
+        omTicketPo.setCityCode(areaRegionPo.getCityCode());
+        //地址区（县）编码
+        omTicketPo.setDistrictCode(areaRegionPo.getParentCode());
         //默认下架状态
         omTicketPo.setPublishState(false);
         //操作人员

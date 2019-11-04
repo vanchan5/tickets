@@ -294,7 +294,7 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
         omSceneRelGradeMapper.updateById(omSceneRelGradePo);
 
         //分配座位信息（用户提交订单不分配座位，等到支付完成再根据购票数去分配座位）
-        //arrangeSeat(omOrderPo);
+        arrangeSeat(omOrderPo);
 
 
         //过期时间  半小时
@@ -379,6 +379,8 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
                 //修改剩余座位  剩余座位 - 购买票数
                 seat.setRemainingSum(seat.getRemainingSum() - remainingNum);
             }
+            //批量插入
+            omOrderRelSeatService.saveBatch(omOrderRelSeatPoList);
             omSceneGradeRelSeatService.updateBatchById(omSceneGradeRelSeatPoList);
         }
     }
