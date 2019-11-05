@@ -52,7 +52,7 @@ spring:
     port: 1884
     username: admin
     password: admins
-    virtual-host: my_tickets
+    virtual-host: my_vhost
 #    connection-timeout: 10000
     listener:
       simple:
