@@ -1,7 +1,8 @@
-# distribution-parent/.idea
+# tickets-parent/.idea
 
 HELP.md
 **/target/
+**/ticket-log/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
