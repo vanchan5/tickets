@@ -1,6 +1,7 @@
 package com.track.data.mapper.ticket;
 
 import com.track.data.domain.po.ticket.OmSceneRelGradePo;
+import com.track.data.dto.applet.order.OrderSubmitDto;
 import com.track.data.mapper.base.IBaseMapper;
 import com.track.data.vo.applet.ticket.SceneRelGradeInfoVo;
 
@@ -27,4 +28,28 @@ public interface OmSceneRelGradeMapper extends IBaseMapper<OmSceneRelGradePo> {
      * @return java.util.List<com.track.data.vo.applet.ticket.SceneRelGradeInfoVo>
      **/
     List<SceneRelGradeInfoVo> getSceneRelGradeInfoList(Long ticketId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/1 18:22
+     * @Description 根据场次档次获取门票所剩余的座位数
+     *
+     * @Update yeJH
+     *
+     * @param  relId 场次档次关联的id
+     * @return com.track.data.domain.po.ticket.OmSceneRelGradePo
+     **/
+    OmSceneRelGradePo getRemainingSum(Long relId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/1 12:50
+     * @Description 新增/编辑门票信息时 根据已插入的场次，档次获取要插入的关联座位信息
+     *
+     * @Update yeJH
+     *
+     * @param  ticketId
+     * @return java.util.List<com.track.data.domain.po.ticket.OmSceneRelGradePo>
+     **/
+    List<OmSceneRelGradePo> getInsertRelInfo(Long ticketId);
 }

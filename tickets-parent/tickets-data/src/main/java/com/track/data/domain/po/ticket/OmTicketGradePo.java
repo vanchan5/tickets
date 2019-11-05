@@ -47,7 +47,4 @@ public class OmTicketGradePo implements Serializable {
     @ApiModelProperty(value = "该档位有多少排座位")
     private Integer rowSum;
 
-    @ApiModelProperty(value = "座位总数量")
-    private Integer seatSum;
-
 }

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @since 2019/10/25 10:57
  */
 @Data
-@ApiModel(value = "平台门票列表数据")
+@ApiModel(description = "平台门票列表数据")
 public class ManageTicketListVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

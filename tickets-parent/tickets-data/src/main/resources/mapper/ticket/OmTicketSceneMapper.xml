@@ -23,5 +23,11 @@
         where ots.`ticket_id` = #{ticketId}
         ORDER BY ots.`start_time` ASC
     </select>
+    <select id="findByRelId" resultType="com.track.data.domain.po.ticket.OmTicketScenePo">
+        SELECT ots.*
+        FROM om_scene_rel_grade osrg
+        INNER JOIN om_ticket_scene ots ON ots.id = osrg.scene_id
+        WHERE osrg.id = #{relId}
+    </select>
 
 </mapper>

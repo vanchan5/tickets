@@ -1,5 +1,6 @@
 package com.track.data.vo.manage.order;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author yeJH
@@ -17,7 +19,7 @@ import java.time.LocalDateTime;
  *
  */
 @Data
-@ApiModel(value = "平台订单列表数据")
+@ApiModel(description = "平台订单列表数据")
 public class ManageOrderListVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,6 +42,13 @@ public class ManageOrderListVo implements Serializable {
     @ApiModelProperty(value = "购买票数")
     private Integer orderNum;
 
+    @ApiModelProperty(value = "座位号")
+    @JSONField(serialize = false)
+    private String seatStr;
+
+    @ApiModelProperty(value = "座位号")
+    private List<String> seatStrList;
+
     @ApiModelProperty(value = "订单金额（元）")
     private BigDecimal payAmount;
 
@@ -61,5 +70,9 @@ public class ManageOrderListVo implements Serializable {
     @ApiModelProperty(value = "订单状态   \n1.待付款   \n2.已取消   \n3.待消费   \n" +
             "4.已完成   \n5.退款中   \n6.已退款   \n")
     private Integer orderState;
+
+    @ApiModelProperty(value = "下单快照信息")
+    private OrderTempVo orderTempVo;
+
 
 }

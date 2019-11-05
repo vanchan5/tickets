@@ -51,6 +51,9 @@ public class OaTicketApi extends BaseWeb {
             @ApiParam(required = true, name = "searchTicketDto", value = "查询条件")
             @Validated @RequestBody SearchTicketDto searchTicketDto) {
 
+        searchTicketDto.setCityCodeType(searchTicketDto.getCityCodeList().size());
+        searchTicketDto.setCityCode(searchTicketDto.getCityCodeList().get(searchTicketDto.getCityCodeList().size() - 1));
+
         PageInfo<TicketListVo> ticketListVoPageInfo =
                 service.searchTicketList(searchTicketDto);
         return new JsonViewData(ResultCode.SUCCESS, "查找成功",

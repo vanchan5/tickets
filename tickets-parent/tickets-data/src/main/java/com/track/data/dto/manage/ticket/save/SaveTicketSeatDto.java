@@ -17,7 +17,7 @@ import java.io.Serializable;
  *
  */
 @Data
-@ApiModel(value = "保存演唱会座位区参数")
+@ApiModel(description = "保存演唱会座位区参数")
 public class SaveTicketSeatDto  implements Serializable {
 
     private static final long serialVersionUID = 1L;

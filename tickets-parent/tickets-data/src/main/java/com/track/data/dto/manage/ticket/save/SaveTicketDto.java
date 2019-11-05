@@ -19,7 +19,7 @@ import java.util.List;
  *
  */
 @Data
-@ApiModel(value = "新增/编辑门票参数")
+@ApiModel(description = "新增/编辑门票参数")
 public class SaveTicketDto  implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,6 +36,10 @@ public class SaveTicketDto  implements Serializable {
     @ApiModelProperty(value = "场次列表")
     @NotEmpty(message = "至少添加一个演唱会场次")
     private List<SaveTicketSceneDto> ticketSceneList;
+
+    @ApiModelProperty(value = "省份id")
+    @NotNull(message = "provinceId参数不能为空")
+    private Long provinceId;
 
     @ApiModelProperty(value = "地区ID")
     @NotNull(message = "addrId参数不能为空")

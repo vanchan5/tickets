@@ -41,14 +41,14 @@ public class OmOrderApi extends BaseWeb {
     /**
      * @Author yeJH
      * @Date 2019/10/29 16:02
-     * @Description 查询订单列表
+     * @Description 查询平台订单列表
      *
      * @Update yeJH
      *
      * @param  searchOrderDto  查询条件
      * @return com.track.core.interaction.JsonViewData<com.github.pagehelper.PageInfo<com.track.data.vo.manage.order.ManageOrderListVo>>
      **/
-    @ApiOperation(value = "查询订单列表", notes = "根据下单时间，订单号，订单状态，购买人手机以及购买场次等条件查询")
+    @ApiOperation(value = "查询平台订单列表", notes = "根据下单时间，订单号，订单状态，购买人手机以及购买场次等条件查询")
     @PostMapping("/searchOrderList")
     public JsonViewData<PageInfo<ManageOrderListVo>> searchOrderList(
             @ApiParam(required = true, name = "searchOrderDto", value = "查询条件")

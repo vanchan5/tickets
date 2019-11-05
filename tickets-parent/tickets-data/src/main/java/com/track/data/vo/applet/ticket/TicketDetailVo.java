@@ -17,7 +17,7 @@ import java.util.Map;
  * 小程序演出详情VO
  */
 @Data
-@ApiModel(value = "小程序演出详情")
+@ApiModel(description = "小程序演出详情")
 public class TicketDetailVo  implements Serializable {
 
     private static final long serialVersionUID = 1L;

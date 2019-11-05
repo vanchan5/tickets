@@ -8,13 +8,12 @@
         <result column="ticket_id" property="ticketId" />
         <result column="name" property="name" />
         <result column="sell_price" property="sellPrice" />
-        <result column="seat_sum" property="seatSum" />
         <result column="row_sum" property="rowSum" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, scene_id, name, sell_price, seat_sum, remaining_sum
+        id, scene_id, name, sell_price, remaining_sum
     </sql>
     <select id="getGradeIdsByTicketId" resultType="java.lang.Long">
         SELECT otg.id

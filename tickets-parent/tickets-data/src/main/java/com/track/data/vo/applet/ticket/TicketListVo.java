@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * 小程序门票列表数据
  */
 @Data
-@ApiModel(value = "小程序门票列表数据")
+@ApiModel(description = "小程序门票列表数据")
 public class TicketListVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

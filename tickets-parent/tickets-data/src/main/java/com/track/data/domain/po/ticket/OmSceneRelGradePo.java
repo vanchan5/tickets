@@ -42,8 +42,8 @@ public class OmSceneRelGradePo implements Serializable {
     @ApiModelProperty(value = "门票档次id")
     private Long gradeId;
 
-    @ApiModelProperty(value = "门票座位区id")
-    private Long seatId;
+    /*@ApiModelProperty(value = "门票座位区id")
+    private Long seatId;*/
 
     @ApiModelProperty(value = "剩余总座位数")
     private Integer remainingSum;

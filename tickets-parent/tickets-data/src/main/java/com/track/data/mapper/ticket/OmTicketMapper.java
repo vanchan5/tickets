@@ -26,7 +26,7 @@ public interface OmTicketMapper extends IBaseMapper<OmTicketPo> {
     /**
      * @Author yeJH
      * @Date 2019/10/25 11:33
-     * @Description 查询演唱会门票列表
+     * @Description 查询平台演唱会门票列表
      *
      * @Update yeJH
      *

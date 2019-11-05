@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * @since 2019/10/25 14:21
  */
 @Data
-@ApiModel(value = "平台门票场次数据")
+@ApiModel(description = "平台门票场次数据")
 public class TicketSceneInfoVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

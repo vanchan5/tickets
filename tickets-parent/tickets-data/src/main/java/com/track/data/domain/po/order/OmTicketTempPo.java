@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -53,8 +54,11 @@ public class OmTicketTempPo implements Serializable {
     @ApiModelProperty(value = "演唱会门票名称")
     private String ticketName;
 
-    @ApiModelProperty(value = "场次跟座位区关联id")
-    private Long relId;
+    @ApiModelProperty(value = "地址详情")
+    private String addrDetail;
+
+    /*@ApiModelProperty(value = "场次跟座位区关联id")
+    private Long relId;*/
 
     @ApiModelProperty(value = "场次id")
     private Long sceneId;
@@ -62,11 +66,16 @@ public class OmTicketTempPo implements Serializable {
     @ApiModelProperty(value = "场次名称")
     private String sceneName;
 
+    @ApiModelProperty(value = "场次开始时间")
+    private LocalDateTime startTime;
+
     @ApiModelProperty(value = "档次id")
     private Long gradeId;
 
     @ApiModelProperty(value = "档次名称")
     private String gradeName;
 
+    @ApiModelProperty(value = "场次跟档次关联的id")
+    private Long relId;
 
 }

@@ -39,13 +39,13 @@
         INNER JOIN om_ticket_scene ots ON ots.`ticket_id` = ot.id
         <where>
             <if test="null != publishState">
-                and ot.publishState = #{publishState}
+                and ot.publish_state = #{publishState}
             </if>
             <if test="startDate != null">
-                and DATE_FORMAT(ots.`start_time`,'%Y-%m-%d')  <![CDATA[>= ]]> = #{startDate}
+                and DATE_FORMAT(ots.`start_time`,'%Y-%m-%d')  <![CDATA[>= ]]> #{startDate}
             </if>
             <if test="endDate != null">
-                and DATE_FORMAT(ots.`start_time`,'%Y-%m-%d')  <![CDATA[<= ]]> = #{endDate}
+                and DATE_FORMAT(ots.`start_time`,'%Y-%m-%d')  <![CDATA[<= ]]> #{endDate}
             </if>
             <if test="null != ticketName and ticketName != ''">
                 and ot.name like concat('%',#{ticketName},'%')
@@ -105,8 +105,10 @@
         <collection property="ticketSeatInfoList" ofType="com.track.data.vo.manage.ticket.TicketSeatInfoVo">
             <id column="seatId" property="seatId" />
             <result column="gradeName1" property="gradeName" />
-            <result column="seatRow" property="seatRow" />
+            <result column="seat_row" property="seatRow" />
             <result column="seat_sum" property="seatSum" />
+            <result column="min_range" property="minRange" />
+            <result column="max_range" property="maxRange" />
         </collection>
     </resultMap>
     <select id="getTicketGradeInfo" resultMap="ticketGradeInfoVo">
@@ -117,11 +119,12 @@
             ots.id as seatId,
             otg.`name` AS gradeName1,
             ots.seat_row,
-            ots.seat_sum
+            ots.seat_sum,
+            ots.min_range,
+            ots.max_range
         FROM om_ticket_grade otg
         INNER JOIN om_ticket_seat ots ON ots.grade_id = otg.`id`
         WHERE otg.`ticket_id` = #{ticketId}
-        ORDER BY ots.seat_row ASC
     </select>
 
     <select id="searchTicketList" resultType="com.track.data.vo.applet.ticket.TicketListVo">
@@ -134,10 +137,15 @@
         FROM om_ticket ot
         INNER JOIN om_ticket_scene ots ON ots.`ticket_id` = ot.`id`
         INNER JOIN om_ticket_grade otg ON otg.`ticket_id` = ot.`id`
-        GROUP BY ot.`id`
         <where>
-            <if test="null != ticketName and ticketName != ''">
-                and ot.ticketName like concat('%', #{ticketName}, '%')
+            <if test="null != cityCodeType and cityCodeType == 1">
+                and ot.province_code = #{cityCode}
+            </if>
+            <if test="null != cityCodeType and cityCodeType == 2">
+                and ot.city_code = #{cityCode}
+            </if>
+            <if test="null != cityCodeType and cityCodeType == 3">
+                and ot.district_code = #{cityCode}
             </if>
             <if test="null != timeScreening and timeScreening == 2">
                 and ots.`start_time` <![CDATA[<= ]]> (SELECT now() + INTERVAL 7 DAY)
@@ -145,7 +153,11 @@
             <if test="null != timeScreening and timeScreening == 3">
                 and ots.`start_time` <![CDATA[<= ]]> (SELECT NOW() + INTERVAL 1 MONTH)
             </if>
+            <if test="null != ticketName and ticketName != ''">
+                and ot.name like concat('%', #{ticketName}, '%')
+            </if>
         </where>
+        GROUP BY ot.`id`
         <if test="null != sortFile and sortFile == 1">
             ORDER BY ot.`update_time` DESC
         </if>
@@ -153,7 +165,7 @@
             ORDER BY ot.`update_time` DESC
         </if>
         <if test="null != sortFile and sortFile == 3">
-            ORDER BY ot.`minSellPrice` ASC
+            ORDER BY `minSellPrice` ASC
         </if>
     </select>
     <select id="getTicketDetail" resultType="com.track.data.vo.applet.ticket.TicketDetailVo">

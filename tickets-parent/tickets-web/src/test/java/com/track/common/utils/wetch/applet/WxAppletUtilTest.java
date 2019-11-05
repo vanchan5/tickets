@@ -2,12 +2,17 @@ package com.track.common.utils.wetch.applet;
 
 import com.track.common.utils.JSONUtils;
 import com.track.data.bo.applet.CodeToSessionBo;
+import com.track.data.dto.applet.order.OrderSubmitDto;
+import com.track.data.mapper.ticket.OmSceneRelGradeMapper;
+import com.track.order.service.IOmOrderService;
 import com.track.web.StartApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.time.LocalDateTime;
 
 /**
  * @author yeJH
@@ -20,6 +25,9 @@ public class WxAppletUtilTest {
 
     @Autowired
     private WxAppletBo wxAppletConfig;
+
+    @Autowired
+    private IOmOrderService omOrderService;
 
     @Test
     public void codeToSession() {
@@ -36,5 +44,8 @@ public class WxAppletUtilTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @Test
+    public void getRemainingSum() {
     }
 }

@@ -8,7 +8,6 @@
         <result column="ticket_id" property="ticketId" />
         <result column="scene_id" property="sceneId" />
         <result column="grade_id" property="gradeId" />
-        <result column="seat_id" property="seatId" />
         <result column="remaining_sum" property="remainingSum" />
     </resultMap>
 
@@ -17,10 +16,26 @@
         id, scene_id, grade_id, remaining_sum
     </sql>
     <select id="getSceneRelGradeInfoList" resultType="com.track.data.vo.applet.ticket.SceneRelGradeInfoVo">
-        SELECT osrg.scene_id, osrg.grade_id, SUM(osrg.remaining_sum) AS remainingSum
+        SELECT osrg.id AS relId, osrg.scene_id, osrg.grade_id, osrg.remaining_sum
         FROM om_scene_rel_grade osrg
         WHERE osrg.`ticket_id` = #{ticketId}
-        GROUP BY osrg.scene_id, osrg.grade_id
+    </select>
+    <select id="getRemainingSum" resultType="com.track.data.domain.po.ticket.OmSceneRelGradePo">
+        SELECT osrg.id, osrg.grade_id, osrg.scene_id, osrg.remaining_sum
+        FROM om_scene_rel_grade osrg
+        WHERE osrg.id = #{relId}
+        FOR UPDATE
+    </select>
+    <select id="getInsertRelInfo" resultType="com.track.data.domain.po.ticket.OmSceneRelGradePo">
+        SELECT ot.id AS ticketId,
+            ots.id AS sceneId,
+            otg.id AS gradeId,
+            SUM(seat.seat_sum) AS remainingSum
+        FROM om_ticket ot
+        INNER JOIN om_ticket_scene ots ON ots.ticket_id = ot.id AND ot.id= #{ticketId}
+        INNER JOIN om_ticket_grade otg ON otg.ticket_id = ot.id
+        INNER JOIN om_ticket_seat seat ON seat.grade_id = otg.id
+        GROUP BY ot.id, ots.id, otg.id
     </select>
 
 </mapper>

@@ -47,6 +47,15 @@ public class OmTicketPo implements Serializable {
     @ApiModelProperty(value = "地区名称（省/市/区）")
     private String addrName;
 
+    @ApiModelProperty(value = "省份编码")
+    private String provinceCode;
+
+    @ApiModelProperty(value = "城市编码")
+    private String cityCode;
+
+    @ApiModelProperty(value = "区县编码")
+    private String districtCode;
+
     @ApiModelProperty(value = "地址详情")
     private String addrDetail;
 

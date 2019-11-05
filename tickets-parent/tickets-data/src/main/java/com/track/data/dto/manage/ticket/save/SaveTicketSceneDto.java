@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  *
  */
 @Data
-@ApiModel(value = "保存演唱会场次参数")
+@ApiModel(description = "保存演唱会场次参数")
 public class SaveTicketSceneDto  implements Serializable {
 
     private static final long serialVersionUID = 1L;
