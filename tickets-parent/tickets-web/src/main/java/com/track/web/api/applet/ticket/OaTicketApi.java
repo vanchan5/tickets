@@ -52,7 +52,9 @@ public class OaTicketApi extends BaseWeb {
             @Validated @RequestBody SearchTicketDto searchTicketDto) {
 
         searchTicketDto.setCityCodeType(searchTicketDto.getCityCodeList().size());
-        searchTicketDto.setCityCode(searchTicketDto.getCityCodeList().get(searchTicketDto.getCityCodeList().size() - 1));
+        if(searchTicketDto.getCityCodeList().size() > 0) {
+            searchTicketDto.setCityCode(searchTicketDto.getCityCodeList().get(searchTicketDto.getCityCodeList().size() - 1));
+        }
 
         PageInfo<TicketListVo> ticketListVoPageInfo =
                 service.searchTicketList(searchTicketDto);
