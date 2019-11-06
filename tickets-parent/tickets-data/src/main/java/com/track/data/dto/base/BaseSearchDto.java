@@ -25,4 +25,10 @@ public class BaseSearchDto {
     @Min(1)
     @ApiModelProperty(value = "分页大小")
     private Integer pageSize;
+
+    @ApiModelProperty(value = "排序字段")
+    private String sort;
+
+    @ApiModelProperty(value = "排序方式 asc/desc")
+    private String order;
 }

@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
 import com.track.common.constant.SecurityConstant;
 import com.track.common.enums.manage.sys.LoginTypeEnum;
+import com.track.common.enums.system.SystemLogTypeEnum;
 import com.track.common.utils.ListUtil;
+import com.track.core.elk.SystemLog;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.bo.security.TokenUserBo;
 import com.track.data.domain.po.user.UmUserPo;
@@ -74,6 +76,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
     private IBaseMapper<UmUserPo> umUserPoIBaseMapper;
 
     @Override
+    @SystemLog(description = "登录系统", type = SystemLogTypeEnum.LOGIN)
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response, Authentication authentication)
             throws ServletException, IOException {

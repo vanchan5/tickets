@@ -4,6 +4,8 @@ package com.track.web.controller.test;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.track.common.enums.system.ResultCode;
+import com.track.common.enums.system.SystemLogTypeEnum;
+import com.track.core.elk.SystemLog;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.domain.po.test.TbUserPo;
 import com.track.data.dto.test.save.SaveTestUsersDto;
@@ -64,6 +66,7 @@ public class TbUserController extends BaseWeb {
      */
     @PostMapping("/searchUsers")
     @ApiOperation("分页条件查询用户列表")
+    @SystemLog(description = "分页条件查询用户列表",type = SystemLogTypeEnum.OPERATION)
     public JsonViewData<PageInfo<SearchUsersVo>> searchUsers(@RequestBody @ApiParam(required =true,name = "searchUsersDto", value = "分页条件查询用户列表")
                                                                  @Validated SearchUsersDto searchUsersDto){
 

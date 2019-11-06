@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -23,6 +24,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableRedisRepositories
 @EnableRabbit
+//启用elasticsearch
+@EnableElasticsearchRepositories(basePackages = "com.track.elk")
 //@EnableAspectJAutoProxy //aop编程
 @Slf4j
 public class StartApplication extends SpringBootServletInitializer {

@@ -1,4 +1,4 @@
-package com.track.web.api.security;
+package com.track.web.api.sys.security;
 
 import com.track.common.enums.system.ResultCode;
 import com.track.common.utils.RedisUtil;

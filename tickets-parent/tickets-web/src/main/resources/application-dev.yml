@@ -67,7 +67,7 @@ spring:
     # Elasticsearch
   data:
     elasticsearch:
-      cluster-nodes: 127.0.0.1:9300
+      cluster-nodes: 39.108.136.61:9300
 
 #server:
 #  max-http-header-size: 200MB
@@ -129,9 +129,12 @@ tickets:
   loginTimeLimit: 5
   # 错误超过次数后多少分钟后才能继续登录（分钟）
   loginAfterTime: 2
+  # ES
+  elasticsearch:
+    nodeClient: 39.108.136.61:9200
   # 日志记录方式 true使用Elasticsearch记录 false记录至数据库中
   logRecord:
-    es: false
+    es: true
   # 七牛云配置
   qiniu:
     accessKey: wkxcEQGakg0zhC4wxV_3dOxw42X2gQvkFuRq-lJr
