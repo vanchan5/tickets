@@ -103,7 +103,7 @@ public class UmUserApi extends BaseWeb {
      * @param  ids
      * @return com.track.core.interaction.JsonViewData
      **/
-    @GetMapping("/delUsersByIds")
+    @GetMapping("/delUsersByIds/{ids}")
     @ApiOperation("批量删除用户信息")
     public JsonViewData delUsersByIds(@PathVariable List<Long> ids){
 
