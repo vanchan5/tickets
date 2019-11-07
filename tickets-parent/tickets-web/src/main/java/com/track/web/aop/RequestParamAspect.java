@@ -37,9 +37,10 @@ public class RequestParamAspect {
     }
 
     @Around("requestParamAspect()")
-    public void doBefore(ProceedingJoinPoint joinPoint) throws InterruptedException {
+    public Object doAround(ProceedingJoinPoint joinPoint) throws InterruptedException {
 
         log.info(String.format("%%%%%%%%%%%%%%%%%%%%请求开始，请求路径为:【%s】",request.getRequestURI()));
+        Object rvt = null;
 
         try {
             String requestParam = "";
@@ -73,7 +74,7 @@ public class RequestParamAspect {
             }
 
             //执行目标方法
-            joinPoint.proceed(args);
+            rvt = joinPoint.proceed(args);
             log.info(String.format("%%%%%%%%%%%%%%%%%%%%请求结束，请求路径为:【%s】",request.getRequestURI()));
 
         }catch (Exception e){
@@ -81,5 +82,6 @@ public class RequestParamAspect {
         } catch (Throwable throwable) {
             log.error("AOP环绕通知执行方法异常",throwable);
         }
+        return rvt;
     }
 }
