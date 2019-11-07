@@ -31,7 +31,7 @@ public class RequestParamAspect {
     /**
      * controller层切点
      */
-    @Pointcut("within(com.track.web.api..*)")
+    @Pointcut("within(com.track.web..*)")
     public void requestParamAspect() {
 
     }
