@@ -267,9 +267,9 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
         //地址省份编码
         omTicketPo.setProvinceCode(province.getCityCode());
         //地址城市编码
-        omTicketPo.setCityCode(areaRegionPo.getCityCode());
+        omTicketPo.setCityCode(areaRegionPo.getParentCode());
         //地址区（县）编码
-        omTicketPo.setDistrictCode(areaRegionPo.getParentCode());
+        omTicketPo.setDistrictCode(areaRegionPo.getCityCode());
         //默认下架状态
         omTicketPo.setPublishState(false);
         //操作人员
