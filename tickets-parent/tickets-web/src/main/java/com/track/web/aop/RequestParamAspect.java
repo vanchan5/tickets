@@ -6,9 +6,8 @@ import com.track.common.utils.JSONUtils;
 import com.track.common.utils.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -30,18 +29,22 @@ public class RequestParamAspect {
     private HttpServletRequest request;
 
     /**
-     * MyAuthenticationFilter 过滤器切点】
+     * controller层切点
      */
     @Pointcut("within(com.track.web.api..*)")
     public void requestParamAspect() {
 
     }
 
-    @Before("requestParamAspect()")
-    public void doBefore(JoinPoint joinPoint) throws InterruptedException {
+    @Around("requestParamAspect()")
+    public void doBefore(ProceedingJoinPoint joinPoint) throws InterruptedException {
+
+        log.info(String.format("%%%%%%%%%%%%%%%%%%%%请求开始，请求路径为:【%s】",request.getRequestURI()));
 
         try {
             String requestParam = "";
+            //获取json参数
+            Object[] args = joinPoint.getArgs();
             //请求参数Json/form
             //json方式
             if (request.getContentType() != null) {
@@ -51,8 +54,6 @@ public class RequestParamAspect {
                     if (joinPoint.getSignature().getName().equals("onAuthenticationSuccess")) {
                         requestParam = "忽略";
                     } else {
-                        //获取json参数
-                        Object[] args = joinPoint.getArgs();
                         //param
                         Object object = args[0];
                         Map<String, Object> jsonParam = JSONUtils.toHashMap(object);
@@ -70,8 +71,15 @@ public class RequestParamAspect {
             }else {
                 log.info(String.format("方法【%s】请求参数为:【无参请求】", joinPoint.getTarget().toString() + "----" + joinPoint.getSignature().getName()));
             }
+
+            //执行目标方法
+            joinPoint.proceed(args);
+            log.info(String.format("%%%%%%%%%%%%%%%%%%%%请求结束，请求路径为:【%s】",request.getRequestURI()));
+
         }catch (Exception e){
-            log.error("AOP前置同通知异常",e);
+            log.error("AOP环绕通知异常",e);
+        } catch (Throwable throwable) {
+            log.error("AOP环绕通知执行方法异常",throwable);
         }
-        }
+    }
 }
