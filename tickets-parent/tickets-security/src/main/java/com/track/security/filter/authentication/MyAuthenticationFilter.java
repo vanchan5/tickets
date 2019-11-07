@@ -1,24 +1,19 @@
 package com.track.security.filter.authentication;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.track.common.constant.SecurityConstant;
 import com.track.common.enums.manage.sys.LoginTypeEnum;
 import com.track.common.enums.system.ResultCode;
-import com.track.common.utils.LoggerUtil;
 import com.track.core.base.service.Service;
-import com.track.core.exception.ServiceException;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.bo.security.TokenUserBo;
 import com.track.data.domain.po.user.UmUserPo;
-import com.track.data.mapper.base.IBaseMapper;
 import com.track.security.util.ResponseUtil;
 import com.track.security.util.SecurityUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +26,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -73,7 +66,6 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
     //注入失败--待解决，还另一种方式捕捉异常
     @Autowired
     private Service<UmUserPo> service;
-
 
     public MyAuthenticationFilter(AuthenticationManager authenticationManager, Boolean tokenRedis, Integer tokenExpireTime,
                                   Boolean storePerms, StringRedisTemplate redisTemplate, SecurityUtil securityUtil) {
