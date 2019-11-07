@@ -150,13 +150,14 @@ public class SystemLogAspect {
 
                             esLog.setRequestParam(requestParam);
                         }
-
+                        log.info(String.format("方法【%s】请求参数为:【%s】",joinPoint.getTarget().toString()+"----"+joinPoint.getSignature().getName(),requestParam));
                     }
                     //form表单
                     else {
                         Map<String, String[]> logParams = request.getParameterMap();
                         requestParam = request.getQueryString();
                         esLog.setMapToParams(logParams);
+                        log.info(String.format("方法【%s】请求参数为:【%s】",joinPoint.getTarget().toString()+"----"+joinPoint.getSignature().getName(),ObjectUtil.mapToString(logParams)));
                     }
 
                     //调用线程保存至ES
