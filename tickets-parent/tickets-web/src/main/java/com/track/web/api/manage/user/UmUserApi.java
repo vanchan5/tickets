@@ -133,6 +133,6 @@ public class UmUserApi extends BaseWeb {
         // 清除持久上下文环境 避免后面语句导致持久化
         /*entityManager.clear();
         u.setPassword(null);*/
-        return setJsonViewData(ResultCode.SUCCESS, "查找成功!", urrUser);
+        return setJsonViewData(urrUser);
     }
 }
