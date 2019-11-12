@@ -138,6 +138,7 @@
         INNER JOIN om_ticket_scene ots ON ots.`ticket_id` = ot.`id`
         INNER JOIN om_ticket_grade otg ON otg.`ticket_id` = ot.`id`
         <where>
+            ots.`start_time` > NOW()
             <if test="null != cityCodeType and cityCodeType == 1">
                 and ot.province_code = #{cityCode}
             </if>
@@ -185,6 +186,7 @@
         INNER JOIN om_ticket_detail otd ON otd.id = ot.id AND ot.`id` = #{ticketId}
         INNER JOIN om_ticket_scene ots ON ots.ticket_id = ot.id
         INNER JOIN om_ticket_grade otg ON otg.ticket_id = ot.id
+        WHERE ots.`start_time` > NOW()
         GROUP BY ot.`id`
     </select>
 

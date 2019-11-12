@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -27,9 +28,9 @@ public class SearchFeedBackDto extends BaseSearchDto {
     private String keyWord;
 
     @ApiModelProperty("反馈开始时间")
-    private LocalDateTime startTime;
+    private LocalDate startTime;
 
     @ApiModelProperty(value = "反馈截止时间")
-    private LocalDateTime endTime;
+    private LocalDate endTime;
 
 }
