@@ -6,7 +6,9 @@ import com.track.data.domain.po.user.UmUserPo;
 import com.track.core.base.service.Service;
 import com.track.data.dto.manage.user.edit.EditPasswordDto;
 import com.track.data.dto.manage.user.save.SaveUserDto;
+import com.track.data.dto.manage.user.search.SearchAppletUsersDto;
 import com.track.data.dto.manage.user.search.SearchUsersDto;
+import com.track.data.vo.user.SearchAppletUsersVo;
 import com.track.data.vo.user.SearchUsersVo;
 
 import java.util.List;
@@ -68,4 +70,16 @@ public interface IUmUserService extends Service<UmUserPo> {
      * @return void
      **/
     void editPassword(EditPasswordDto editPasswordDto);
+
+    /**
+     * @Author chauncy
+     * @Date 2019-11-12 19:58
+     * @Description //条件分页查询applet用户信息
+     *
+     * @Update chauncy
+     *
+     * @param  searchAppletUsersDto
+     * @return com.github.pagehelper.PageInfo<com.track.data.vo.user.SearchAppletUsersVo>
+     **/
+    PageInfo<SearchAppletUsersVo> searchAppletUsers(SearchAppletUsersDto searchAppletUsersDto);
 }

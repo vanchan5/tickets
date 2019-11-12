@@ -20,11 +20,13 @@ import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.manage.permission.search.SearchRoleDto;
 import com.track.data.dto.manage.user.edit.EditPasswordDto;
 import com.track.data.dto.manage.user.save.SaveUserDto;
+import com.track.data.dto.manage.user.search.SearchAppletUsersDto;
 import com.track.data.dto.manage.user.search.SearchUsersDto;
 import com.track.data.mapper.permission.SysRoleMapper;
 import com.track.data.mapper.permission.SysRoleUserMapper;
 import com.track.data.mapper.user.UmUserMapper;
 import com.track.data.vo.base.BaseVo;
+import com.track.data.vo.user.SearchAppletUsersVo;
 import com.track.data.vo.user.SearchUsersVo;
 import com.track.security.util.SecurityUtil;
 import com.track.user.service.IUmUserService;
@@ -329,5 +331,28 @@ public class UmUserServiceImpl extends AbstractService<UmUserMapper, UmUserPo> i
         String key2 = SecurityConstant.TOKEN_PRE+token;
         String key3 = "permission::userMenuList:" + user.getId();
         redisUtil.del (key1,key2,key3);
+    }
+
+    /**
+     * @Author chauncy
+     * @Date 2019-11-12 19:58
+     * @Description //条件分页查询applet用户信息
+     *
+     * @Update chauncy
+     *
+     * @param  searchAppletUsersDto
+     * @return com.github.pagehelper.PageInfo<com.track.data.vo.user.SearchAppletUsersVo>
+     **/
+    @Override
+    public PageInfo<SearchAppletUsersVo> searchAppletUsers(SearchAppletUsersDto searchAppletUsersDto) {
+
+        Integer pageNo = searchAppletUsersDto.getPageNo() == null ? defaultPageNo : searchAppletUsersDto.getPageNo();
+        Integer pageSize = searchAppletUsersDto.getPageSize() == null ? defaultPageSize : searchAppletUsersDto.getPageSize();
+
+        PageInfo<SearchAppletUsersVo> appletUsersVoPageInfo = PageHelper.startPage(pageNo,pageSize,defaultSoft)
+                .doSelectPageInfo(()->mapper.searchAppletUsers(searchAppletUsersDto));
+
+
+        return appletUsersVoPageInfo;
     }
 }
