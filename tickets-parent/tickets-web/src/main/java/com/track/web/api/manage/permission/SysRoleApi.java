@@ -1,9 +1,11 @@
 package com.track.web.api.manage.permission;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.interaction.JsonViewData;
+import com.track.data.domain.po.permission.SysRolePo;
 import com.track.data.dto.manage.permission.save.EditDefaultRoleDto;
 import com.track.data.dto.manage.permission.save.SaveRoleDto;
 import com.track.data.dto.manage.permission.save.SaveRolePermissionsDto;
@@ -20,6 +22,8 @@ import io.swagger.annotations.Api;
 import com.track.web.base.BaseWeb;
 
 import java.util.List;
+
+import static com.track.common.constant.SecurityConstant.SYS_TYPE_MANAGER;
 
 /**
  * <p>
@@ -75,6 +79,13 @@ public class SysRoleApi extends BaseWeb {
 
     }
 
+    @GetMapping("/getAllRoleList")
+    @ApiOperation("获取全部角色")
+    public JsonViewData<SysRolePo> roleGetAll(){
+
+        return setJsonViewData(service.list(new QueryWrapper<SysRolePo>().lambda().eq(SysRolePo::getSystemType,SYS_TYPE_MANAGER)));
+    }
+
     /**
      * @Author chauncy
      * @Date 2019-10-28 21:47
@@ -86,12 +97,12 @@ public class SysRoleApi extends BaseWeb {
      * @return com.track.core.interaction.JsonViewData
      **/
     @PostMapping("/setDefaultRole")
-    @ApiOperation("设置默认角色")
+    @ApiOperation("设置/取消默认角色")
     public JsonViewData setDefaultRole(@RequestBody @ApiParam(required = true,name = "setDefaultRoleDto",value = "设置默认角色")
                                @Validated EditDefaultRoleDto editDefaultRoleDto){
 
         service.setDefaultRole(editDefaultRoleDto);
-        return setJsonViewData(ResultCode.SUCCESS,"设置默认角色成功");
+        return setJsonViewData(ResultCode.SUCCESS,"设置成功");
     }
 
     /**

@@ -39,13 +39,13 @@
                 and uu.username like concat('%', #{username} ,'%')
             </if>
             <if test="roleName != null and roleName != ''">
-                and sr.roleName like concat('%', #{roleName} ,'%')
+                and sr.name = #{roleName}
             </if>
             <if test="enabled != null">
                 and uu.enabled = #{enabled}
             </if>
             <if test="userType != null and userType != ''">
-                and uu.userType = #{userType}
+                and uu.user_type = #{userType}
             </if>
     </select>
 

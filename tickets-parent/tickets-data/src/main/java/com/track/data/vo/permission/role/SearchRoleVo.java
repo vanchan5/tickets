@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * @Author cheng
  * @create 2019-10-23 13:31
@@ -28,4 +30,10 @@ public class SearchRoleVo {
 
     @ApiModelProperty(value = "角色级别")
     private Integer level;
+
+    @ApiModelProperty(value = "创建时间")
+    private LocalDateTime createTime;
+
+    @ApiModelProperty(value = "更新时间")
+    private LocalDateTime updateTime;
 }

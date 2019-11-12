@@ -130,9 +130,6 @@ public class UmUserApi extends BaseWeb {
     public JsonViewData<UmUserPo> getUserInfo() {
 
         UmUserPo urrUser =securityUtil.getSysCurrUser();
-        // 清除持久上下文环境 避免后面语句导致持久化
-        /*entityManager.clear();
-        u.setPassword(null);*/
         return setJsonViewData(urrUser);
     }
 }
