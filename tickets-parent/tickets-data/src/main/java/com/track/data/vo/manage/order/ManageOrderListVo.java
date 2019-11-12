@@ -72,7 +72,7 @@ public class ManageOrderListVo implements Serializable {
     private Integer orderState;
 
     @ApiModelProperty(value = "下单快照信息")
-    private OrderTempVo orderTempVo;
+    private List<OrderTempVo> orderTempVo;
 
 
 }
