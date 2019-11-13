@@ -39,14 +39,31 @@
                 and uu.username like concat('%', #{username} ,'%')
             </if>
             <if test="roleName != null and roleName != ''">
-                and sr.roleName like concat('%', #{roleName} ,'%')
+                and sr.name = #{roleName}
             </if>
             <if test="enabled != null">
                 and uu.enabled = #{enabled}
             </if>
             <if test="userType != null and userType != ''">
-                and uu.userType = #{userType}
+                and uu.user_type = #{userType}
             </if>
+    </select>
+    <select id="searchAppletUsers" resultType="com.track.data.vo.user.SearchAppletUsersVo">
+        select id,phone,nick_name,enabled
+        from um_user
+        where del_flag = 0 and user_type = 3
+        <if test="phone != null and phone != '' ">
+            and phone = #{phone}
+        </if>
+        <if test="enabled != null">
+            and enabled = #{enabled}
+        </if>
+        <if test="nickName != null and nickName != '' ">
+            and nick_name like concat('%', #{nickName} ,'%')
+        </if>
+        <if test="wechat != null and wechat != ''">
+
+        </if>
     </select>
 
 </mapper>

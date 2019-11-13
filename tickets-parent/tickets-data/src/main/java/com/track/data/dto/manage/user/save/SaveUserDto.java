@@ -37,7 +37,7 @@ public class SaveUserDto {
     private Integer sex = SecurityConstant.USER_DEFAULT_SEX;
 
     @ApiModelProperty(value = "密码")
-    private String password = LoginConstant.PASSWORD;
+    private String password;
 
     @ApiModelProperty(value = "头像")
     private String photo = SecurityConstant.USER_DEFAULT_AVATAR;

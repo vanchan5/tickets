@@ -4,6 +4,8 @@ import com.alibaba.fastjson.support.spring.FastjsonSockJsMessageCodec;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.track.common.constant.SecurityConstant;
+import com.track.common.constant.login.LoginConstant;
 import com.track.common.enums.manage.user.UserTypeEnum;
 import com.track.common.enums.system.ResultCode;
 import com.track.common.utils.GuavaUtil;
@@ -18,11 +20,13 @@ import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.manage.permission.search.SearchRoleDto;
 import com.track.data.dto.manage.user.edit.EditPasswordDto;
 import com.track.data.dto.manage.user.save.SaveUserDto;
+import com.track.data.dto.manage.user.search.SearchAppletUsersDto;
 import com.track.data.dto.manage.user.search.SearchUsersDto;
 import com.track.data.mapper.permission.SysRoleMapper;
 import com.track.data.mapper.permission.SysRoleUserMapper;
 import com.track.data.mapper.user.UmUserMapper;
 import com.track.data.vo.base.BaseVo;
+import com.track.data.vo.user.SearchAppletUsersVo;
 import com.track.data.vo.user.SearchUsersVo;
 import com.track.security.util.SecurityUtil;
 import com.track.user.service.IUmUserService;
@@ -30,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +68,12 @@ public class UmUserServiceImpl extends AbstractService<UmUserMapper, UmUserPo> i
 
     @Autowired
     private SecurityUtil securityUtil;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     /**
      * @Author chauncy
@@ -144,8 +155,8 @@ public class UmUserServiceImpl extends AbstractService<UmUserMapper, UmUserPo> i
             //修改操作
             else {
                 //不能为空
-                if (StringUtils.isBlank(userDto.getUsername()) || StringUtils.isBlank(userDto.getPassword())){
-                    throw new ServiceException(ResultCode.FAIL,"缺少必需表单字段");
+                if (StringUtils.isBlank(userDto.getUsername())){
+                    throw new ServiceException(ResultCode.FAIL,"用户名不能为空");
                 }
 
                 UmUserPo umUserPo = mapper.selectById(userDto.getId());
@@ -165,7 +176,22 @@ public class UmUserServiceImpl extends AbstractService<UmUserMapper, UmUserPo> i
                     throw new ServiceException(ResultCode.DUPLICATION, "该手机号已绑定其他账户");
                 }
                 //密码不能和原来一样
-//                if ()
+                if (userDto.getPassword() != null){
+                    if (!new BCryptPasswordEncoder().matches(userDto.getPassword(), umUserPo.getPassword())) {
+                        userDto.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
+                        //删除缓存，需要退出登录
+                        UmUserPo userPo = securityUtil.getSysCurrUser ();
+                        String key1 = SecurityConstant.USER_TOKEN+userPo.getUsername ();
+                        Object token = redisTemplate.opsForValue().get(key1);
+                        String key2 = SecurityConstant.TOKEN_PRE+token;
+                        String key3 = "permission::userMenuList:" + userPo.getId();
+                        redisUtil.del (key1,key2,key3);
+                    } else {
+                        throw new ServiceException(ResultCode.FAIL, "不能和原来密码一样");
+                    }
+                } else {
+                    userDto.setPassword(umUserPo.getPassword());
+                }
 
                 //更新用户与权限信息表
                 roleUserMapper.delete(new QueryWrapper<SysRoleUserPo>().lambda()
@@ -184,7 +210,7 @@ public class UmUserServiceImpl extends AbstractService<UmUserMapper, UmUserPo> i
                 //更新用户信息操作
                 BeanUtils.copyProperties(userDto,umUserPo);
                 umUserPo.setUpdateBy(urrUser.getId());
-                umUserPo.setPassword(urrUser.getPassword());
+//                umUserPo.setPassword(urrUser.getPassword());
                 mapper.updateById(umUserPo);
 
             }
@@ -203,6 +229,7 @@ public class UmUserServiceImpl extends AbstractService<UmUserMapper, UmUserPo> i
                 UmUserPo userPo = new UmUserPo();
                 BeanUtils.copyProperties(userDto,userPo);
                 userPo.setId(null);
+                userPo.setPassword(LoginConstant.PASSWORD);
                 userPo.setCreateBy(urrUser.getId());
                 mapper.insert(userPo);
             }
@@ -297,5 +324,35 @@ public class UmUserServiceImpl extends AbstractService<UmUserMapper, UmUserPo> i
             userPo.setPassword(new BCryptPasswordEncoder().encode(editPasswordDto.getPassword()));
         }
         mapper.updateById(userPo);
+        //删除缓存，需要退出登录
+        UmUserPo user = securityUtil.getSysCurrUser ();
+        String key1 = SecurityConstant.USER_TOKEN+user.getUsername ();
+        Object token = redisTemplate.opsForValue().get(key1);
+        String key2 = SecurityConstant.TOKEN_PRE+token;
+        String key3 = "permission::userMenuList:" + user.getId();
+        redisUtil.del (key1,key2,key3);
+    }
+
+    /**
+     * @Author chauncy
+     * @Date 2019-11-12 19:58
+     * @Description //条件分页查询applet用户信息
+     *
+     * @Update chauncy
+     *
+     * @param  searchAppletUsersDto
+     * @return com.github.pagehelper.PageInfo<com.track.data.vo.user.SearchAppletUsersVo>
+     **/
+    @Override
+    public PageInfo<SearchAppletUsersVo> searchAppletUsers(SearchAppletUsersDto searchAppletUsersDto) {
+
+        Integer pageNo = searchAppletUsersDto.getPageNo() == null ? defaultPageNo : searchAppletUsersDto.getPageNo();
+        Integer pageSize = searchAppletUsersDto.getPageSize() == null ? defaultPageSize : searchAppletUsersDto.getPageSize();
+
+        PageInfo<SearchAppletUsersVo> appletUsersVoPageInfo = PageHelper.startPage(pageNo,pageSize,defaultSoft)
+                .doSelectPageInfo(()->mapper.searchAppletUsers(searchAppletUsersDto));
+
+
+        return appletUsersVoPageInfo;
     }
 }

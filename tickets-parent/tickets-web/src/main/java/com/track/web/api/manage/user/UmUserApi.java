@@ -8,12 +8,15 @@ import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.base.EditEnabledDto;
 import com.track.data.dto.manage.user.edit.EditPasswordDto;
 import com.track.data.dto.manage.user.save.SaveUserDto;
+import com.track.data.dto.manage.user.search.SearchAppletUsersDto;
 import com.track.data.dto.manage.user.search.SearchUsersDto;
+import com.track.data.vo.user.SearchAppletUsersVo;
 import com.track.data.vo.user.SearchUsersVo;
 import com.track.security.util.SecurityUtil;
 import com.track.user.service.IUmUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,9 +133,54 @@ public class UmUserApi extends BaseWeb {
     public JsonViewData<UmUserPo> getUserInfo() {
 
         UmUserPo urrUser =securityUtil.getSysCurrUser();
-        // 清除持久上下文环境 避免后面语句导致持久化
-        /*entityManager.clear();
-        u.setPassword(null);*/
         return setJsonViewData(urrUser);
     }
+
+    /**
+     * @Author chauncy
+     * @Date 2019-11-12 19:58
+     * @Description //条件分页查询applet用户信息
+     *
+     * @Update chauncy
+     *
+     * @param  searchAppletUsersDto
+     * @return com.track.core.interaction.JsonViewData<com.github.pagehelper.PageInfo<com.track.data.vo.user.SearchAppletUsersVo>>
+     **/
+    @PostMapping("/searchAppletUsers")
+    @ApiOperation("条件分页查询applet用户信息")
+    public JsonViewData<PageInfo<SearchAppletUsersVo>> searchAppletUsers(@RequestBody @ApiParam(required = true,
+            name = "searchAppletUsersDto",value = "条件分页查询applet用户信息") @Validated SearchAppletUsersDto searchAppletUsersDto){
+
+        return setJsonViewData(service.searchAppletUsers(searchAppletUsersDto));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
