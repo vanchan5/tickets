@@ -4,8 +4,11 @@ package com.track.web.api.manage.order;
 import com.github.pagehelper.PageInfo;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.interaction.JsonViewData;
+import com.track.data.dto.manage.order.search.SearchAccountLogDto;
 import com.track.data.dto.manage.order.search.SearchOrderDto;
+import com.track.data.vo.manage.order.AccountLogVo;
 import com.track.data.vo.manage.order.ManageOrderListVo;
+import com.track.order.service.IOmAccountLogService;
 import com.track.order.service.IOmOrderService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -37,6 +40,9 @@ public class OmOrderApi extends BaseWeb {
     @Autowired
     private IOmOrderService service;
 
+    @Autowired
+    private IOmAccountLogService omAccountLogService;
+
 
     /**
      * @Author yeJH
@@ -57,6 +63,28 @@ public class OmOrderApi extends BaseWeb {
         PageInfo<ManageOrderListVo> manageOrderListVoPageInfo = service.searchOrderList(searchOrderDto);
         return new JsonViewData(ResultCode.SUCCESS, "查找成功",
                 manageOrderListVoPageInfo);
+
+    }
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/13 14:12
+     * @Description 查询系统流水
+     *
+     * @Update yeJH
+     *
+     * @param  searchAccountLogDto
+     * @return com.track.core.interaction.JsonViewData<com.github.pagehelper.PageInfo<com.track.data.vo.manage.order.AccountLogVo>>
+     **/
+    @ApiOperation(value = "查询系统流水", notes = "根据关联订单号，流水类型，流水发生时间，用户昵称等条件查询")
+    @PostMapping("/searchAccountLog")
+    public JsonViewData<PageInfo<AccountLogVo>> searchAccountLog(
+            @ApiParam(required = true, name = "searchAccountLogDto", value = "查询条件")
+            @Validated @RequestBody SearchAccountLogDto searchAccountLogDto) {
+
+        PageInfo<AccountLogVo> accountLogVoPageInfo = omAccountLogService.searchAccountLog(searchAccountLogDto);
+        return new JsonViewData(ResultCode.SUCCESS, "查找成功",
+                accountLogVoPageInfo);
 
     }
 
