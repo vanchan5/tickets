@@ -32,6 +32,6 @@ public class TicketGradeInfoVo implements Serializable {
     private Integer rowSum;
 
     @ApiModelProperty(value = "座位区列表")
-    private List<TicketSeatInfoVo> ticketSeatInfoList;
+    private List<TicketSeatInfoVo> ticketSeatList;
 
 }
