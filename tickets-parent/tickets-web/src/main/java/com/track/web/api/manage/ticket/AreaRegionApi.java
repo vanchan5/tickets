@@ -72,6 +72,23 @@ public class AreaRegionApi extends BaseWeb {
 
     /**
      * @Author chauncy
+     * @Date 2019-11-13 20:27
+     * @Description //获取省市区地址
+     *
+     * @Update chauncy
+     *
+     * @param
+     * @return com.track.core.interaction.JsonViewData<java.util.List<com.track.data.vo.manage.ticket.AreaCityVo>>
+     **/
+    @GetMapping("/searchArea")
+    @ApiOperation("获取省市区地址")
+    public JsonViewData<List<AreaCityVo>> searchArea(){
+
+        return setJsonViewData(service.searchArea());
+    }
+
+    /**
+     * @Author chauncy
      * @Date 2019-10-31 11:15
      * @Description //根据区县编号获取街道信息
      *
