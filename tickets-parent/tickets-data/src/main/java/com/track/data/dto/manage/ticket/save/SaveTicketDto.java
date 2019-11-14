@@ -73,17 +73,17 @@ public class SaveTicketDto  implements Serializable {
     @NotNull(message = "购买须知不能为空")
     private String purchaseHtml;
 
-    @ApiModelProperty(value = "购买须知纯文本")
+    /*@ApiModelProperty(value = "购买须知纯文本")
     @NotNull(message = "购买须知不能为空")
-    private String purchaseText;
+    private String purchaseText;*/
 
     @ApiModelProperty(value = "门票详情信息带格式文本")
     @NotNull(message = "门票详情信息不能为空")
     private String detailHtml;
 
-    @ApiModelProperty(value = "门票详情信息纯文本")
+    /*@ApiModelProperty(value = "门票详情信息纯文本")
     @NotNull(message = "门票详情信息不能为空")
-    private String detailText;
+    private String detailText;*/
 
     @ApiModelProperty(value = "档次列表")
     @NotEmpty(message = "档次列表不能为空")
