@@ -90,4 +90,26 @@ public class AreaRegionServiceImpl extends AbstractService<AreaRegionMapper, Are
 
         return mapper.findStreet(parentCode);
     }
+
+    /**
+     * @Author chauncy
+     * @Date 2019-11-13 20:27
+     * @Description //获取省市区
+     *
+     * @Update chauncy
+     *
+     * @param
+     * @return java.util.List<com.track.data.vo.manage.ticket.AreaCityVo>
+     **/
+    @Override
+    public List<AreaCityVo> searchArea() {
+        List<AreaCityVo> city = mapper.searchArea();
+        List<AreaCityVo> areaCityVos = Lists.newArrayList();
+        try {
+            areaCityVos = TreeUtil.getTree(city,"cityCode","parentCode","children");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return areaCityVos;
+    }
 }

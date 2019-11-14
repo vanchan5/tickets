@@ -52,4 +52,16 @@ public interface AreaRegionMapper extends IBaseMapper<AreaRegionPo> {
      * @return java.util.List<com.track.data.vo.manage.ticket.AreaVo>
      **/
     List<AreaVo> findStreet(String parentCode);
+
+    /**
+     * @Author chauncy
+     * @Date 2019-11-13 20:28
+     * @Description //获取省市区
+     *
+     * @Update chauncy
+     *
+     * @param
+     * @return java.util.List<com.track.data.vo.manage.ticket.AreaCityVo>
+     **/
+    List<AreaCityVo> searchArea();
 }
