@@ -3,6 +3,7 @@ package com.track.data.mapper.ticket;
 import com.track.data.domain.po.ticket.OmSceneRelGradePo;
 import com.track.data.dto.applet.order.OrderSubmitDto;
 import com.track.data.mapper.base.IBaseMapper;
+import com.track.data.vo.applet.ticket.CommodityAttrVo;
 import com.track.data.vo.applet.ticket.SceneRelGradeInfoVo;
 
 import java.util.List;
@@ -52,4 +53,16 @@ public interface OmSceneRelGradeMapper extends IBaseMapper<OmSceneRelGradePo> {
      * @return java.util.List<com.track.data.domain.po.ticket.OmSceneRelGradePo>
      **/
     List<OmSceneRelGradePo> getInsertRelInfo(Long ticketId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/15 22:39
+     * @Description 获取场次跟档次关联的信息（规格）
+     *
+     * @Update yeJH
+     *
+     * @param  ticketId
+     * @return java.util.List<com.track.data.vo.applet.ticket.CommodityAttrVo>
+     **/
+    List<CommodityAttrVo> getCommodityAttr(Long ticketId);
 }

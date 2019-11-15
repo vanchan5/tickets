@@ -253,6 +253,11 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
     @Override
     public Long submit(OrderSubmitDto orderSubmitDto, UmUserPo umUserPo) {
 
+        //获取场次信息
+        OmTicketScenePo omTicketScenePo = omTicketSceneMapper.findByRelId(orderSubmitDto.getRelId());
+        if(null == omTicketScenePo || omTicketScenePo.getStartTime().compareTo(LocalDateTime.now()) < 0) {
+            throw new ServiceException(ResultCode.FAIL, "售票截止");
+        }
         //获取用户选择的场次档次关联的记录
         OmSceneRelGradePo omSceneRelGradePo = omSceneRelGradeMapper.getRemainingSum(orderSubmitDto.getRelId());
         if(null == omSceneRelGradePo) {

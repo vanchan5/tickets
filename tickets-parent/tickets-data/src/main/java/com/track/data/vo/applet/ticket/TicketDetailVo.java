@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yeJH
@@ -62,12 +61,14 @@ public class TicketDetailVo  implements Serializable {
     private String phone;
 
     @ApiModelProperty(value = "场次信息")
+    private List<CommodityAttrVo> commodityAttr;
+    /*@ApiModelProperty(value = "场次信息")
     private List<TicketSceneBaseVo> ticketSceneBaseList;
 
     @ApiModelProperty(value = "档次信息")
     private List<TicketGradeBaseVo> ticketGradeBaseList;
 
     @ApiModelProperty("选择场次跟档次对应的信息")
-    private Map<String, SceneRelGradeInfoVo> sceneRelGradeInfo;
+    private Map<String, SceneRelGradeInfoVo> sceneRelGradeInfo;*/
 
 }

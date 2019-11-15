@@ -445,30 +445,32 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
 
         //获取演出详情
         TicketDetailVo ticketDetailVo = mapper.getTicketDetail(ticketId);
+        if(null == ticketDetailVo) {
+            throw new ServiceException(ResultCode.NO_EXISTS, "演出已结束");
+        }
 
         //获取客服电话
         BasicSettingPo basicSettingPo = basicSettingMapper.selectOne(new QueryWrapper<>());
         ticketDetailVo.setPhone(basicSettingPo.getPhone());
 
-        //获取场次信息
-        List<TicketSceneBaseVo> ticketSceneBaseList = omTicketSceneMapper.getTicketSceneBase(ticketId);
-        ticketDetailVo.setTicketSceneBaseList(ticketSceneBaseList);
-
-        //获取档次信息
-        List<TicketGradeBaseVo> ticketGradeBaseList = omTicketGradeMapper.getTicketGradeBase(ticketId);
-        ticketDetailVo.setTicketGradeBaseList(ticketGradeBaseList);
-
         //获取场次跟档次关联的信息（规格）
-        List<SceneRelGradeInfoVo> sceneRelGradeInfoList = omSceneRelGradeMapper.getSceneRelGradeInfoList(ticketId);
-        Map<String, SceneRelGradeInfoVo> sceneRelGradeInfoMap = new HashMap<>();
-        if(null != sceneRelGradeInfoList && sceneRelGradeInfoList.size() > 0) {
-            sceneRelGradeInfoList.stream().forEach(sceneRelGradeInfoVo -> {
-                //组装场次跟档次，sceneId:gradeId;  作为key，sceneRelGradeInfoVo作为value
-                String key = sceneRelGradeInfoVo.getSceneId() + ":" + sceneRelGradeInfoVo.getGradeId() + ";";
-                sceneRelGradeInfoMap.put(key, sceneRelGradeInfoVo);
-            });
-        }
-        ticketDetailVo.setSceneRelGradeInfo(sceneRelGradeInfoMap);
+        List<CommodityAttrVo> commodityAttrVoList = omSceneRelGradeMapper.getCommodityAttr(ticketId);
+        commodityAttrVoList.stream().forEach(commodityAttrVo -> {
+            List<AttrValueVo> attrValueList = new ArrayList<>();
+            AttrValueVo scene = new AttrValueVo();
+            scene.setAttrKey("场次");
+            scene.setAttrValue(commodityAttrVo.getSceneName());
+            scene.setAttrCode(commodityAttrVo.getSceneId());
+            attrValueList.add(scene);
+            AttrValueVo grade = new AttrValueVo();
+            grade.setAttrKey("档次");
+            grade.setAttrValue(commodityAttrVo.getGradeName());
+            grade.setAttrCode(commodityAttrVo.getGradeId());
+            attrValueList.add(grade);
+            commodityAttrVo.setAttrValueList(attrValueList);
+        });
+
+        ticketDetailVo.setCommodityAttr(commodityAttrVoList);
 
         return ticketDetailVo;
     }

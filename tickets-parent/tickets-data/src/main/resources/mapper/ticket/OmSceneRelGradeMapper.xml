@@ -37,5 +37,19 @@
         INNER JOIN om_ticket_seat seat ON seat.grade_id = otg.id
         GROUP BY ot.id, ots.id, otg.id
     </select>
+    <select id="getCommodityAttr" resultType="com.track.data.vo.applet.ticket.CommodityAttrVo">
+        SELECT osrg.id AS priceId,
+            otg.`sell_price` AS price,
+            osrg.remaining_sum AS stock,
+            ots.id AS sceneId,
+            ots.`name` AS sceneName,
+            otg.id AS gradeId,
+            otg.`name` AS gradeName
+        FROM om_ticket ot
+        INNER JOIN om_scene_rel_grade osrg ON ot.id = osrg.ticket_id AND ot.id = #{ticketId}
+        INNER JOIN om_ticket_scene ots ON osrg.scene_id = ots.`id`
+        INNER JOIN om_ticket_grade otg ON otg.id = osrg.`grade_id`
+        ORDER BY ots.`start_time` ASC
+    </select>
 
 </mapper>
