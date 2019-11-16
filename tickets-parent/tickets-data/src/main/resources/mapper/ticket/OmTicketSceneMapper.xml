@@ -29,5 +29,8 @@
         INNER JOIN om_ticket_scene ots ON ots.id = osrg.scene_id
         WHERE osrg.id = #{relId}
     </select>
+    <select id="getSceneByRelId" resultType="com.track.data.domain.po.ticket.OmTicketScenePo">
+
+    </select>
 
 </mapper>
