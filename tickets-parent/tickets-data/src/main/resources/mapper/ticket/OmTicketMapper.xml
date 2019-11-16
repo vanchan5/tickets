@@ -189,5 +189,12 @@
         WHERE ots.`start_time` > NOW()
         GROUP BY ot.`id`
     </select>
+    <select id="getAddrIds" resultType="java.lang.String">
+        SELECT CONCAT(c.id,',',b.id,',',a.id) as addr_ids
+        from area_region a
+        inner join area_region b on a.parent_code = b.city_code
+        inner join area_region c on b.parent_code = c.city_code
+        where a.id = #{addrId};
+    </select>
 
 </mapper>

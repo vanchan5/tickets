@@ -82,4 +82,16 @@ public interface OmTicketMapper extends IBaseMapper<OmTicketPo> {
      * @return com.track.data.vo.applet.ticket.TicketDetailVo
      **/
     TicketDetailVo getTicketDetail(@Param("ticketId") Long ticketId);
+
+    /**
+     * @Author chauncy
+     * @Date 2019-11-14 22:47
+     * @Description //获取省市区id
+     *
+     * @Update chauncy
+     *
+     * @param  addrId
+     * @return java.lang.String
+     **/
+    String getAddrIds(Long addrId);
 }
