@@ -76,4 +76,8 @@ public class ManageTicketInfoVo  implements Serializable {
     @JSONField(ordinal = 13)
     private List<TicketGradeInfoVo> ticketGradeInfoList;
 
+    @ApiModelProperty(value = "地区名称（省id/市id/区id）")
+    @JSONField(ordinal = 14)
+    private String addrIds;
+
 }
