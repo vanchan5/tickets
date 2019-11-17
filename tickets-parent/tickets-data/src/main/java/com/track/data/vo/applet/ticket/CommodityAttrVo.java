@@ -50,6 +50,7 @@ public class CommodityAttrVo implements Serializable {
     private Long sceneId;
 
     @JsonIgnore
+    @JSONField(serialize = false)
     @ApiModelProperty(value = "场次名称")
     private String sceneName;
 

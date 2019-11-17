@@ -331,6 +331,8 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
         insertOrderQuartzJob(omTicketScenePoList);
 
         //2.保存门票档次以及座位区信息（无法批量插入 座位区信息关联档次id）
+        //档次排数  依次递增
+        final Integer[] number = {0};
         saveTicketDto.getTicketGradeList().stream().forEach(saveTicketGradeDto -> {
             OmTicketGradePo omTicketGradePo = new OmTicketGradePo();
             //门票id
@@ -344,25 +346,24 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
             //插入档次信息
             omTicketGradeMapper.insert(omTicketGradePo);
             //3 保存该档次下的座位区
-            //座位区编号
-            final Integer[] number = {0};
             List<OmTicketSeatPo> omTicketSeatPoList = new ArrayList<>();
             saveTicketGradeDto.getTicketSeatList().stream().forEach(saveTicketSeatDto -> {
                 OmTicketSeatPo omTicketSeatPo = new OmTicketSeatPo();
                 omTicketSeatPo.setTicketId(ticketId);
                 //座位区（第几排）
-                omTicketSeatPo.setSeatRow(saveTicketSeatDto.getSeatRow());
+                omTicketSeatPo.setSeatRow(number[0] + saveTicketSeatDto.getSeatRow());
                 //当前座位区座位数量
                 omTicketSeatPo.setSeatSum(saveTicketSeatDto.getSeatSum());
                 //档位id
                 omTicketSeatPo.setGradeId(omTicketGradePo.getId());
                 //座位区最小编号
-                omTicketSeatPo.setMinRange(number[0] + 1);
+                omTicketSeatPo.setMinRange(1);
                 //座位区最大编号
-                omTicketSeatPo.setMaxRange(number[0] + saveTicketSeatDto.getSeatSum());
-                number[0] = number[0] + saveTicketSeatDto.getSeatSum();
+                omTicketSeatPo.setMaxRange(saveTicketSeatDto.getSeatSum());
                 omTicketSeatPoList.add(omTicketSeatPo);
             });
+            //排数递增
+            number[0] = number[0] + saveTicketGradeDto.getTicketSeatList().size();
             //批量插入座位区记录
             omTicketSeatService.saveBatch(omTicketSeatPoList);
         });
