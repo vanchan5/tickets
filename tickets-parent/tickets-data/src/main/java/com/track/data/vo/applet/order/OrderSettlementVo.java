@@ -24,6 +24,9 @@ public class OrderSettlementVo implements Serializable {
     @ApiModelProperty(value = "门票id")
     private Long ticketId;
 
+    @ApiModelProperty(value = "场次档次关联id")
+    private Long relId;
+
     @ApiModelProperty(value = "场次id")
     private Long sceneId;
 

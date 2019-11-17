@@ -121,6 +121,7 @@
     </select>
     <select id="settlement" resultType="com.track.data.vo.applet.order.OrderSettlementVo">
         SELECT osrg.ticket_id,
+            osrg.id as relId,
             osrg.scene_id,
             osrg.grade_id,
             ot.`name`,

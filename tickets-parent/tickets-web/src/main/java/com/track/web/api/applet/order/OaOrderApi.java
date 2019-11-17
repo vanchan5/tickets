@@ -151,7 +151,7 @@ public class OaOrderApi extends BaseWeb {
      **/
     @ApiOperation(value = "订单下单提交", notes = "用户选择场次，档次之后，填写信息后提交订单")
     @PostMapping("/submit")
-    public JsonViewData submit(
+    public JsonViewData<Long> submit(
             @ApiParam(required = true, name = "orderSubmitDto", value = "订单提交参数")
             @Validated @RequestBody OrderSubmitDto orderSubmitDto) {
 
