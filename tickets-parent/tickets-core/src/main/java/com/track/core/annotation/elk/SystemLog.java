@@ -1,4 +1,4 @@
-package com.track.core.elk;
+package com.track.core.annotation.elk;
 
 import com.track.common.enums.system.SystemLogTypeEnum;
 

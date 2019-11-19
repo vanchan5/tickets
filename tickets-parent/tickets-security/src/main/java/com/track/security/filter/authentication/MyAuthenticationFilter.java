@@ -2,6 +2,7 @@ package com.track.security.filter.authentication;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.track.common.constant.Constants;
 import com.track.common.constant.SecurityConstant;
 import com.track.common.enums.manage.sys.LoginTypeEnum;
 import com.track.common.enums.system.ResultCode;
@@ -16,6 +17,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -94,13 +97,22 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
 
         log.info("%%%%%%%%%验证token有效性开始%%%%%%%%%");
 
+        //日志跟踪
+        boolean bInsertMDC = insertMDC();
+
         String header = request.getHeader(SecurityConstant.HEADER);
         if (StringUtils.isBlank(header)) {
             header = request.getParameter(SecurityConstant.HEADER);
         }
         Boolean notValid = StringUtils.isBlank(header) || (!tokenRedis && !header.startsWith(SecurityConstant.TOKEN_SPLIT));
         if (notValid) {
-            chain.doFilter(request, response);
+            try {
+                chain.doFilter(request, response);
+            } finally {
+                if (bInsertMDC) {
+                    MDC.remove(Constants.UNIQUE_ID);
+                }
+            }
             return;
         }
         try {
@@ -116,7 +128,17 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
             ResponseUtil.out(response, new JsonViewData<Object>(ResultCode.NO_LOGIN,"账户被禁用，请联系管理员"));
         }
 
-        chain.doFilter(request, response);
+        MDC.put(Constants.USER_ID, String.valueOf(securityUtil.getSysCurrUser().getId()));
+        MDC.put(Constants.USER_NAME, securityUtil.getSysCurrUser().getUsername());
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            if (bInsertMDC) {
+                MDC.remove(Constants.UNIQUE_ID);
+                MDC.remove(Constants.USER_ID);
+                MDC.remove(Constants.USER_NAME);
+            }
+        }
     }
     
     /**
@@ -226,5 +248,22 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
         }
 
         return null;
+    }
+
+    /**
+     * @Author chauncy
+     * @Date 2019-11-19 20:31
+     * @Description //使用UUID作为日志跟踪ID
+     *
+     * @Update chauncy
+     *       
+     * @param  
+     * @return boolean
+     **/
+    private boolean insertMDC() {
+        UUID uuid = UUID.randomUUID();
+        String uniqueId = uuid.toString().replace("-", "");
+        MDC.put(Constants.UNIQUE_ID, uniqueId);
+        return true;
     }
 }
