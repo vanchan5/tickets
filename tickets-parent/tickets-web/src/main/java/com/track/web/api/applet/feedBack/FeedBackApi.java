@@ -41,7 +41,7 @@ public class FeedBackApi extends BaseWeb {
      * @param  saveFeedBackDto
      * @return com.track.core.interaction.JsonViewData
      **/
-    @GetMapping("/saveFeedBack")
+    @PostMapping("/saveFeedBack")
     @ApiOperation("保存用户反馈信息")
     public JsonViewData saveFeedBack(@RequestBody @ApiParam(required = true,name = "saveFeedBackDto",value = "保存反馈信息")
                                      @Validated SaveFeedBackDto saveFeedBackDto){
