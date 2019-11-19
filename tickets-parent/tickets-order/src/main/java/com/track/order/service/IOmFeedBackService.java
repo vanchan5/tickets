@@ -3,6 +3,7 @@ package com.track.order.service;
 import com.github.pagehelper.PageInfo;
 import com.track.data.domain.po.order.OmFeedBackPo;
 import com.track.core.base.service.Service;
+import com.track.data.dto.applet.feedBack.SaveFeedBackDto;
 import com.track.data.dto.manage.feedBack.search.SearchFeedBackDto;
 import com.track.data.vo.manage.feedBack.SearchFeedBackVo;
 
@@ -25,10 +26,10 @@ public interface IOmFeedBackService extends Service<OmFeedBackPo> {
      *
      * @Update chauncy
      *
-     * @param  content
+     * @param  saveFeedBackDto
      * @return void
      **/
-    void saveFeedBack(String content);
+    void saveFeedBack(SaveFeedBackDto saveFeedBackDto);
 
     /**
      * @Author chauncy

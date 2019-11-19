@@ -7,6 +7,7 @@ import com.track.common.enums.system.ResultCode;
 import com.track.core.exception.ServiceException;
 import com.track.data.domain.po.order.OmFeedBackPo;
 import com.track.data.domain.po.user.UmUserPo;
+import com.track.data.dto.applet.feedBack.SaveFeedBackDto;
 import com.track.data.dto.manage.feedBack.search.SearchFeedBackDto;
 import com.track.data.mapper.order.OmFeedBackMapper;
 import com.track.data.vo.manage.feedBack.SearchFeedBackVo;
@@ -41,7 +42,7 @@ public class OmFeedBackServiceImpl extends AbstractService<OmFeedBackMapper, OmF
     private SecurityUtil securityUtil;
 
     /**
-     * @param content
+     * @param saveFeedBackDto
      * @return void
      * @Author chauncy
      * @Date 2019-10-30 22:23
@@ -49,7 +50,7 @@ public class OmFeedBackServiceImpl extends AbstractService<OmFeedBackMapper, OmF
      * @Update chauncy
      **/
     @Override
-    public void saveFeedBack(String content) {
+    public void saveFeedBack(SaveFeedBackDto saveFeedBackDto) {
 
         UmUserPo userPo = securityUtil.getSysCurrUser();
         if (userPo == null){
@@ -60,7 +61,7 @@ public class OmFeedBackServiceImpl extends AbstractService<OmFeedBackMapper, OmF
         }
 
         OmFeedBackPo feedBackPo = new OmFeedBackPo();
-        feedBackPo.setId(null).setContent(content).setCreateBy(userPo.getId());
+        feedBackPo.setId(null).setContent(saveFeedBackDto.getContent()).setCreateBy(userPo.getId());
         mapper.insert(feedBackPo);
 
     }
