@@ -4,6 +4,7 @@ package com.track.web.api.manage.order;
 import com.github.pagehelper.PageInfo;
 import com.track.common.enums.system.ResultCode;
 import com.track.core.interaction.JsonViewData;
+import com.track.data.dto.manage.order.search.OrderRefundDto;
 import com.track.data.dto.manage.order.search.SearchAccountLogDto;
 import com.track.data.dto.manage.order.search.SearchOrderDto;
 import com.track.data.vo.manage.order.AccountLogVo;
@@ -104,7 +105,7 @@ public class OmOrderApi extends BaseWeb {
             @ApiParam(required = true, name = "orderRefundDto", value = "单个或批量订单号，或者某个场次")
             @Validated @RequestBody OrderRefundDto orderRefundDto) {
 
-        PageInfo<AccountLogVo> accountLogVoPageInfo = omAccountLogService.searchAccountLog(searchAccountLogDto);
+        PageInfo<AccountLogVo> accountLogVoPageInfo = omAccountLogService.searchAccountLog(orderRefundDto);
         return new JsonViewData(ResultCode.SUCCESS, "查找成功",
                 accountLogVoPageInfo);
 
