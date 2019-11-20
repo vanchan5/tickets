@@ -165,11 +165,6 @@ public interface SecurityConstant {
     Integer DEL_FLAG = 1;
 
     /**
-     * 限流标识
-     */
-    String LIMIT_ALL = "distribution_LIMIT_ALL";
-
-    /**
      * 顶部菜单类型权限
      */
     Integer PERMISSION_NAV = -1;
