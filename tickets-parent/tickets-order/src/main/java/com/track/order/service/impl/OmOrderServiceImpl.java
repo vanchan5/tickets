@@ -45,10 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -271,15 +268,11 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
         //插入订单信息
         OmOrderPo omOrderPo = new OmOrderPo();
         BeanUtils.copyProperties(orderSubmitDto, omOrderPo);
-        //票号 支付成功才有票号
-        //omOrderPo.setTicketNo(SnowFlakeUtil.getFlowIdInstance().nextId());
         //获取单价
         OmTicketGradePo omTicketGradePo = omTicketGradeMapper.selectById(omSceneRelGradePo.getGradeId());
         //支付金额
         BigDecimal payAmount = BigDecimalUtil.safeMultiply(omTicketGradePo.getSellPrice(), orderSubmitDto.getOrderNum());
         omOrderPo.setPayAmount(payAmount);
-        //支付过期时间， 默认为半小时
-        omOrderPo.setExpireTime(LocalDateTime.now().plusMinutes(30));
         //订单状态默认待付款
         omOrderPo.setState(OrderStateEnum.WAIT_PAY.getId());
         //下单用户id
@@ -297,9 +290,6 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
         //扣减座位数
         omSceneRelGradePo.setRemainingSum(omSceneRelGradePo.getRemainingSum() - orderSubmitDto.getOrderNum());
         omSceneRelGradeMapper.updateById(omSceneRelGradePo);
-
-        //分配座位信息（用户提交订单不分配座位，等到支付完成再根据购票数去分配座位）
-        arrangeSeat(omOrderPo);
 
 
         //过期时间  半小时
@@ -476,11 +466,9 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
             throw new ServiceException(ResultCode.PARAM_ERROR, state + "订单不能取消");
         }
         if(!omOrderPo.getUmUserId().equals(umUserPo.getId())) {
-            throw new ServiceException(ResultCode.PARAM_ERROR, "订单不能取消");
+            throw new ServiceException(ResultCode.PARAM_ERROR, "只能取消自己的订单");
         }
-
-        omOrderPo.setState(OrderStateEnum.ALREADY_CANCEL.getId());
-        mapper.updateById(omOrderPo);
+        closeOrder(orderId);
     }
 
     /**
@@ -498,7 +486,9 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
 
         //修改订单状态
         OmOrderPo omOrderPo = new OmOrderPo();
-        omOrderPo.setId(orderId).setState(OrderStateEnum.ALREADY_CANCEL.getId());
+        omOrderPo.setId(orderId)
+                .setState(OrderStateEnum.ALREADY_CANCEL.getId())
+                .setCloseTime(LocalDateTime.now());
         mapper.updateById(omOrderPo);
 
         //获取快照信息
@@ -508,10 +498,35 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
 
         OmSceneRelGradePo omSceneRelGradePo = omSceneRelGradeMapper.getRemainingSum(omTicketTempPo.getRelId());
         //加回库存
-        UpdateWrapper<OmSceneRelGradePo> updateQuery = new UpdateWrapper<>();
-        updateQuery.lambda().eq(OmSceneRelGradePo::getId, omSceneRelGradePo.getId())
-                .set(OmSceneRelGradePo::getRemainingSum, omSceneRelGradePo.getRemainingSum() + omTicketTempPo.getOrderNum());
-        omSceneRelGradeService.update(updateQuery);
+        omSceneRelGradeMapper.closeOrderReturnStock(omSceneRelGradePo.getId(), omTicketTempPo.getOrderNum());
+    }
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/20 11:10
+     * @Description 支付回调通知 修改订单 安排座位
+     *
+     * @Update yeJH
+     *
+     * @param  omOrderPo
+     * @param  response  微信支付回调返回参数
+     * @return void
+     **/
+    @Override
+    public void wxPayNotify(OmOrderPo omOrderPo, Map<String, String> response) {
+
+        //票号 支付成功才有票号
+        omOrderPo.setTicketNo(SnowFlakeUtil.getFlowIdInstance().nextId());
+        //微信支付单号
+        omOrderPo.setPayOrderNo(response.get("transaction_id"));
+        //订单状态改为待消费
+        omOrderPo.setState(OrderStateEnum.WAIT_CONSUME.getId());
+        //订单支付时间
+        omOrderPo.setPayTime(LocalDateTime.now());
+        mapper.updateById(omOrderPo);
+
+        //分配座位信息（用户提交订单不分配座位，等到支付完成再根据购票数去分配座位）
+        arrangeSeat(omOrderPo);
     }
 
 }

@@ -331,8 +331,6 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
         insertOrderQuartzJob(omTicketScenePoList);
 
         //2.保存门票档次以及座位区信息（无法批量插入 座位区信息关联档次id）
-        //档次排数  依次递增
-        final Integer[] number = {0};
         saveTicketDto.getTicketGradeList().stream().forEach(saveTicketGradeDto -> {
             OmTicketGradePo omTicketGradePo = new OmTicketGradePo();
             //门票id
@@ -351,7 +349,7 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
                 OmTicketSeatPo omTicketSeatPo = new OmTicketSeatPo();
                 omTicketSeatPo.setTicketId(ticketId);
                 //座位区（第几排）
-                omTicketSeatPo.setSeatRow(number[0] + saveTicketSeatDto.getSeatRow());
+                omTicketSeatPo.setSeatRow(saveTicketSeatDto.getSeatRow());
                 //当前座位区座位数量
                 omTicketSeatPo.setSeatSum(saveTicketSeatDto.getSeatSum());
                 //档位id
@@ -362,8 +360,6 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
                 omTicketSeatPo.setMaxRange(saveTicketSeatDto.getSeatSum());
                 omTicketSeatPoList.add(omTicketSeatPo);
             });
-            //排数递增
-            number[0] = number[0] + saveTicketGradeDto.getTicketSeatList().size();
             //批量插入座位区记录
             omTicketSeatService.saveBatch(omTicketSeatPoList);
         });

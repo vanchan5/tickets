@@ -14,6 +14,8 @@ import com.track.data.vo.applet.order.MyOrderListVo;
 import com.track.data.vo.applet.order.OrderSettlementVo;
 import com.track.data.vo.manage.order.ManageOrderListVo;
 
+import java.util.Map;
+
 /**
  * <p>
  * 支付订单 服务类
@@ -123,4 +125,17 @@ public interface IOmOrderService extends Service<OmOrderPo> {
      * @return void
      **/
     void closeOrder(Long orderId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/20 11:05
+     * @Description 支付回调通知 修改订单 安排座位
+     *
+     * @Update yeJH
+     *
+     * @param  omOrderPo
+     * @param  response
+     * @return void
+     **/
+    void wxPayNotify(OmOrderPo omOrderPo, Map<String, String> response);
 }

@@ -15,6 +15,9 @@
     <sql id="Base_Column_List">
         id, scene_id, grade_id, remaining_sum
     </sql>
+    <update id="closeOrderReturnStock">
+        UPDATE om_scene_rel_grade SET remaining_sum = remaining_sum + #{orderNum}  WHERE id = #{id}
+    </update>
     <select id="getSceneRelGradeInfoList" resultType="com.track.data.vo.applet.ticket.SceneRelGradeInfoVo">
         SELECT osrg.id AS relId, osrg.scene_id, osrg.grade_id, osrg.remaining_sum
         FROM om_scene_rel_grade osrg

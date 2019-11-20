@@ -5,6 +5,7 @@ import com.track.data.dto.applet.order.OrderSubmitDto;
 import com.track.data.mapper.base.IBaseMapper;
 import com.track.data.vo.applet.ticket.CommodityAttrVo;
 import com.track.data.vo.applet.ticket.SceneRelGradeInfoVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -65,4 +66,17 @@ public interface OmSceneRelGradeMapper extends IBaseMapper<OmSceneRelGradePo> {
      * @return java.util.List<com.track.data.vo.applet.ticket.CommodityAttrVo>
      **/
     List<CommodityAttrVo> getCommodityAttr(Long ticketId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/20 11:46
+     * @Description 取消订单  加回库存
+     *
+     * @Update yeJH
+     *
+     * @param  id  场次档次关联id
+     * @param  orderNum  加回库存数量
+     * @return void
+     **/
+    void closeOrderReturnStock(@Param("id") Long id, @Param("orderNum")Integer orderNum);
 }
