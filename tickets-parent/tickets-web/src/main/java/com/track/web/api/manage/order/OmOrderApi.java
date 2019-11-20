@@ -88,4 +88,26 @@ public class OmOrderApi extends BaseWeb {
 
     }
 
+    /**
+     * @Author yeJH
+     * @Date 2019/11/13 14:12
+     * @Description 根据订单号，单个或者批量退款，也可根据场次将所有订单退款
+     *
+     * @Update yeJH
+     *
+     * @param  orderRefundDto
+     * @return com.track.core.interaction.JsonViewData<com.github.pagehelper.PageInfo<com.track.data.vo.manage.order.AccountLogVo>>
+     **/
+    @ApiOperation(value = "订单退款", notes = "根据订单号，单个或者批量退款，也可根据场次将所有订单退款")
+    @PostMapping("/orderRefund")
+    public JsonViewData orderRefund(
+            @ApiParam(required = true, name = "orderRefundDto", value = "单个或批量订单号，或者某个场次")
+            @Validated @RequestBody OrderRefundDto orderRefundDto) {
+
+        PageInfo<AccountLogVo> accountLogVoPageInfo = omAccountLogService.searchAccountLog(searchAccountLogDto);
+        return new JsonViewData(ResultCode.SUCCESS, "查找成功",
+                accountLogVoPageInfo);
+
+    }
+
 }

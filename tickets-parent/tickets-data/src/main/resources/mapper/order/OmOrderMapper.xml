@@ -146,7 +146,9 @@
             ott.scene_name,
             ott.grade_name,
             ott.order_num,
-            ot.`addr_detail`
+            ot.`addr_detail`,
+            ot.picture,
+            ot.name
         FROM om_order oo
         INNER JOIN om_ticket_temp ott ON ott.order_id = oo.id
         INNER JOIN om_ticket ot ON ot.id = ott.ticket_id

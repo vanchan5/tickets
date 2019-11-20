@@ -44,6 +44,9 @@ public class OmOrderPo implements Serializable {
     @ApiModelProperty(value = "用于微信商户交易流水号,唯一索引。")
     private String payOrderNo;
 
+    @ApiModelProperty(value = "微信退款单号")
+    private String refundId;
+
     @ApiModelProperty(value = "微信返回的给app或者网页的支付凭证，客户端通过此信息调起支付界面。")
     private String prePayId;
 

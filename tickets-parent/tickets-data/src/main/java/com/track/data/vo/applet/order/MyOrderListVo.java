@@ -58,4 +58,8 @@ public class MyOrderListVo implements Serializable {
     @JSONField(ordinal = 9)
     private Long orderId;
 
+    @ApiModelProperty(value = "演出图片")
+    @JSONField(ordinal = 10)
+    private String picture;
+
 }
