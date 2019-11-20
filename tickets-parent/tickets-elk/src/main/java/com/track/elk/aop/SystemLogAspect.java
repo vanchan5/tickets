@@ -7,7 +7,7 @@ import com.track.common.utils.IpInfoUtil;
 import com.track.common.utils.JSONUtils;
 import com.track.common.utils.ObjectUtil;
 import com.track.common.utils.ThreadPoolUtil;
-import com.track.core.elk.SystemLog;
+import com.track.core.annotation.elk.SystemLog;
 import com.track.data.domain.po.elk.SysLogPo;
 import com.track.elk.po.EsLogDo;
 import com.track.elk.service.EsLogService;
@@ -68,7 +68,7 @@ public class SystemLogAspect {
      * Controller层切点,注解方式
      */
     //@Pointcut("execution(* *..controller..*Controller*.*(..))")
-    @Pointcut("@annotation(com.track.core.elk.SystemLog)")
+    @Pointcut("@annotation(com.track.core.annotation.elk.SystemLog)")
     public void controllerAspect() {
 
     }

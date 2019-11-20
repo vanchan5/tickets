@@ -6,7 +6,7 @@ import com.track.common.constant.SecurityConstant;
 import com.track.common.enums.manage.sys.LoginTypeEnum;
 import com.track.common.enums.system.SystemLogTypeEnum;
 import com.track.common.utils.ListUtil;
-import com.track.core.elk.SystemLog;
+import com.track.core.annotation.elk.SystemLog;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.bo.security.TokenUserBo;
 import com.track.data.domain.po.user.UmUserPo;

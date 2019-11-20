@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.track.common.enums.system.ResultCode;
 import com.track.common.enums.system.SystemLogTypeEnum;
-import com.track.core.elk.SystemLog;
+import com.track.core.annotation.elk.SystemLog;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.domain.po.test.TbUserPo;
 import com.track.data.dto.test.save.SaveTestUsersDto;

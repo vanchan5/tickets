@@ -1,5 +1,7 @@
 package com.track.quartz.proccessor;
 
+import com.track.core.annotation.elk.SystemLog;
+import com.track.core.annotation.logback.LogBack;
 import com.track.quartz.service.IQuartzLogJobService;
 import com.track.quartz.util.BeanUtil;
 import com.track.quartz.util.SpringContextUtil;
@@ -45,6 +47,7 @@ public class ScheduleJob extends QuartzJobBean {
     private final static IQuartzLogJobService logService = (IQuartzLogJobService) SpringContextUtil.getBean("quartzLogJobServiceImpl");
 
     @Override
+    @LogBack
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         QuartzJobPo quartzJob = new QuartzJobPo();
         BeanUtil.copyBeanProp(quartzJob,jobExecutionContext.getMergedJobDataMap().get(QuartzConstants.TASK_PROPERTIES));

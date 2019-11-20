@@ -1,5 +1,6 @@
 package com.track.quartz.test;
 
+import com.track.core.annotation.logback.LogBack;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ public class Quartz {
 
     public String texts = "测试spel";
 
+    @LogBack
     public String quartzTest(String texts){
 
         String text = "测试定时任务传参数";
