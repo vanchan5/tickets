@@ -106,8 +106,7 @@ public class OmOrderApi extends BaseWeb {
             @Validated @RequestBody OrderRefundDto orderRefundDto) {
 
         //PageInfo<AccountLogVo> accountLogVoPageInfo = omAccountLogService.searchAccountLog(orderRefundDto);
-        return new JsonViewData(ResultCode.SUCCESS, "查找成功",
-                accountLogVoPageInfo);
+        return new JsonViewData(ResultCode.SUCCESS, "查找成功");
 
     }
 
