@@ -97,7 +97,7 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
 
         log.info("%%%%%%%%%验证token有效性开始%%%%%%%%%");
 
-        //日志跟踪
+        //日志唯一ID跟踪
         boolean bInsertMDC = insertMDC();
 
         String header = request.getHeader(SecurityConstant.HEADER);
