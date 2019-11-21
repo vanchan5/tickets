@@ -3,6 +3,7 @@ package com.track.web.api.manage.user;
 
 import com.github.pagehelper.PageInfo;
 import com.track.common.enums.system.ResultCode;
+import com.track.core.annotation.limit.RateLimiter;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.base.EditEnabledDto;
@@ -130,6 +131,7 @@ public class UmUserApi extends BaseWeb {
 
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     @ApiOperation(value = "获取当前登录用户接口")
+    @RateLimiter(limit = 1)
     public JsonViewData<UmUserPo> getUserInfo() {
 
         UmUserPo urrUser =securityUtil.getSysCurrUser();

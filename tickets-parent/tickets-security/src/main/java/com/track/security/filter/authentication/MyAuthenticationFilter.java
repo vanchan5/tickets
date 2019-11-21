@@ -52,6 +52,8 @@ import java.util.concurrent.TimeUnit;
  *
  * 1：redis 2、jwt
  *
+ * 本项目拦截：security MyAuthenticationFilter ==>LimitRaterInterceptor==>controller
+ *
  */
 @Slf4j
 public class MyAuthenticationFilter extends BasicAuthenticationFilter {
