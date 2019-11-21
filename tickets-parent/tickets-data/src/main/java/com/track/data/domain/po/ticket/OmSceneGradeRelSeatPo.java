@@ -42,6 +42,9 @@ public class OmSceneGradeRelSeatPo implements Serializable {
     @ApiModelProperty(value = "门票座位区id")
     private Long seatId;
 
+    @ApiModelProperty(value = "起始总座位数")
+    private Integer startSum;
+
     @ApiModelProperty(value = "剩余座位数")
     private Integer remainingSum;
 

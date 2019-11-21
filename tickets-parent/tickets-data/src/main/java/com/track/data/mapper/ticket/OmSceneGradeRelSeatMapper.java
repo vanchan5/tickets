@@ -40,4 +40,16 @@ public interface OmSceneGradeRelSeatMapper extends IBaseMapper<OmSceneGradeRelSe
     OmSceneGradeRelSeatPo selectByIdForUpdate(Long id);
 
     List<OmSceneGradeRelSeatPo> selectListForUpdate(Long relId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/21 14:02
+     * @Description 根据场次所有对应订单退款  该场次所有对应的座位区剩余座位数恢复
+     *
+     * @Update yeJH
+     *
+     * @param  sceneId
+     * @return void
+     **/
+    void orderRefundReturnStock(Long sceneId);
 }

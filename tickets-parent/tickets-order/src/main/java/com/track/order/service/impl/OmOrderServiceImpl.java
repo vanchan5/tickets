@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Splitter;
 import com.track.common.constant.RabbitConstants;
+import com.track.common.enums.manage.order.LogTypeEnum;
 import com.track.common.enums.manage.order.OrderStateEnum;
 import com.track.common.enums.manage.order.OrderStateExplainEnum;
 import com.track.common.enums.manage.order.SearchOrderStateEnum;
@@ -13,6 +14,7 @@ import com.track.common.enums.system.ResultCode;
 import com.track.common.utils.BigDecimalUtil;
 import com.track.common.utils.SnowFlakeUtil;
 import com.track.core.exception.ServiceException;
+import com.track.data.domain.po.order.OmAccountLogPo;
 import com.track.data.domain.po.order.OmOrderPo;
 import com.track.data.domain.po.order.OmOrderRelSeatPo;
 import com.track.data.domain.po.order.OmTicketTempPo;
@@ -21,7 +23,9 @@ import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.applet.order.OrderSettlementDto;
 import com.track.data.dto.applet.order.OrderSubmitDto;
 import com.track.data.dto.applet.order.SearchMyOrderDto;
+import com.track.data.dto.manage.order.search.OrderRefundDto;
 import com.track.data.dto.manage.order.search.SearchOrderDto;
+import com.track.data.mapper.order.OmAccountLogMapper;
 import com.track.data.mapper.order.OmOrderMapper;
 import com.track.data.mapper.order.OmTicketTempMapper;
 import com.track.data.mapper.ticket.*;
@@ -80,6 +84,9 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
 
     @Autowired
     private OmTicketSeatMapper omTicketSeatMapper;
+
+    @Autowired
+    private OmAccountLogMapper omAccountLogMapper;
 
     @Autowired
     private IOmSceneRelGradeService omSceneRelGradeService;
@@ -527,6 +534,42 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
 
         //分配座位信息（用户提交订单不分配座位，等到支付完成再根据购票数去分配座位）
         arrangeSeat(omOrderPo);
+
+        //记录流水
+        OmAccountLogPo omAccountLogPo = new OmAccountLogPo();
+        omAccountLogPo.setUserId(omOrderPo.getUmUserId())
+                .setAmount(omOrderPo.getPayAmount())
+                .setOrderId(omOrderPo.getId())
+                .setLogType(LogTypeEnum.ORDER_PAY.getId());
+        omAccountLogMapper.insert(omAccountLogPo);
+    }
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/20 21:31
+     * @Description 根据订单号，单个或者批量退款，也可根据场次将所有订单退款
+     *
+     * @Update yeJH
+     *
+     * @param  orderRefundDto
+     * @return void
+     **/
+    @Override
+    public void orderRefund(OrderRefundDto orderRefundDto) {
+        if(orderRefundDto.getIsAll()) {
+            if(null == orderRefundDto.getSceneId()) {
+                throw new ServiceException(ResultCode.PARAM_ERROR, "场次id不能为空");
+            }
+
+            //该场次对应的所有已经支付的订单改为退款中
+            mapper.refundUpdateState(orderRefundDto.getSceneId(), OrderStateEnum.REFUNDING.getId());
+            //该场次所有对应的座位数总数恢复
+            omSceneRelGradeMapper.orderRefundReturnStock(orderRefundDto.getSceneId());
+            //该场次所有对应的座位区剩余座位数恢复
+            omSceneGradeRelSeatMapper.orderRefundReturnStock(orderRefundDto.getSceneId());
+
+            //TODO  消息队列  15天后退款
+        }
     }
 
 }

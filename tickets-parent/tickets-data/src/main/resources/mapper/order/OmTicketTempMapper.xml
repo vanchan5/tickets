@@ -32,7 +32,9 @@
             ots.`start_time`,
             otg.id AS gradeId,
             otg.`name` AS gradeName,
-            osrg.id AS relId
+            osrg.id AS relId,
+            ot.longitude,
+            ot.latitude
         FROM om_scene_rel_grade osrg
         INNER JOIN om_ticket ot ON ot.id = osrg.ticket_id AND osrg.id = #{relId}
         INNER JOIN om_ticket_scene ots ON osrg.scene_id  = ots.id

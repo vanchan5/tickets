@@ -8,6 +8,7 @@ import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.applet.order.OrderSettlementDto;
 import com.track.data.dto.applet.order.OrderSubmitDto;
 import com.track.data.dto.applet.order.SearchMyOrderDto;
+import com.track.data.dto.manage.order.search.OrderRefundDto;
 import com.track.data.dto.manage.order.search.SearchOrderDto;
 import com.track.data.vo.applet.order.MyOrderDetailVo;
 import com.track.data.vo.applet.order.MyOrderListVo;
@@ -138,4 +139,16 @@ public interface IOmOrderService extends Service<OmOrderPo> {
      * @return void
      **/
     void wxPayNotify(OmOrderPo omOrderPo, Map<String, String> response);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/20 21:30
+     * @Description 根据订单号，单个或者批量退款，也可根据场次将所有订单退款
+     *
+     * @Update yeJH
+     *
+     * @param  orderRefundDto
+     * @return void
+     **/
+    void orderRefund(OrderRefundDto orderRefundDto);
 }

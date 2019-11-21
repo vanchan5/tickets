@@ -75,6 +75,14 @@ public class MyOrderDetailVo implements Serializable {
     @JSONField(ordinal = 11)
     private String addrDetail;
 
+    @ApiModelProperty(value = "经度")
+    @JSONField(ordinal = 11)
+    private BigDecimal longitude;
+
+    @ApiModelProperty(value = "纬度")
+    @JSONField(ordinal = 11)
+    private BigDecimal latitude;
+
     @ApiModelProperty(value = "票档名称")
     @JSONField(ordinal = 12)
     private String gradeName;

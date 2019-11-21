@@ -14,8 +14,19 @@
     <sql id="Base_Column_List">
         id, rel_id, seat_id, remaining_sum
     </sql>
+    <update id="orderRefundReturnStock">
+        UPDATE om_scene_grade_rel_seat osgrs
+        SET osgrs.remaining_sum = osgrs.start_sum
+        WHERE id IN (
+            SELECT * FROM (SELECT osgrs1.id
+            FROM om_scene_grade_rel_seat osgrs1
+            INNER JOIN om_scene_rel_grade osrg ON osrg.`id` = osgrs1.`rel_id`
+            AND osrg.scene_id = #{sceneId})
+            AS temp
+        )
+    </update>
     <select id="getInsertRelSeatInfo" resultType="com.track.data.domain.po.ticket.OmSceneGradeRelSeatPo">
-        SELECT osrg.ticket_id, osrg.id AS relId, ots.id AS seat_id, ots.seat_sum AS remainingSum
+        SELECT osrg.ticket_id, osrg.id AS relId, ots.id AS seat_id, ots.seat_sum AS remainingSum, ots.seat_sum AS startSum
         FROM om_scene_rel_grade osrg
         INNER JOIN om_ticket_seat ots ON ots.grade_id = osrg.grade_id AND osrg.ticket_id = #{ticketId}
     </select>

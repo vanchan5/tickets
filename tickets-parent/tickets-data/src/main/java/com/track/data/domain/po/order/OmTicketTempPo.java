@@ -57,6 +57,12 @@ public class OmTicketTempPo implements Serializable {
     @ApiModelProperty(value = "地址详情")
     private String addrDetail;
 
+    @ApiModelProperty(value = "经度")
+    private BigDecimal longitude;
+
+    @ApiModelProperty(value = "纬度")
+    private BigDecimal latitude;
+
     /*@ApiModelProperty(value = "场次跟座位区关联id")
     private Long relId;*/
 

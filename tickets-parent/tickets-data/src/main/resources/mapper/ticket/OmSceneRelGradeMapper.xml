@@ -18,6 +18,9 @@
     <update id="closeOrderReturnStock">
         UPDATE om_scene_rel_grade SET remaining_sum = remaining_sum + #{orderNum}  WHERE id = #{id}
     </update>
+    <update id="orderRefundReturnStock">
+        UPDATE om_scene_rel_grade SET remaining_sum = start_sum WHERE scene_id = #{sceneId}
+    </update>
     <select id="getSceneRelGradeInfoList" resultType="com.track.data.vo.applet.ticket.SceneRelGradeInfoVo">
         SELECT osrg.id AS relId, osrg.scene_id, osrg.grade_id, osrg.remaining_sum
         FROM om_scene_rel_grade osrg
@@ -33,7 +36,8 @@
         SELECT ot.id AS ticketId,
             ots.id AS sceneId,
             otg.id AS gradeId,
-            SUM(seat.seat_sum) AS remainingSum
+            SUM(seat.seat_sum) AS remainingSum,
+            SUM(seat.seat_sum) AS startSum
         FROM om_ticket ot
         INNER JOIN om_ticket_scene ots ON ots.ticket_id = ot.id AND ot.id= #{ticketId}
         INNER JOIN om_ticket_grade otg ON otg.ticket_id = ot.id

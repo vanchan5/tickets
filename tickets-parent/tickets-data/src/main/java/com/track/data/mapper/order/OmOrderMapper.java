@@ -1,5 +1,6 @@
 package com.track.data.mapper.order;
 
+import com.track.common.enums.manage.order.OrderStateEnum;
 import com.track.data.domain.po.order.OmOrderPo;
 import com.track.data.dto.applet.order.OrderSettlementDto;
 import com.track.data.dto.applet.order.SearchMyOrderDto;
@@ -9,6 +10,7 @@ import com.track.data.vo.applet.order.MyOrderDetailVo;
 import com.track.data.vo.applet.order.MyOrderListVo;
 import com.track.data.vo.applet.order.OrderSettlementVo;
 import com.track.data.vo.manage.order.ManageOrderListVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -93,4 +95,17 @@ public interface OmOrderMapper extends IBaseMapper<OmOrderPo> {
      * @return void
      **/
     void updateOrderByScene(Long omTicketSceneId);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/20 22:54
+     * @Description 订单退款 场次对应的所有订单状态改为退款中  15天之后再执行退款操作
+     *
+     * @Update yeJH
+     *
+     * @param  sceneId
+     * @param  orderState  退款订单状态
+     * @return void
+     **/
+    void refundUpdateState(@Param("sceneId") Long sceneId, @Param("orderState")Integer orderState);
 }

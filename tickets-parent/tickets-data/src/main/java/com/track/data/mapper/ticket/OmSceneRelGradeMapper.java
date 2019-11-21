@@ -79,4 +79,16 @@ public interface OmSceneRelGradeMapper extends IBaseMapper<OmSceneRelGradePo> {
      * @return void
      **/
     void closeOrderReturnStock(@Param("id") Long id, @Param("orderNum")Integer orderNum);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/21 13:07
+     * @Description 订单退款该场次所有对应的座位数恢复
+     *
+     * @Update yeJH
+     *
+     * @param  sceneId
+     * @return void
+     **/
+    void orderRefundReturnStock(Long sceneId);
 }

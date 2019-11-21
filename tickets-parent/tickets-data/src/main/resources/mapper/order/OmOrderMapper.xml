@@ -34,6 +34,18 @@
         ON ott.order_id = oo.id AND ott.scene_id = #{omTicketSceneId}
         SET oo.update_time = NOW(), oo.state = 4
     </update>
+    <update id="refundUpdateState">
+        UPDATE om_order oo
+        SET oo.state = 5
+        WHERE id IN (
+            SELECT * FROM (SELECT oo1.`id`
+            FROM om_ticket_temp ott
+            INNER JOIN om_order oo1 ON ott.order_id = oo1.id
+            AND ott.scene_id = #{sceneId}
+            AND oo1.state in (3,4))
+            AS temp
+        )
+    </update>
 
     <select id="isOrderByTicketId" resultType="java.lang.Boolean">
         SELECT EXISTS (
@@ -203,6 +215,8 @@
             ott.scene_name,
             ott.`addr_detail`,
             ott.grade_name,
+            ott.longitude,
+            ott.latitude,
             oo.pay_amount,
             oo.id AS orderId,
             oo.create_time,
