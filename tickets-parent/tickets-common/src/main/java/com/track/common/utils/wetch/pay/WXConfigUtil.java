@@ -60,14 +60,6 @@ public class WXConfigUtil implements WXPayConfig {
         return KEY;
     }
 
-    public String getCustoms() {
-        return CUSTOMS;
-    }
-
-    public String getMchCustomsNo() {
-        return MCH_CUSTOMS_NO;
-    }
-
     @Override
     public InputStream getCertStream() {
         ByteArrayInputStream certBis = new ByteArrayInputStream(this.certData);
