@@ -19,20 +19,14 @@ import java.io.InputStream;
 public class WXConfigUtil implements WXPayConfig {
     private byte[] certData;
 
-    @Value("${distribution.wxpay.APP_ID}")
+    @Value("${wetch.applet.APP_ID}")
     public String APP_ID;
 
-    @Value("${distribution.wxpay.KEY}")
+    @Value("${wetch.applet.KEY}")
     public String KEY;
 
-    @Value("${distribution.wxpay.MCH_ID}")
+    @Value("${wetch.applet.MCH_ID}")
     public String MCH_ID;
-
-    @Value("${distribution.wxpay.CUSTOMS}")
-    public String CUSTOMS;
-
-    @Value("${distribution.wxpay.MCH_CUSTOMS_NO}")
-    public String MCH_CUSTOMS_NO;
 
     public WXConfigUtil() throws Exception {
         //判断项目服务环境
