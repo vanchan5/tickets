@@ -1,6 +1,7 @@
 package com.track.order.service;
 
 import com.track.data.domain.po.user.UmUserPo;
+import com.track.data.dto.applet.user.GetPhoneNumberDto;
 import com.track.data.vo.applet.order.UnifiedOrderVo;
 
 /**
@@ -37,4 +38,16 @@ public interface IWxService {
      * @return String
      **/
     String refund(Long orderId) ;
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/22 12:10
+     * @Description 获取微信小程序手机号码
+     *
+     * @Update yeJH
+     *
+     * @param  getPhoneNumberDto
+     * @return void
+     **/
+    void getPhoneNumber(GetPhoneNumberDto getPhoneNumberDto, UmUserPo umUserPo);
 }

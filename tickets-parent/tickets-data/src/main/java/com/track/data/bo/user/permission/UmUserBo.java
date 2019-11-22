@@ -31,8 +31,8 @@ public class UmUserBo implements Serializable {
     @ApiModelProperty(value = "昵称")
     private String nickName;
 
-    @ApiModelProperty(value = "0-女  1-男")
-    private Boolean sex;
+    @ApiModelProperty(value = "0：未知、1：男、2：女")
+    private Integer sex;
 
     @ApiModelProperty(value = "是否启用 1启用 0禁用")
     private Boolean enabled;

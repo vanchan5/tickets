@@ -35,5 +35,23 @@ public interface RabbitConstants {
      */
     static final String ROUTING_KEY = "all";
 
+    /**
+     * 延迟退款队列名称
+     */
+    static final String ORDER_REFUND_DELAY_QUEUE = "order.refund.delay.queue";
+    /**
+     * DLX，dead letter发送到的 exchange
+     * TODO 此处的 exchange 很重要,具体消息就是发送到该交换机的
+     */
+    static final String ORDER_REFUND_DELAY_EXCHANGE = "order.refund.delay.exchange";
+    /**
+     * 操作退款
+     */
+    static final String REFUND_ORDER_QUEUE = "refund.order.queue";
+    /**
+     * 操作退款交换机
+     */
+    static final String REFUND_ORDER_EXCHANGE = "refund.order.exchange";
+
 
 }

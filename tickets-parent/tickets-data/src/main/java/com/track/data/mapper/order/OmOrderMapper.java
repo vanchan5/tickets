@@ -12,6 +12,7 @@ import com.track.data.vo.applet.order.OrderSettlementVo;
 import com.track.data.vo.manage.order.ManageOrderListVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -108,4 +109,29 @@ public interface OmOrderMapper extends IBaseMapper<OmOrderPo> {
      * @return void
      **/
     void refundUpdateState(@Param("sceneId") Long sceneId, @Param("orderState")Integer orderState);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/21 22:19
+     * @Description 根据场次id，获取某个时间之前下单的订单数量
+     *
+     * @Update yeJH
+     *
+     * @param  sceneId
+     * @return int
+     **/
+    int getOrderSumBySceneId(@Param("sceneId") Long sceneId, @Param("operationTime")LocalDateTime operationTime);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/21 22:48
+     * @Description 根据场次id，获取某个时间之前下单的订单id
+     *
+     * @Update yeJH
+     *
+     * @param  sceneId
+     * @param  operationTime
+     * @return java.util.List<java.lang.Long>
+     **/
+    List<Long> getOrderBySceneId(@Param("sceneId") Long sceneId, @Param("operationTime")LocalDateTime operationTime);
 }

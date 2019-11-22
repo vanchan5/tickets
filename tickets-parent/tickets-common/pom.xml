@@ -140,6 +140,12 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/wxpay-sdk-0.0.3.jar</systemPath>
         </dependency>
+        <!-- 小程序 加密数据解密算法 -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.55</version>
+        </dependency>
 
         <!--极光推送  start-->
         <dependency>

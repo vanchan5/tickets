@@ -33,7 +33,7 @@ public class SaveUserDto {
     @ApiModelProperty(value = "昵称")
     private String nickName = SecurityConstant.USER_DEFAULT_NICKNAME;
 
-    @ApiModelProperty(value = "0-女  1-男 2-保密")
+    @ApiModelProperty(value = "0：未知、1：男、2：女")
     private Integer sex = SecurityConstant.USER_DEFAULT_SEX;
 
     @ApiModelProperty(value = "密码")

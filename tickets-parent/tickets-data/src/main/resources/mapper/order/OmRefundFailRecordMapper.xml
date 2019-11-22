@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.track.data.mapper.order.OmRefundFailRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.track.data.domain.po.order.OmRefundFailRecordPo">
+        <id column="id" property="id" />
+        <result column="order_id" property="orderId" />
+        <result column="is_return_stock" property="isReturnStock" />
+        <result column="state" property="state" />
+        <result column="scene_id" property="sceneId" />
+        <result column="operating_time" property="operatingTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_id, is_return_stock, state, scene_id, operating_time, create_time
+    </sql>
+
+</mapper>

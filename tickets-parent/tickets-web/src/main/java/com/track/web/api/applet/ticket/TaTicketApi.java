@@ -27,13 +27,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/applet/ticket")
 @Slf4j
-public class OaTicketApi extends BaseWeb {
+public class TaTicketApi extends BaseWeb {
 
     @Autowired
     private IOmTicketService service;
-
-    @Autowired
-    private SecurityUtil securityUtil;
 
     /**
      * @Author yeJH

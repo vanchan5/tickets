@@ -47,13 +47,7 @@ public class OaOrderApi extends BaseWeb {
     private IOmOrderService service;
 
     @Autowired
-    private IWxService wxService;
-
-    @Autowired
     private SecurityUtil securityUtil;
-
-    @Autowired
-    private IpInfoUtil ipInfoUtil;
 
     /**
      * @Author yeJH
@@ -179,70 +173,5 @@ public class OaOrderApi extends BaseWeb {
     }
 
 
-    /**
-     * 统一下单
-     * 官方文档:https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_1
-     * @return
-     * @throws Exception
-     */
-    @PostMapping("/wxPay/{orderId}")
-    @ApiOperation("统一下单")
-    public JsonViewData<UnifiedOrderVo> wxPay(HttpServletRequest request, @PathVariable Long orderId) {
-
-        //获取当前用户
-        UmUserPo umUserPo = securityUtil.getSysCurrUser();
-        if(null == umUserPo) {
-            throw  new ServiceException(ResultCode.NO_LOGIN, "未登陆或登陆已超时");
-        }
-        try {
-            //请求预支付订单
-            UnifiedOrderVo unifiedOrderVo = wxService.unifiedOrder(orderId, ipInfoUtil.getIpAddr(request), umUserPo);
-            return new JsonViewData(ResultCode.SUCCESS, "操作成功", unifiedOrderVo);
-        } catch (ServiceException e) {
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServiceException(ResultCode.SYSTEM_ERROR, "系统错误");
-        }
-
-    }
-
-
-    /**
-     *   支付异步结果通知，请求预支付订单时传入的地址
-     *   官方文档 ：https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_7&index=3
-     */
-    @RequestMapping(value = "/wxPay/notify", method = {RequestMethod.GET, RequestMethod.POST})
-    @ApiOperation("异步通知")
-    public String wxPayNotify(HttpServletRequest request) {
-        String resXml;
-        try {
-            InputStream inputStream = request.getInputStream();
-            //将InputStream转换成xmlString
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            try {
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            resXml = sb.toString();
-            String result = wxService.payBack(resXml);
-            return result;
-        } catch (Exception e) {
-            log.error("微信手机支付失败:" + e.getMessage());
-            String result = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml>";
-            return result;
-        }
-    }
 }
 

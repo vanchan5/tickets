@@ -76,39 +76,39 @@ public class MyOrderDetailVo implements Serializable {
     private String addrDetail;
 
     @ApiModelProperty(value = "经度")
-    @JSONField(ordinal = 11)
+    @JSONField(ordinal = 12)
     private BigDecimal longitude;
 
     @ApiModelProperty(value = "纬度")
-    @JSONField(ordinal = 11)
+    @JSONField(ordinal = 13)
     private BigDecimal latitude;
 
     @ApiModelProperty(value = "票档名称")
-    @JSONField(ordinal = 12)
+    @JSONField(ordinal = 14)
     private String gradeName;
 
     @ApiModelProperty(value = "总计/支付金额")
-    @JSONField(ordinal = 13)
+    @JSONField(ordinal = 15)
     private BigDecimal payAmount;
 
     @ApiModelProperty(value = "订单id")
-    @JSONField(ordinal = 14)
+    @JSONField(ordinal = 16)
     private Long orderId;
 
     @ApiModelProperty(value = "下单时间")
-    @JSONField(ordinal = 15)
+    @JSONField(ordinal = 17)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "支付时间")
-    @JSONField(ordinal = 16)
+    @JSONField(ordinal = 18)
     private LocalDateTime payTime;
 
     @ApiModelProperty(value = "退款时间")
-    @JSONField(ordinal = 17)
+    @JSONField(ordinal = 19)
     private LocalDateTime refundTime;
 
     @ApiModelProperty(value = "未支付订单支付截止时间")
-    @JSONField(ordinal = 18)
+    @JSONField(ordinal = 20)
     private LocalDateTime expireTime;
 
 }

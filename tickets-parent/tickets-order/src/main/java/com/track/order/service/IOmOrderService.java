@@ -151,4 +151,16 @@ public interface IOmOrderService extends Service<OmOrderPo> {
      * @return void
      **/
     void orderRefund(OrderRefundDto orderRefundDto);
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/21 22:10
+     * @Description 申请退款之后15天完成退款操作
+     *
+     * @Update yeJH
+     *
+     * @param  orderRefundDto
+     * @return void
+     **/
+    void achieveRefund(OrderRefundDto orderRefundDto);
 }

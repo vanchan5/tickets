@@ -153,14 +153,13 @@
         SELECT oo.id as orderId,
             oo.state AS orderState,
             oo.pay_amount,
-            ott.ticket_name,
+            ott.ticket_name as name,
             ott.start_time,
             ott.scene_name,
             ott.grade_name,
             ott.order_num,
             ot.`addr_detail`,
-            ot.picture,
-            ot.name
+            ot.picture
         FROM om_order oo
         INNER JOIN om_ticket_temp ott ON ott.order_id = oo.id
         INNER JOIN om_ticket ot ON ot.id = ott.ticket_id
@@ -179,6 +178,7 @@
                 and oo.state = 4
             </if>
         </where>
+        ORDER BY oo.update_time DESC
     </select>
 
     <resultMap id="myOrderDetailVo" type="com.track.data.vo.applet.order.MyOrderDetailVo">
@@ -187,6 +187,8 @@
         <result column="scene_name" property="sceneName" />
         <result column="start_time" property="startTime" />
         <result column="addr_detail" property="addrDetail" />
+        <result column="longitude" property="longitude" />
+        <result column="latitude" property="latitude" />
         <result column="grade_name" property="gradeName" />
         <result column="nick_name" property="nickName" />
         <result column="order_num" property="orderNum" />
@@ -229,6 +231,21 @@
         INNER JOIN om_ticket_temp ott ON ott.order_id = oo.id
         LEFT JOIN om_order_rel_seat oors ON oo.id = oors.order_id
         ORDER BY oors.id ASC
+    </select>
+    <select id="getOrderSumBySceneId" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM om_order oo
+        INNER JOIN om_ticket_temp ott ON oo.id = ott.order_id
+        WHERE  ott.scene_id = #{sceneId}
+        AND oo.`create_time`  <![CDATA[<= ]]>  #{operationTime}
+    </select>
+
+    <select id="getOrderBySceneId" resultType="java.lang.Long">
+        SELECT oo.id
+        FROM om_order oo
+        INNER JOIN om_ticket_temp ott ON oo.id = ott.order_id
+        WHERE  ott.scene_id = #{sceneId}
+        AND oo.`create_time`  <![CDATA[<= ]]>  #{operationTime}
     </select>
 
 </mapper>

@@ -9,15 +9,15 @@ import java.util.Objects;
  * @Author cheng
  * @create 2019-09-02 10:28
  *
- * 用户性别:0-女  1-男 2-保密
+ * 用户性别 0：未知、1：男、2：女
  *
  */
 @Getter
 public enum UserSexEnum implements BaseEnum {
 
-    SYS_SUPER_USER(1,"超级管理员"),
-    SYS_GENERAL_USER(2,"系统普通用户"),
-    CONSUMER(3,"消费者");
+    Unknown(0,"未知"),
+    BOY(1,"男"),
+    GIRL(2,"女");
 
     private Integer id;
 

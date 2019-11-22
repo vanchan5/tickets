@@ -1,18 +1,28 @@
 package com.track.order.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import com.track.common.constant.SecurityConstant;
 import com.track.common.constant.wetch.applet.WxPayConstant;
 import com.track.common.enums.manage.order.OrderStateEnum;
 import com.track.common.enums.system.ResultCode;
 import com.track.common.utils.BigDecimalUtil;
+import com.track.common.utils.JSONUtils;
 import com.track.common.utils.LoggerUtil;
+import com.track.common.utils.wetch.applet.WXCore;
+import com.track.common.utils.wetch.applet.WxAppletConfig;
+import com.track.common.utils.wetch.applet.WxAppletUtil;
 import com.track.common.utils.wetch.pay.WXConfigUtil;
 import com.track.common.utils.wetch.pay.WxMD5Util;
 import com.track.core.exception.ServiceException;
+import com.track.data.bo.applet.CodeToSessionBo;
 import com.track.data.domain.po.order.OmOrderPo;
 import com.track.data.domain.po.user.UmUserPo;
+import com.track.data.dto.applet.user.GetPhoneNumberDto;
 import com.track.data.mapper.order.OmOrderMapper;
+import com.track.data.mapper.user.UmUserMapper;
 import com.track.data.vo.applet.order.UnifiedOrderVo;
 import com.track.order.service.IOmOrderService;
 import com.track.order.service.IWxService;
@@ -25,8 +35,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.math.BigDecimal;
+import java.security.AlgorithmParameters;
+import java.security.Security;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +60,8 @@ public class WxServiceImpl implements IWxService {
     //@Value("${distribution.wxpay.PAY_NOTIFY_URL}")
     public String PAY_NOTIFY_URL ;
 
-
+    @Autowired
+    private UmUserMapper umUserMapper;
 
     @Autowired
     private WXConfigUtil wxConfigUtil;
@@ -192,8 +209,8 @@ public class WxServiceImpl implements IWxService {
         data.put("mch_id", config.getMchID());
         //随机字符串
         data.put("nonce_str", WXPayUtil.generateNonceStr());
-        //商品描述  APP——需传入应用市场上的APP名字-实际商品名称
-        data.put("body", config.getBody());
+        //商品描述 需传入应用市场上的APP名字-实际商品名称
+        data.put("body", WxPayConstant.WX_PAY_BODY);
         //商户订单号
         data.put("out_trade_no", String.valueOf(orderId));
         data.put("total_fee", String.valueOf(totalFee));
@@ -425,6 +442,31 @@ public class WxServiceImpl implements IWxService {
             String returnMsg = response.get("return_msg");
             throw new ServiceException(ResultCode.FAIL, returnMsg);
         }
+    }
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/22 12:10
+     * @Description 获取微信小程序手机号码
+     *
+     * @Update yeJH
+     *
+     * @param  getPhoneNumberDto
+     * @return void
+     **/
+    @Override
+    public void getPhoneNumber(GetPhoneNumberDto getPhoneNumberDto, UmUserPo umUserPo) {
+        //根据code 获取sessionKey
+        CodeToSessionBo codeToSessionBo = JSONUtils.toBean(
+                WxAppletUtil.codeToSession(getPhoneNumberDto.getCode()),
+        CodeToSessionBo.class);
+        //通过解密微信返回数据获取手机号码
+        String result = WXCore.decrypt(WxAppletConfig.getAppId(), getPhoneNumberDto.getEncryptedData(),
+                codeToSessionBo.getSessionKey(), getPhoneNumberDto.getIv());
+        JSONObject data = JSONObject.parseObject(result);
+        //更新用户信息
+        umUserPo.setPhoto(data.get("phoneNumber").toString());
+        umUserMapper.updateById(umUserPo);
     }
 
 

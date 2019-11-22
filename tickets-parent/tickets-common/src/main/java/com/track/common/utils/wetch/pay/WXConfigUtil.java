@@ -19,22 +19,19 @@ import java.io.InputStream;
 public class WXConfigUtil implements WXPayConfig {
     private byte[] certData;
 
-    //@Value("${distribution.wxpay.APP_ID}")
+    @Value("${distribution.wxpay.APP_ID}")
     public String APP_ID;
 
-    //@Value("${distribution.wxpay.KEY}")
+    @Value("${distribution.wxpay.KEY}")
     public String KEY;
 
-    //@Value("${distribution.wxpay.MCH_ID}")
+    @Value("${distribution.wxpay.MCH_ID}")
     public String MCH_ID;
 
-    //@Value("${distribution.wxpay.BODY}")
-    public String BODY;
-
-    //@Value("${distribution.wxpay.CUSTOMS}")
+    @Value("${distribution.wxpay.CUSTOMS}")
     public String CUSTOMS;
 
-    //@Value("${distribution.wxpay.MCH_CUSTOMS_NO}")
+    @Value("${distribution.wxpay.MCH_CUSTOMS_NO}")
     public String MCH_CUSTOMS_NO;
 
     public WXConfigUtil() throws Exception {
@@ -67,10 +64,6 @@ public class WXConfigUtil implements WXPayConfig {
     @Override
     public String getKey() {
         return KEY;
-    }
-
-    public String getBody() {
-        return BODY;
     }
 
     public String getCustoms() {

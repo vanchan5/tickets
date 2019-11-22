@@ -15,4 +15,7 @@ public class WxPayConstant {
 
     //签名类型，默认为MD5
     public static final String SIGN_TYPE_MD5 = "MD5";
+
+    //小程序支付商品描述
+    public static final String WX_PAY_BODY = "演出门票";
 }

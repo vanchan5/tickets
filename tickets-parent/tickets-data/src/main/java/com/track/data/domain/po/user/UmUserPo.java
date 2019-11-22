@@ -59,7 +59,7 @@ public class UmUserPo implements Serializable {
     @ApiModelProperty(value = "昵称")
     private String nickName;
 
-    @ApiModelProperty(value = "0-女  1-男 2-保密")
+    @ApiModelProperty(value = "0：未知、1：男、2：女")
     private Integer sex;
 
     @ApiModelProperty(value = "状态 默认1启用 0禁用")

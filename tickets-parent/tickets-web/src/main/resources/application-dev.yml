@@ -178,3 +178,6 @@ wetch:
   applet:
     APP_ID: wx9f0839375a30274e
     SECRET: 905f26893b74727ede31a42b5e55a5dd
+    KEY:
+    MCH_ID:
+    PAY_NOTIFY_URL: http://112.126.96.226:81/distribution/app/wxPay/notify

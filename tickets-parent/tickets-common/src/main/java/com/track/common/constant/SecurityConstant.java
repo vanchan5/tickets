@@ -65,9 +65,9 @@ public interface SecurityConstant {
     String USER_DEFAULT_NICKNAME = "昵称";
 
     /**
-     * 用户默认性别--2-保密
+     * 用户默认性别--0 未知
      */
-    Integer USER_DEFAULT_SEX = 2;
+    Integer USER_DEFAULT_SEX = 0;
 
     /**
      * 用户正常状态

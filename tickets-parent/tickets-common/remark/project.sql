@@ -76,7 +76,7 @@ CREATE TABLE `um_user` (
   `phone` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '手机号码',
   `nick_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '用户' COMMENT '昵称',
   `password` varchar(64) NOT NULL COMMENT '密码',
-  `sex` tinyint(2) NOT NULL DEFAULT '2' COMMENT '0-女  1-男 2-保密',
+  `sex` tinyint(2) NOT NULL DEFAULT '2' COMMENT '0：未知、1：男、2：女',
   `photo` varchar(255) DEFAULT NULL COMMENT '头像',
   `update_by` bigint(20) DEFAULT NULL COMMENT '修改者Id',
   `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',

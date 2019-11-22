@@ -1,5 +1,6 @@
 package com.track.data.dto.manage.order.search;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.track.data.dto.base.BaseSearchDto;
 import com.track.data.valid.annotation.NeedExistConstraint;
 import io.swagger.annotations.ApiModel;
@@ -8,6 +9,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -29,5 +31,11 @@ public class OrderRefundDto  extends BaseSearchDto {
     @ApiModelProperty(value = "场次id")
     @NeedExistConstraint(tableName = "om_ticket_scene")
     private Long sceneId;
+
+    @ApiModelProperty(value = "操作时间 申请退款时间")
+    @JsonIgnore
+    private LocalDateTime operationTime;
+
+
 
 }

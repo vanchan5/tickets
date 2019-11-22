@@ -14,10 +14,7 @@ import com.track.common.enums.system.ResultCode;
 import com.track.common.utils.BigDecimalUtil;
 import com.track.common.utils.SnowFlakeUtil;
 import com.track.core.exception.ServiceException;
-import com.track.data.domain.po.order.OmAccountLogPo;
-import com.track.data.domain.po.order.OmOrderPo;
-import com.track.data.domain.po.order.OmOrderRelSeatPo;
-import com.track.data.domain.po.order.OmTicketTempPo;
+import com.track.data.domain.po.order.*;
 import com.track.data.domain.po.ticket.*;
 import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.applet.order.OrderSettlementDto;
@@ -27,6 +24,7 @@ import com.track.data.dto.manage.order.search.OrderRefundDto;
 import com.track.data.dto.manage.order.search.SearchOrderDto;
 import com.track.data.mapper.order.OmAccountLogMapper;
 import com.track.data.mapper.order.OmOrderMapper;
+import com.track.data.mapper.order.OmRefundFailRecordMapper;
 import com.track.data.mapper.order.OmTicketTempMapper;
 import com.track.data.mapper.ticket.*;
 import com.track.data.vo.applet.order.MyOrderDetailVo;
@@ -36,6 +34,7 @@ import com.track.data.vo.manage.order.ManageOrderListVo;
 import com.track.order.service.IOmOrderRelSeatService;
 import com.track.order.service.IOmOrderService;
 import com.track.core.base.service.AbstractService;
+import com.track.order.service.IWxService;
 import com.track.ticket.service.IOmSceneGradeRelSeatService;
 import com.track.ticket.service.IOmSceneRelGradeService;
 import org.apache.logging.log4j.util.Strings;
@@ -89,13 +88,16 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
     private OmAccountLogMapper omAccountLogMapper;
 
     @Autowired
-    private IOmSceneRelGradeService omSceneRelGradeService;
+    private OmRefundFailRecordMapper omRefundFailRecordMapper;
 
     @Autowired
     private IOmOrderRelSeatService omOrderRelSeatService;
 
     @Autowired
     private IOmSceneGradeRelSeatService omSceneGradeRelSeatService;
+
+    @Autowired
+    private IWxService wxService;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -568,7 +570,66 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
             //该场次所有对应的座位区剩余座位数恢复
             omSceneGradeRelSeatMapper.orderRefundReturnStock(orderRefundDto.getSceneId());
 
-            //TODO  消息队列  15天后退款
+            //15天之后正式操作退款
+            String expireTime = 15 * 24 * 60 * 60 * 1000 + "";
+
+            // 添加退款延时队列
+            this.rabbitTemplate.convertAndSend(RabbitConstants.ORDER_REFUND_DELAY_EXCHANGE,
+                    RabbitConstants.DELAY_ROUTING_KEY, orderRefundDto, message -> {
+
+                        message.getMessageProperties().setExpiration(expireTime);
+                        return message;
+            });
+
+        }
+    }
+
+    /**
+     * @Author yeJH
+     * @Date 2019/11/21 22:10
+     * @Description 申请退款之后15天完成退款操作
+     *
+     * @Update yeJH
+     *
+     * @param  orderRefundDto
+     * @return void
+     **/
+    @Override
+    public void achieveRefund(OrderRefundDto orderRefundDto) {
+        if(orderRefundDto.getIsAll()) {
+            if(null != orderRefundDto.getSceneId()) {
+                //需要退款的订单数量
+                int orderSum = mapper.getOrderSumBySceneId(orderRefundDto.getSceneId(), orderRefundDto.getOperationTime());
+                //一次只处理1000个订单
+                if(orderSum > 0) {
+                    for (int pageNo = 1; pageNo <= orderSum / 1000 + 1; pageNo++) {
+                        PageHelper.startPage(pageNo, 1000);
+                        List<Long> orderIdList = mapper.getOrderBySceneId(orderRefundDto.getSceneId(), orderRefundDto.getOperationTime());
+                        orderIdList.forEach(orderId -> {
+                            try {
+                                //微信退款单号
+                                String refundId = wxService.refund(orderId);
+                                OmOrderPo omOrderPo = new OmOrderPo();
+                                omOrderPo.setId(orderId)
+                                        .setRefundId(refundId)
+                                        .setState(OrderStateEnum.REFUNDED.getId())
+                                        .setRefundTime(LocalDateTime.now());
+                                mapper.updateById(omOrderPo);
+                            } catch (Exception e) {
+                                //记录有问题的退款
+                                OmRefundFailRecordPo omRefundFailRecordPo = new OmRefundFailRecordPo();
+                                omRefundFailRecordPo.setIsReturnStock(true)
+                                        .setOperatingTime(orderRefundDto.getOperationTime())
+                                        .setOrderId(orderId)
+                                        .setSceneId(orderRefundDto.getSceneId())
+                                        .setState(false);
+                                omRefundFailRecordMapper.insert(omRefundFailRecordPo);
+                            }
+                        });
+                    }
+                }
+
+            }
         }
     }
 
