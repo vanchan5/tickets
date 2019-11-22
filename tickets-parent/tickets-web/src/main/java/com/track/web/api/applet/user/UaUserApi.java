@@ -57,9 +57,10 @@ public class UaUserApi extends BaseWeb {
         if(null == umUserPo) {
             throw  new ServiceException(ResultCode.NO_LOGIN, "未登陆或登陆已超时");
         }
-        umUserPo.setSex(improveUserInfoDto.getGender())
+        UmUserPo user = new UmUserPo().setId(umUserPo.getId())
+                .setSex(improveUserInfoDto.getGender())
                 .setNickName(improveUserInfoDto.getNickName());
-        umUserService.updateById(umUserPo);
+        umUserService.updateById(user);
         return new JsonViewData(ResultCode.SUCCESS, "操作成功");
 
     }
