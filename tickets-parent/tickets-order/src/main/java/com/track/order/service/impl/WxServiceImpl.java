@@ -459,13 +459,13 @@ public class WxServiceImpl implements IWxService {
         //根据code 获取sessionKey
         CodeToSessionBo codeToSessionBo = JSONUtils.toBean(
                 WxAppletUtil.codeToSession(getPhoneNumberDto.getCode()),
-        CodeToSessionBo.class);
+                CodeToSessionBo.class);
         //通过解密微信返回数据获取手机号码
         String result = WXCore.decrypt(WxAppletConfig.getAppId(), getPhoneNumberDto.getEncryptedData(),
                 codeToSessionBo.getSessionKey(), getPhoneNumberDto.getIv());
         JSONObject data = JSONObject.parseObject(result);
         //更新用户信息
-        umUserPo.setPhoto(data.get("phoneNumber").toString());
+        umUserPo.setPhone(data.get("phoneNumber").toString());
         umUserMapper.updateById(umUserPo);
     }
 
