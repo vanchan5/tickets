@@ -57,7 +57,7 @@ public class WxServiceImpl implements IWxService {
     private static final Logger logger = LoggerFactory.getLogger(WxServiceImpl.class);
 
     //支付结果通知地址
-    @Value("${distribution.wxpay.PAY_NOTIFY_URL}")
+    @Value("${distribution.applet.PAY_NOTIFY_URL}")
     public String PAY_NOTIFY_URL ;
 
     @Autowired
