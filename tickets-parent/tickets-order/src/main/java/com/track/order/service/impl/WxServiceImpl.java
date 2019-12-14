@@ -57,7 +57,7 @@ public class WxServiceImpl implements IWxService {
     private static final Logger logger = LoggerFactory.getLogger(WxServiceImpl.class);
 
     //支付结果通知地址
-    //@Value("${distribution.wxpay.PAY_NOTIFY_URL}")
+    @Value("${distribution.wxpay.PAY_NOTIFY_URL}")
     public String PAY_NOTIFY_URL ;
 
     @Autowired
@@ -446,16 +446,17 @@ public class WxServiceImpl implements IWxService {
 
     /**
      * @Author yeJH
-     * @Date 2019/11/22 12:10
+     * @Date 2019/12/14 15:23
      * @Description 获取微信小程序手机号码
      *
      * @Update yeJH
      *
      * @param  getPhoneNumberDto
-     * @return void
+     * @param  umUserPo
+     * @return java.lang.String  手机号码
      **/
     @Override
-    public void getPhoneNumber(GetPhoneNumberDto getPhoneNumberDto, UmUserPo umUserPo) {
+    public String getPhoneNumber(GetPhoneNumberDto getPhoneNumberDto, UmUserPo umUserPo) {
         //根据code 获取sessionKey
         CodeToSessionBo codeToSessionBo = JSONUtils.toBean(
                 WxAppletUtil.codeToSession(getPhoneNumberDto.getCode()),
@@ -467,6 +468,8 @@ public class WxServiceImpl implements IWxService {
         //更新用户信息
         umUserPo.setPhone(data.get("phoneNumber").toString());
         umUserMapper.updateById(umUserPo);
+
+        return umUserPo.getPhone();
     }
 
 

@@ -41,13 +41,14 @@ public interface IWxService {
 
     /**
      * @Author yeJH
-     * @Date 2019/11/22 12:10
+     * @Date 2019/12/14 15:23
      * @Description 获取微信小程序手机号码
      *
      * @Update yeJH
      *
      * @param  getPhoneNumberDto
-     * @return void
+     * @param  umUserPo
+     * @return java.lang.String  手机号码
      **/
-    void getPhoneNumber(GetPhoneNumberDto getPhoneNumberDto, UmUserPo umUserPo);
+    String getPhoneNumber(GetPhoneNumberDto getPhoneNumberDto, UmUserPo umUserPo);
 }

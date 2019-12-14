@@ -5,6 +5,8 @@ import com.track.core.exception.ServiceException;
 import com.track.core.interaction.JsonViewData;
 import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.dto.applet.user.ImproveUserInfoDto;
+import com.track.data.vo.applet.ticket.TicketDetailVo;
+import com.track.data.vo.applet.user.UserMessageVo;
 import com.track.security.util.SecurityUtil;
 import com.track.ticket.service.IOmTicketService;
 import com.track.user.service.IUmUserService;
@@ -15,10 +17,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author yeJH
@@ -63,6 +62,18 @@ public class UaUserApi extends BaseWeb {
         umUserService.updateById(user);
         return new JsonViewData(ResultCode.SUCCESS, "操作成功");
 
+    }
+
+
+    @ApiOperation(value="查询用户信息",notes = "查询用户信息")
+    @GetMapping("/getUserMessage")
+    public JsonViewData<UserMessageVo> getUserMessage(){
+
+        //获取当前用户
+        UmUserPo umUserPo = securityUtil.getSysCurrUser();
+        UserMessageVo userMessageVo = new UserMessageVo();
+        userMessageVo.setPhone(umUserPo.getPhone());
+        return setJsonViewData(userMessageVo);
     }
 
 }

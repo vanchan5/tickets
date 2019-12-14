@@ -133,8 +133,8 @@ public class WaWxApi extends BaseWeb {
         if(null == umUserPo) {
             throw  new ServiceException(ResultCode.NO_LOGIN, "未登陆或登陆已超时");
         }
-        wxService.getPhoneNumber(getPhoneNumberDto, umUserPo);
-        return new JsonViewData(ResultCode.SUCCESS, "绑定手机成功");
+        String phone = wxService.getPhoneNumber(getPhoneNumberDto, umUserPo);
+        return new JsonViewData(ResultCode.SUCCESS, "绑定手机成功", phone);
 
     }
 

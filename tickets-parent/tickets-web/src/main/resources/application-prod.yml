@@ -155,4 +155,4 @@ wetch:
     SECRET: b277b660e3f24314e0d5a6744bc8e9f5
     KEY: 7da8ae9c587a4b72865fee0f4ee57581
     MCH_ID: 1567464741
-    PAY_NOTIFY_URL: http://112.126.96.226:81/distribution/app/wxPay/notify
+    PAY_NOTIFY_URL: http://http://39.108.136.61:8801/tickets/applet/wxPay/notify
