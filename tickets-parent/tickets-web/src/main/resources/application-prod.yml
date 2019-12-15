@@ -89,6 +89,7 @@ ignored:
     - /test/findByUserName
     - /security/**
     - /login/self
+    - /applet/wxPay/notify
     - /common/sms/send
     - /generator/create
 
