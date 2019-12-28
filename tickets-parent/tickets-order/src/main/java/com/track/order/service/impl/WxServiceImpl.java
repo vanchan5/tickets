@@ -465,8 +465,9 @@ public class WxServiceImpl implements IWxService {
         String result = WXCore.decrypt(WxAppletConfig.getAppId(), getPhoneNumberDto.getEncryptedData(),
                 codeToSessionBo.getSessionKey(), getPhoneNumberDto.getIv());
         JSONObject data = JSONObject.parseObject(result);
+        logger.info(data.toString());
         //更新用户信息
-        umUserPo.setPhone(data.get("phoneNumber").toString());
+        umUserPo.setPhone(null == data.get("phoneNumber") ? "" : data.get("phoneNumber").toString());
         umUserMapper.updateById(umUserPo);
 
         return umUserPo.getPhone();

@@ -139,6 +139,7 @@
         INNER JOIN om_ticket_grade otg ON otg.`ticket_id` = ot.`id`
         <where>
             ots.`start_time` > NOW()
+            AND ot.publish_state = 1
             <if test="null != cityCodeType and cityCodeType == 1">
                 and ot.province_code = #{cityCode}
             </if>
