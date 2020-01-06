@@ -116,17 +116,19 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
     public PageInfo<ManageOrderListVo> searchOrderList(SearchOrderDto searchOrderDto) {
 
         //根据场次名称获取场次id
-        QueryWrapper<OmTicketScenePo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(OmTicketScenePo::getName, searchOrderDto.getSceneName());
-        OmTicketScenePo omTicketScenePo = omTicketSceneMapper.selectOne(queryWrapper);
+        if(Strings.isNotBlank(searchOrderDto.getSceneName())) {
+            QueryWrapper<OmTicketScenePo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().eq(OmTicketScenePo::getName, searchOrderDto.getSceneName());
+            OmTicketScenePo omTicketScenePo = omTicketSceneMapper.selectOne(queryWrapper);
+            if(null == omTicketScenePo) {
+                throw new ServiceException(ResultCode.PARAM_ERROR, "场次不存在");
+            }
+            searchOrderDto.setSceneId(omTicketScenePo.getId());
+
+        }
 
         Integer pageNo = searchOrderDto.getPageNo()==null ? defaultPageNo : searchOrderDto.getPageNo();
         Integer pageSize = searchOrderDto.getPageSize()==null ? defaultPageSize : searchOrderDto.getPageSize();
-
-        if(null == omTicketScenePo) {
-            throw new ServiceException(ResultCode.PARAM_ERROR, "场次不存在");
-        }
-        searchOrderDto.setSceneId(omTicketScenePo.getId());
 
         PageInfo<ManageOrderListVo> manageOrderListVoPageInfo = PageHelper.startPage(pageNo, pageSize)
                 .doSelectPageInfo(() -> mapper.searchOrderList(searchOrderDto));
