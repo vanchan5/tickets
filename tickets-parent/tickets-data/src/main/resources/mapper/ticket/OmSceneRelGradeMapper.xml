@@ -57,7 +57,6 @@
         INNER JOIN om_ticket_scene ots ON osrg.scene_id = ots.`id`
         INNER JOIN om_ticket_grade otg ON otg.id = osrg.`grade_id`
         WHERE ots.`start_time` > NOW()
-        ORDER BY ots.`start_time` ASC
     </select>
 
 </mapper>
