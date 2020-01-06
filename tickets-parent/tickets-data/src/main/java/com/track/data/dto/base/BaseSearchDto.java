@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 
 /**
  * @Author cheng
@@ -16,7 +17,9 @@ import javax.validation.constraints.Min;
 @Data
 @ApiModel(description = "分页查询基础Dto")
 @Accessors(chain = true)
-public class BaseSearchDto {
+public class BaseSearchDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Min(1)
     @ApiModelProperty(value = "页码")
