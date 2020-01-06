@@ -115,8 +115,18 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
     @Override
     public PageInfo<ManageOrderListVo> searchOrderList(SearchOrderDto searchOrderDto) {
 
+        //根据场次名称获取场次id
+        QueryWrapper<OmTicketScenePo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(OmTicketScenePo::getName, searchOrderDto.getSceneName());
+        OmTicketScenePo omTicketScenePo = omTicketSceneMapper.selectOne(queryWrapper);
+
         Integer pageNo = searchOrderDto.getPageNo()==null ? defaultPageNo : searchOrderDto.getPageNo();
         Integer pageSize = searchOrderDto.getPageSize()==null ? defaultPageSize : searchOrderDto.getPageSize();
+
+        if(null == omTicketScenePo) {
+            throw new ServiceException(ResultCode.PARAM_ERROR, "场次不存在");
+        }
+        searchOrderDto.setSceneId(omTicketScenePo.getId());
 
         PageInfo<ManageOrderListVo> manageOrderListVoPageInfo = PageHelper.startPage(pageNo, pageSize)
                 .doSelectPageInfo(() -> mapper.searchOrderList(searchOrderDto));
@@ -558,30 +568,36 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
      **/
     @Override
     public void orderRefund(OrderRefundDto orderRefundDto) {
-        if(orderRefundDto.getIsAll()) {
-            if(null == orderRefundDto.getSceneId()) {
-                throw new ServiceException(ResultCode.PARAM_ERROR, "场次id不能为空");
-            }
-
-            //该场次对应的所有已经支付的订单改为退款中
-            mapper.refundUpdateState(orderRefundDto.getSceneId(), OrderStateEnum.REFUNDING.getId());
-            //该场次所有对应的座位数总数恢复
-            omSceneRelGradeMapper.orderRefundReturnStock(orderRefundDto.getSceneId());
-            //该场次所有对应的座位区剩余座位数恢复
-            omSceneGradeRelSeatMapper.orderRefundReturnStock(orderRefundDto.getSceneId());
-
-            //15天之后正式操作退款
-            String expireTime = 15 * 24 * 60 * 60 * 1000 + "";
-
-            // 添加退款延时队列
-            this.rabbitTemplate.convertAndSend(RabbitConstants.ORDER_REFUND_DELAY_EXCHANGE,
-                    RabbitConstants.DELAY_ROUTING_KEY, orderRefundDto, message -> {
-
-                        message.getMessageProperties().setExpiration(expireTime);
-                        return message;
-            });
-
+        if(null == orderRefundDto.getSceneName()) {
+            throw new ServiceException(ResultCode.PARAM_ERROR, "场次不能为空");
         }
+
+        QueryWrapper<OmTicketScenePo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(OmTicketScenePo::getName, orderRefundDto.getSceneName());
+        OmTicketScenePo omTicketScenePo = omTicketSceneMapper.selectOne(queryWrapper);
+        if(null == omTicketScenePo) {
+            throw new ServiceException(ResultCode.PARAM_ERROR, "场次不存在");
+        }
+
+        orderRefundDto.setSceneId(omTicketScenePo.getId());
+        //该场次对应的所有已经支付的订单改为退款中
+        mapper.refundUpdateState(orderRefundDto.getSceneId(), OrderStateEnum.REFUNDING.getId());
+        //该场次所有对应的座位数总数恢复
+        omSceneRelGradeMapper.orderRefundReturnStock(orderRefundDto.getSceneId());
+        //该场次所有对应的座位区剩余座位数恢复
+        omSceneGradeRelSeatMapper.orderRefundReturnStock(orderRefundDto.getSceneId());
+
+        //15天之后正式操作退款
+        String expireTime = 15 * 24 * 60 * 60 * 1000 + "";
+
+        // 添加退款延时队列
+        this.rabbitTemplate.convertAndSend(RabbitConstants.ORDER_REFUND_DELAY_EXCHANGE,
+                RabbitConstants.DELAY_ROUTING_KEY, orderRefundDto, message -> {
+
+                    message.getMessageProperties().setExpiration(expireTime);
+                    return message;
+        });
+
     }
 
     /**
@@ -596,40 +612,38 @@ public class OmOrderServiceImpl extends AbstractService<OmOrderMapper, OmOrderPo
      **/
     @Override
     public void achieveRefund(OrderRefundDto orderRefundDto) {
-        if(orderRefundDto.getIsAll()) {
-            if(null != orderRefundDto.getSceneId()) {
-                //需要退款的订单数量
-                int orderSum = mapper.getOrderSumBySceneId(orderRefundDto.getSceneId(), orderRefundDto.getOperationTime());
-                //一次只处理1000个订单
-                if(orderSum > 0) {
-                    for (int pageNo = 1; pageNo <= orderSum / 1000 + 1; pageNo++) {
-                        PageHelper.startPage(pageNo, 1000);
-                        List<Long> orderIdList = mapper.getOrderBySceneId(orderRefundDto.getSceneId(), orderRefundDto.getOperationTime());
-                        orderIdList.forEach(orderId -> {
-                            try {
-                                //微信退款单号
-                                String refundId = wxService.refund(orderId);
-                                OmOrderPo omOrderPo = new OmOrderPo();
-                                omOrderPo.setId(orderId)
-                                        .setRefundId(refundId)
-                                        .setState(OrderStateEnum.REFUNDED.getId())
-                                        .setRefundTime(LocalDateTime.now());
-                                mapper.updateById(omOrderPo);
-                            } catch (Exception e) {
-                                //记录有问题的退款
-                                OmRefundFailRecordPo omRefundFailRecordPo = new OmRefundFailRecordPo();
-                                omRefundFailRecordPo.setIsReturnStock(true)
-                                        .setOperatingTime(orderRefundDto.getOperationTime())
-                                        .setOrderId(orderId)
-                                        .setSceneId(orderRefundDto.getSceneId())
-                                        .setState(false);
-                                omRefundFailRecordMapper.insert(omRefundFailRecordPo);
-                            }
-                        });
-                    }
+        if(null != orderRefundDto.getSceneId()) {
+            //需要退款的订单数量
+            int orderSum = mapper.getOrderSumBySceneId(orderRefundDto.getSceneId(), orderRefundDto.getOperationTime());
+            //一次只处理1000个订单
+            if(orderSum > 0) {
+                for (int pageNo = 1; pageNo <= orderSum / 1000 + 1; pageNo++) {
+                    PageHelper.startPage(pageNo, 1000);
+                    List<Long> orderIdList = mapper.getOrderBySceneId(orderRefundDto.getSceneId(), orderRefundDto.getOperationTime());
+                    orderIdList.forEach(orderId -> {
+                        try {
+                            //微信退款单号
+                            String refundId = wxService.refund(orderId);
+                            OmOrderPo omOrderPo = new OmOrderPo();
+                            omOrderPo.setId(orderId)
+                                    .setRefundId(refundId)
+                                    .setState(OrderStateEnum.REFUNDED.getId())
+                                    .setRefundTime(LocalDateTime.now());
+                            mapper.updateById(omOrderPo);
+                        } catch (Exception e) {
+                            //记录有问题的退款
+                            OmRefundFailRecordPo omRefundFailRecordPo = new OmRefundFailRecordPo();
+                            omRefundFailRecordPo.setIsReturnStock(true)
+                                    .setOperatingTime(orderRefundDto.getOperationTime())
+                                    .setOrderId(orderId)
+                                    .setSceneId(orderRefundDto.getSceneId())
+                                    .setState(false);
+                            omRefundFailRecordMapper.insert(omRefundFailRecordPo);
+                        }
+                    });
                 }
-
             }
+
         }
     }
 

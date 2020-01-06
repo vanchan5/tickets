@@ -27,6 +27,9 @@ public class SearchOrderDto extends BaseSearchDto {
     @ApiModelProperty(value = "购买人手机号码")
     private String phone;
 
+    @ApiModelProperty(value = "场次")
+    private String sceneName;
+
     @ApiModelProperty(value = "场次id")
     private Long sceneId;
 
