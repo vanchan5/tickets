@@ -417,7 +417,8 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
     public PageInfo<TicketListVo> searchTicketList(SearchTicketDto searchTicketDto) {
 
         Integer pageNo = searchTicketDto.getPageNo()==null ? defaultPageNo : searchTicketDto.getPageNo();
-        Integer pageSize = searchTicketDto.getPageSize()==null ? defaultPageSize : searchTicketDto.getPageSize();
+        //Integer pageSize = searchTicketDto.getPageSize()==null ? defaultPageSize : searchTicketDto.getPageSize();
+        Integer pageSize = defaultPageSize;
 
         //小程序审核 放开地区筛选
         //searchTicketDto.setCityCodeType(null);
