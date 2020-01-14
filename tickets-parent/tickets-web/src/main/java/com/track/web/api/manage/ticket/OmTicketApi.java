@@ -32,7 +32,7 @@ import com.track.web.base.BaseWeb;
  */
 @Api(tags = "后台_门票管理接口")
 @RestController
-@RequestMapping("/manage/ticket")
+@RequestMapping("/getTicket//manage/ticket")
 @Slf4j
 public class OmTicketApi extends BaseWeb {
 
