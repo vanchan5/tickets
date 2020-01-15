@@ -159,8 +159,8 @@ public class OmTicketServiceImpl extends AbstractService<OmTicketMapper, OmTicke
         //获取门票基本信息
         ManageTicketInfoVo manageTicketInfoVo = mapper.getTicketInfo(ticketId);
         //获取省市区id
-        //String addrIds = mapper.getAddrIds(manageTicketInfoVo.getAddrId());
-        //manageTicketInfoVo.setAddrIds(addrIds);
+        String addrIds = mapper.getAddrIds(manageTicketInfoVo.getAddrId());
+        manageTicketInfoVo.setAddrIds(addrIds);
 
         //获取门票档次及作座位区信息
         List<TicketGradeInfoVo> ticketGradeInfoList = mapper.getTicketGradeInfo(ticketId);
