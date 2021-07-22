@@ -11,9 +11,9 @@ spring:
     druid:
       master:
         #        url: jdbc:mysql://localhost:3306/tests?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT
-        url: jdbc:mysql://47.102.104.124:3306/tickets?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=true&useAffectedRows=true&serverTimezone=Asia/Shanghai
-        username: root
-        password: root
+        url: jdbc:mysql://chauncy:3358/tickets?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=true&useAffectedRows=true&serverTimezone=Asia/Shanghai
+        username: ENC(3L8LhZ0x4zj6h4kMcGUPig==)
+        password: ENC(aSi121s5W/ZZHm9a40xpiA==)
       slave:
         enabled: false
         url:
@@ -48,10 +48,10 @@ spring:
       max-file-size: 200MB
   # RabbitMQ配置信息
   rabbitmq:
-    host: 39.108.136.61
+    host: ENC(Vjx71h3IPfUtkba5VT1XtQ==)
     port: 1884
-    username: admin
-    password: admins
+    username: ENC(IMVxneTVVPh6bcU1UoM48w==)
+    password: ENC(4HRcDkDATbENAMm2Gpzgrg==)
     virtual-host: my_vhost
 #    connection-timeout: 10000
     listener:
@@ -158,10 +158,10 @@ tickets:
     appKey: 2cf3cb9ebbbc3
 
 redis:
-  hostName: 39.108.136.61
-  port: 6386
+  hostName: ENC(Vjx71h3IPfUtkba5VT1XtQ==)
+  port: ENC(EbEDy7zBJAsJYIS84f0LdQ==)
   database: 0
-  password: w+.8?2267
+  password: ENC(SqpbvN6mgoi/pK4nWBVj5g==)
   timeout: 0
   maxIdle: 300
   min-idle: 0
