@@ -159,6 +159,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
                     .claim(SecurityConstant.AUTHORITIES,new Gson().toJson(permissions))
                     //自定义属性 放入密码
                     .claim("password",password)
+                    .claim("loginType",loginType)
                     //设置失效时间，根据用户选择保存登录状态对应token过期时间
                     .setExpiration(new Date(System.currentTimeMillis() + tokenExpireTime*60*1000))
                     //签名算法和密钥

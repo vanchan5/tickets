@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -100,7 +101,7 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
         log.info("%%%%%%%%%验证token有效性开始%%%%%%%%%");
 
         //日志唯一ID跟踪
-        boolean bInsertMDC = insertMDC();
+            boolean bInsertMDC = insertMDC();
 
         String header = request.getHeader(SecurityConstant.HEADER);
         if (StringUtils.isBlank(header)) {
@@ -218,7 +219,8 @@ public class MyAuthenticationFilter extends BasicAuthenticationFilter {
                 //判断用户是否存在
                 securityUtil.userIsExit(username);
                 password = claims.get("password").toString();
-                if (loginType.equals(LoginTypeEnum.MANAGE_PASSWORD) || loginType.equals(LoginTypeEnum.MANAGE_CODE)) {
+                loginType = claims.get("loginType").toString();
+                if (loginType.equals(LoginTypeEnum.MANAGE_PASSWORD.name()) || loginType.equals(LoginTypeEnum.MANAGE_CODE.name())) {
                     //获取权限，缓存了权限
                     if (storePerms) {
                         String authority = claims.get(SecurityConstant.AUTHORITIES).toString();
