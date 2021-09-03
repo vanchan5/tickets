@@ -12,6 +12,7 @@ import com.track.data.bo.security.TokenUserBo;
 import com.track.data.domain.po.user.UmUserPo;
 import com.track.data.mapper.base.IBaseMapper;
 import com.track.data.vo.sys.security.UserInfoVo;
+import com.track.security.Bo.AuthenticationDetailsBo;
 import com.track.security.details.authentication.MyWebAuthenticationDetails;
 import com.track.security.util.ResponseUtil;
 import io.jsonwebtoken.Jwts;
@@ -110,6 +111,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
         String password = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPassword();
         String loginType = ((MyWebAuthenticationDetails) authentication.getDetails()).getAuthenticationDetailsBo().getLoginType().name();
         List<GrantedAuthority> authorityList = (List<GrantedAuthority>) ((UserDetails)authentication.getPrincipal()).getAuthorities();
+        AuthenticationDetailsBo authenticationDetailsBo = ((MyWebAuthenticationDetails) authentication.getDetails()).getAuthenticationDetailsBo();
 
         //这里的权限指的是操作类型权限，
         // 需要在实现了UserDetails接口的SecurityUserDetails实现类中重写getAuthorities()方法
@@ -160,6 +162,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
                     //自定义属性 放入密码
                     .claim("password",password)
                     .claim("loginType",loginType)
+                    .claim("user",authenticationDetailsBo)
                     //设置失效时间，根据用户选择保存登录状态对应token过期时间
                     .setExpiration(new Date(System.currentTimeMillis() + tokenExpireTime*60*1000))
                     //签名算法和密钥
