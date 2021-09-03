@@ -20,6 +20,7 @@
         <module>tickets-permission</module>
         <module>tickets-quartz</module>
         <module>tickets-elk</module>
+        <module>tickets-security-login</module>
     </modules>
 
     <packaging>pom</packaging>

@@ -9,59 +9,32 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tickets-web</artifactId>
-    <description>Web对外模块</description>
+    <artifactId>tickets-security-login</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 
     <dependencies>
+        <!--security 依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!--JWT json web token 支持-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.0</version>
+        </dependency>
 
         <!--系统框架-->
         <dependency>
             <groupId>com.track</groupId>
             <artifactId>tickets-config</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.track</groupId>
-                    <artifactId>tickets-test</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.track</groupId>
-                    <artifactId>tickets-user</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.track</groupId>
-                    <artifactId>tickets-order</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.track</groupId>
-                    <artifactId>tickets-security</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.track</groupId>
-                    <artifactId>tickets-permission</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.track</groupId>
-                    <artifactId>tickets-quartz</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.track</groupId>
-                    <artifactId>tickets-quartz</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.track</groupId>
-                    <artifactId>tickets-elk</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- spring-boot-devtools 热部署-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <version>2.1.4.RELEASE</version>
-            <optional>true</optional> <!-- 表示依赖不会传递 -->
-            <scope>true</scope>
         </dependency>
 
     </dependencies>
@@ -98,4 +71,5 @@
         </plugins>
         <finalName>${artifactId}</finalName>
     </build>
+
 </project>

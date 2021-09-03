@@ -1,0 +1,42 @@
+server:
+  port: 8801
+  servlet:
+      context-path: /tickets
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 800
+    min-spare-threads: 30
+
+spring:
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true
+
+logging:
+  level:
+    com.track: debug
+    org.springframework: WARN
+    org.spring.springboot.dao: debug
+
+
+mybatis-plus:
+  type-aliases-package: com.track.*.domain.po.*
+  mapper-locations: classpath*:/mapper/**/*Mapper.xml
+  typeEnumsPackage: com.track.common.enums
+  configuration:
+    # 3.0.8之前版本问题默认将枚举注册为EnumOrdinalTypeHandler,这是错误的方式,默认是 org.apache.ibatis.type.EnumTypeHandler
+    # 如果项目之中实体统一使用IEnum或注解的方式,可配置成 com.baomidou.mybatisplus.extension.handlers.EnumTypeHandler,也可省略上面的type-enums-package配置
+    # 配置type-enums-package只对注解方式的枚举处理能提前加载缓存.
+    default-enum-type-handler: com.baomidou.mybatisplus.extension.handlers.EnumTypeHandler
+
+#  global-config:
+#    db-config:
+#      logic-delete-value: del_flag
+#jwt:
+#  header: Authorization
+#  secret: mySecret
+#  #token有效期一天
+#  expiration: 86400
+#  tokenHead: "Bearer "

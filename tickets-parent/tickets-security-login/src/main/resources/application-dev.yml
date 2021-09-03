@@ -1,0 +1,184 @@
+
+# 配置文件加密key
+jasypt:
+  encryptor:
+    password: project2019
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      master:
+        #        url: jdbc:mysql://localhost:3306/tests?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT
+        url: jdbc:mysql://chauncy:3358/tickets?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=true&useAffectedRows=true&serverTimezone=Asia/Shanghai
+        username: ENC(3L8LhZ0x4zj6h4kMcGUPig==)
+        password: ENC(aSi121s5W/ZZHm9a40xpiA==)
+      slave:
+        enabled: false
+        url:
+        username:
+        password:
+      initialSize: 5
+      minIdle: 10
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      maxEvictableIdleTimeMillis: 900000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+        log4j:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+  # RabbitMQ配置信息
+  rabbitmq:
+    host: ENC(Vjx71h3IPfUtkba5VT1XtQ==)
+    port: 1884
+    username: ENC(IMVxneTVVPh6bcU1UoM48w==)
+    password: ENC(4HRcDkDATbENAMm2Gpzgrg==)
+    virtual-host: my_vhost
+#    connection-timeout: 10000
+    listener:
+      simple:
+        acknowledge-mode: MANUAL # 自动应答 manual手动应答
+        auto-startup: true
+        default-requeue-rejected: false # 不重回队列
+        concurrency: 5
+        max-concurrency: 20
+        prefetch: 1 # 每次只处理1个信息
+        retry:
+          enabled: true
+    # Elasticsearch
+  data:
+    elasticsearch:
+      cluster-nodes: 39.108.136.61:9300
+
+#server:
+#  max-http-header-size: 200MB
+#  tomcat:
+#    max-http-post-size: 200MB
+
+server:
+  max-http-header-size: 200MB
+  tomcat:
+    max-connections: 200 # Maximum number of connections that the server accepts and processes at any given time.
+    max-http-post-size: 0 # Maximum size, in bytes, of the HTTP post content.
+    max-threads: 300 # Maximum number of worker threads.
+    min-spare-threads: 0 # Minimum number of worker threads.
+
+
+# 忽略鉴权url
+ignored:
+  urls:
+    - /druid/**
+    - /swagger-ui.html
+    - /swagger-resources/**
+    - /swagger/**
+    - /**/v2/api-docs
+    - /**/*.js
+    - /**/*.css
+    - /**/*.png
+    - /**/*.ico
+    - /v2/api-docs
+    - /test/findByUserName
+    - /security/**
+    - /login/self
+    - /common/sms/send
+    - /applet/wxPay/notify
+    - /generator/create
+    - /ipInfo/**
+
+tickets:
+  #短信认证码存在redis的过期时间(分钟)
+  sms:
+    redis:
+      saveTime: 1
+  # 全局限流
+  rateLimit:
+    enable: false
+    # 每1秒内
+    timeout: 1000
+    # 总限制100个请求
+    limit: 100
+  # Ip限流
+  ipRateLimit:
+    # 一般设为false
+    enable: false
+    # 每1秒内
+    timeout: 1000
+    # 总限制1个请求
+    limit: 1
+  # token交互方式
+  token:
+    # 默认redis 设置为true后，token将存入redis，并具有单点登录功能 设为false将使用JWT交互
+    redis: false
+    # token中存储用户权限数据 设为true开启后可避免每次请求再获取用户权限，但有可能导致编辑权限菜单后无法读取到最新权限数据（需用户重新登录）
+    storePerms: true
+  # token过期时间（分钟）
+  tokenExpireTime: 6000
+  # 用户选择保存登录状态对应token过期时间（天）
+  saveLoginTime: 7
+  # 限制用户登陆错误次数（次）
+  loginTimeLimit: 5
+  # 错误超过次数后多少分钟后才能继续登录（分钟）
+  loginAfterTime: 2
+  # ES
+  elasticsearch:
+    nodeClient: 39.108.136.61:9200
+  # 日志记录方式 true使用Elasticsearch记录 false记录至数据库中
+  logRecord:
+    es: true
+  # 七牛云配置
+  qiniu:
+    accessKey: wkxcEQGakg0zhC4wxV_3dOxw42X2gQvkFuRq-lJr
+    secretKey: 1Zbi1Tak2fHhJuwQqyLJfAiZHYI1iFQptTLAVr0-
+    bucket: bohui_20190614
+    domain: http://bo2h.com
+    # 存储区域 -1自动判断 0华东 1华北 2华南 3北美 4东南亚
+    zone: -1
+
+    # mob api配置 mob官网注册申请
+  mob:
+    appKey: 2cf3cb9ebbbc3
+
+redis:
+  hostName: ENC(Vjx71h3IPfUtkba5VT1XtQ==)
+  port: ENC(EbEDy7zBJAsJYIS84f0LdQ==)
+  database: 0
+  password: ENC(SqpbvN6mgoi/pK4nWBVj5g==)
+  timeout: 0
+  maxIdle: 300
+  min-idle: 0
+  maxTotal: 1000
+  maxWaitMillis: 1000
+  minEvictableIdleTimeMillis: 18000000
+  numTestsPerEvictionRun: 1024
+  timeBetweenEvictionRunsMillis: 30000
+  testOnBorrow: true
+  testWhileIdle: true
+  testOnReturn: true
+
+# 微信小程序配置
+wetch:
+  applet:
+    APP_ID: wx2944c4aa2876a200
+    SECRET: b277b660e3f24314e0d5a6744bc8e9f5
+    KEY: 7da8ae9c587a4b72865fee0f4ee57581
+    MCH_ID: 1567464741
+    PAY_NOTIFY_URL: http://www.mailangyule.xyz/tickets/applet/wxPay/notify
